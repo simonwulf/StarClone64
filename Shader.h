@@ -1,28 +1,37 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include <GL\glew.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+
 class Shader {
 
   public:
 
-	Shader();
+	Shader(const char* shaderPath, GLushort shaderType);
 	~Shader();
+
+	GLuint glID() const;
 
   private:
 
-	unsigned int m_glShaderID;
+	GLuint m_iGLShaderID;
 };
 
 class ShaderProgram {
 
   public:
 
-	ShaderProgram();
+	ShaderProgram(const char* vertexShaderPath, const char* fragmentShaderPath);
 	~ShaderProgram();
+
+	GLuint glID() const;
 
   private:
 
-	unsigned int m_glShaderProgramID;
+	GLuint m_iGLShaderProgramID;
 
 	Shader* m_xVertexShader;
 	Shader* m_xFragmentShader;

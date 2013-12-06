@@ -8,6 +8,8 @@
 #include <SOIL/SOIL.h>
 #include <assimp/Importer.hpp>
 
+#include "Shader.h"
+
 class vec3
 {
 public:
@@ -52,18 +54,26 @@ int main(int argc, const char* argv[])
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
 	vec3 verts[3];
-	verts[0].x = -0.5f;
-	verts[0].y = -0.5f;
-	verts[1].x = 0.5f;
-	verts[1].y = -0.5f;
-	verts[2].y = 0.5f;
+	verts[0].x = -1.0f;
+	verts[0].y = -1.0f;
+	verts[0].z =  0.0f;
+	verts[1].x =  1.0f;
+	verts[1].y = -1.0f;
+	verts[1].z =  0.0f;
+	verts[2].x =  0.0f;
+	verts[2].y =  0.1f;
+	verts[2].z =  0.0f;
+	
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vec3), verts, GL_STATIC_DRAW);
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+	ShaderProgram shaderProgram("bar.vert", "foo.frag");
+
 	while(!glfwWindowShouldClose(window))
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glUseProgram(shaderProgram.glID());
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
