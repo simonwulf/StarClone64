@@ -4,8 +4,9 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\quaternion.hpp>
 #include <glm\gtx\quaternion.hpp>
+#include <vector>
 
-class Component;
+class RenderComponent;
 
 class GameObject {
 
@@ -14,15 +15,22 @@ class GameObject {
 	GameObject();
 	~GameObject();
 
-  private:
+	const glm::mat4x4& getMatrix() const;
 
-	static const unsigned int MAX_COMPONENTS = 16;
+	RenderComponent* getRenderComponent() const;
+
+  private:
 
 	glm::vec3 m_vPosition;
 	glm::vec3 m_vScale;
-	glm::quat m_xRotation;
+	glm::quat m_qRotation;
 
-	Component* m_xComponents[MAX_COMPONENTS];
+	glm::mat4x4 m_mMatrix;
+
+	RenderComponent* m_xRenderComponent;
+
+	std::vector<GameObject*> m_xChildren;
+	//std::vector<Component*> m_xComponents;
 };
 
 #endif
