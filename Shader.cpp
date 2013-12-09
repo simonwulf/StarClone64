@@ -50,6 +50,26 @@ GLuint ShaderProgram::glID() const {
 	return m_iGLShaderProgramID;
 }
 
+GLint ShaderProgram::getUniformLocation(const char* name){
+
+	unimap::const_iterator found = m_iUniformLocations.find(name);
+	
+	if (found == m_iUniformLocations.end()) {
+	
+		GLint location = glGetUniformLocation(m_iGLShaderProgramID, name);
+
+		if (location == -1)
+			return -1;
+
+		m_iUniformLocations[name] = location;
+		return location;
+	
+	} else {
+	
+		return found->second;
+	}
+}
+
 Shader::Shader(const char* shaderPath, GLushort shaderType) {
 
 	//TODO: Caching

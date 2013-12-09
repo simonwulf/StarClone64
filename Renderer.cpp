@@ -7,6 +7,12 @@ Renderer::Renderer(GLFWwindow* window) {
 
 	m_xDefaultShaderProgram = new ShaderProgram("default.vert", "default.frag");
 
+	int width, height;
+	glfwGetWindowSize(m_xWindow, &width, &height);
+	m_mPerspective = glm::perspective(60.0f, (float)width/(float)height, 1.0f, 1000.0f);
+
+	glEnable(GL_DEPTH_TEST);
+
 	glClearColor(0.1f, 0.0f, 0.2f, 0.0f);
 }
 
@@ -28,6 +34,12 @@ void Renderer::render(Scene* scene) {
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 
+	//Vertex positions
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), 0);
+	
+	//Vertex colors
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex), (const GLvoid*)sizeof(glm::vec3));
+
 	renderNode(scene->getRoot());
 
 	glDisableVertexAttribArray(0);
@@ -43,13 +55,20 @@ void Renderer::renderNode(GameObject* node) {
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBufferID());
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBufferID());
 
-	//Vertex positions
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), 0);
-	
-	//Vertex colors
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex), (const GLvoid*)sizeof(glm::vec3));
+	GLint uni_world_matrix = m_xDefaultShaderProgram->getUniformLocation("world");
+	if (uni_world_matrix != -1)
+		glUniformMatrix4fv(uni_world_matrix, 1, GL_TRUE, (GLfloat*)&node->getMatrix());
 
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+	GLint uni_perspective_matrix = m_xDefaultShaderProgram->getUniformLocation("perspective");
+	if (uni_perspective_matrix != -1)
+		glUniformMatrix4fv(uni_perspective_matrix, 1, GL_TRUE, (GLfloat*)&m_mPerspective);
+
+	glDrawElements(GL_TRIANGLES, mesh->getIndexCount(), GL_UNSIGNED_INT, 0);
+
+	for (unsigned int i = 0; i < node->numChildren(); ++i) {
+	
+		renderNode(node->childAt(i));
+	}
 
 	glDisableVertexAttribArray(0);
 }

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
 
 class Shader {
 
@@ -28,10 +29,15 @@ class ShaderProgram {
 	~ShaderProgram();
 
 	GLuint glID() const;
+	GLint getUniformLocation(const char* name);
 
   private:
 
+	typedef std::map<std::string, GLint> unimap;
+
 	GLuint m_iGLShaderProgramID;
+
+	unimap m_iUniformLocations;
 
 	Shader* m_xVertexShader;
 	Shader* m_xFragmentShader;

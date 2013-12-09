@@ -1,9 +1,10 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include <glm\glm.hpp>
-#include <glm\gtc\quaternion.hpp>
-#include <glm\gtx\quaternion.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <vector>
 
 class RenderComponent;
@@ -15,9 +16,20 @@ class GameObject {
 	GameObject();
 	~GameObject();
 
-	const glm::mat4x4& getMatrix() const;
+	const glm::mat4& getMatrix();
 
 	RenderComponent* getRenderComponent() const;
+
+	unsigned int numChildren() const;
+	GameObject* childAt(unsigned int index) const;
+
+	const glm::vec3& getPosition() const;
+	const glm::vec3& getScale() const;
+	const glm::quat& getRotation() const;
+
+	void setPosition(const glm::vec3& position);
+	void setScale(const glm::vec3& scale);
+	void setRotation(const glm::quat& rotation);
 
   private:
 
@@ -26,8 +38,11 @@ class GameObject {
 	glm::quat m_qRotation;
 
 	glm::mat4x4 m_mMatrix;
+	bool m_bUpdateMatrix;
 
 	RenderComponent* m_xRenderComponent;
+
+	GameObject* m_xParent;
 
 	std::vector<GameObject*> m_xChildren;
 	//std::vector<Component*> m_xComponents;
