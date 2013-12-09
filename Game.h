@@ -38,7 +38,7 @@ class Game {
 	clock_t m_iStartTime;
 	float m_fElapsedTime;
 
-	void update();
+	void update(float delta, float elapsedTime);
 	void render();
 };
 

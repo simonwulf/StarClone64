@@ -19,6 +19,7 @@ class Mesh {
 	~Mesh();
 
 	unsigned int getVertexCount() const;
+	unsigned int getIndexCount() const;
 	unsigned int getTriCount() const;
 
 	GLuint getVertexBufferID() const;

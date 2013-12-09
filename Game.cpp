@@ -20,7 +20,7 @@ int Game::init() {
 	}
 
 	glfwWindowHint(GLFW_RESIZABLE, 0);
-	//glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 	m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", NULL/*glfwGetPrimaryMonitor()*/, NULL);
 	glfwMakeContextCurrent(m_xWindow);
 
@@ -41,6 +41,9 @@ int Game::init() {
 
 	m_xRenderer = new Renderer(m_xWindow);
 	m_xScene = new Scene();
+
+	//Test purposes
+	m_xScene->getRoot()->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
 }
 
 void Game::loop() {
@@ -53,7 +56,7 @@ void Game::loop() {
 	
 		glfwPollEvents();
 
-		update();
+		update(delta, m_fElapsedTime);
 		m_xRenderer->render(m_xScene);
 
 		clock_t now = clock();
@@ -63,6 +66,20 @@ void Game::loop() {
 	}
 }
 
-void Game::update() {
+void Game::update(float delta, float elapsedTime) {
 
+	m_xScene->getRoot()->setPosition(glm::vec3(
+		sinf(elapsedTime * 1.0f),
+		sinf(elapsedTime * 2.0f),
+		-5.0f
+	));
+	
+	m_xScene->getRoot()->setScale(glm::vec3(
+		0.55f + sinf(elapsedTime * 2.0f) * 0.45f,
+		1.0f,
+		0.55f + cosf(elapsedTime * 2.0f) * 0.45f
+	));
+
+	glm::quat rotation = glm::angleAxis(elapsedTime * 90.0f, glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f)));
+	m_xScene->getRoot()->setRotation(rotation);
 }
