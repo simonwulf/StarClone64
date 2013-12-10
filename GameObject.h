@@ -23,6 +23,9 @@ class GameObject {
 	unsigned int numChildren() const;
 	GameObject* childAt(unsigned int index) const;
 
+	void addChild(GameObject* child);
+	void removeChild(GameObject* child);
+
 	const glm::vec3& getPosition() const;
 	const glm::vec3& getScale() const;
 	const glm::quat& getRotation() const;
@@ -46,6 +49,8 @@ class GameObject {
 
 	std::vector<GameObject*> m_xChildren;
 	//std::vector<Component*> m_xComponents;
+
+	void invalidateMatrix();
 };
 
 #endif

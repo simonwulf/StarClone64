@@ -44,6 +44,12 @@ int Game::init() {
 
 	//Test purposes
 	m_xScene->getRoot()->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+
+	GameObject* test = new GameObject();
+
+	m_xScene->getRoot()->addChild(test);
+
+	test->setPosition(glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void Game::loop() {
@@ -71,15 +77,19 @@ void Game::update(float delta, float elapsedTime) {
 	m_xScene->getRoot()->setPosition(glm::vec3(
 		sinf(elapsedTime * 1.0f),
 		sinf(elapsedTime * 2.0f),
-		-5.0f
+		-5.0f + sinf(elapsedTime * 3.0f) * 1.0f
 	));
 	
-	m_xScene->getRoot()->setScale(glm::vec3(
+	/*m_xScene->getRoot()->setScale(glm::vec3(
 		0.55f + sinf(elapsedTime * 2.0f) * 0.45f,
 		1.0f,
-		0.55f + cosf(elapsedTime * 2.0f) * 0.45f
-	));
+		0.55f + sinf(elapsedTime * 2.0f) * 0.45f
+	));*/
 
-	glm::quat rotation = glm::angleAxis(elapsedTime * 90.0f, glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f)));
-	m_xScene->getRoot()->setRotation(rotation);
+	m_xScene->getRoot()->setRotation(glm::angleAxis(
+		elapsedTime * 90.0f,
+		glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))
+	));
+	//m_xScene->getRoot()->childAt(0)->setRotation(glm::angleAxis(180.0f, glm::normalize(glm::vec3(1.0f, 0.0f, 0.0f))) * glm::angleAxis(elapsedTime * -90.0f, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))));
+	//m_xScene->getRoot()->childAt(0)->setRotation(glm::angleAxis(elapsedTime * -90.0f, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))));
 }

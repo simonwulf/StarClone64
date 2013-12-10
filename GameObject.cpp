@@ -50,6 +50,40 @@ GameObject* GameObject::childAt(unsigned int index) const {
 	return m_xChildren[index];
 }
 
+void GameObject::addChild(GameObject* child) {
+
+	GameObject* current = this;
+
+	while (current != nullptr) {
+	
+		if (current == child)
+			throw std::invalid_argument("A GameObject cannot be added to itself");
+
+		current = current->m_xParent;
+	}
+
+	if (child->m_xParent)
+		m_xParent->removeChild(m_xParent);
+
+	child->m_xParent = this;
+	child->invalidateMatrix();
+
+	m_xChildren.push_back(child);
+}
+
+void GameObject::removeChild(GameObject* child) {
+
+	for (unsigned int i = 0; i < m_xChildren.size(); ++i) {
+
+		if (m_xChildren[i] == child) {
+		
+			child->m_xParent = nullptr;
+			m_xChildren.erase(m_xChildren.begin() + i);
+			break;
+		}
+	}
+}
+
 const glm::vec3& GameObject::getPosition() const {
 
 	return m_vPosition;
@@ -68,20 +102,27 @@ const glm::quat& GameObject::getRotation() const {
 void GameObject::setPosition(const glm::vec3& position) {
 
 	m_vPosition = position;
-
-	m_bUpdateMatrix = true;
+	invalidateMatrix();
 }
 
 void GameObject::setScale(const glm::vec3& scale) {
 
 	m_vScale = scale;
-
-	m_bUpdateMatrix = true;
+	invalidateMatrix();
 }
 
 void GameObject::setRotation(const glm::quat& rotation) {
 
 	m_qRotation = rotation;
+	invalidateMatrix();
+}
+
+void GameObject::invalidateMatrix() {
 
 	m_bUpdateMatrix = true;
+
+	for (unsigned int i = 0; i < m_xChildren.size(); ++i) {
+	
+		m_xChildren[i]->invalidateMatrix();
+	}
 }

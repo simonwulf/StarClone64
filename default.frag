@@ -1,10 +1,17 @@
 #version 420
 
+in vec4 position;
 in vec4 color;
 
-out vec3 color_frag;
+out vec4 color_out;
 
 void main() {
 
-	color_frag = color.rgb;
+	//Fog test
+	/*color_out = vec4 (
+		color.rgb * (1.0 - clamp((-2.0 - position.z) * 0.3, 0.0, 1.0)),
+		1.0
+	);*/
+
+	color_out = vec4 (color.rgb, 1.0);
 }

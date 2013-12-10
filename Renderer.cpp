@@ -9,9 +9,10 @@ Renderer::Renderer(GLFWwindow* window) {
 
 	int width, height;
 	glfwGetWindowSize(m_xWindow, &width, &height);
-	m_mPerspective = glm::perspective(60.0f, (float)width/(float)height, 1.0f, 1000.0f);
+	m_mPerspective = glm::perspective(60.0f, (float)width/(float)height, 0.1f, 1000.0f);
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
 	glClearColor(0.1f, 0.0f, 0.2f, 0.0f);
 }
@@ -55,13 +56,8 @@ void Renderer::renderNode(GameObject* node) {
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->getVertexBufferID());
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->getIndexBufferID());
 
-	GLint uni_world_matrix = m_xDefaultShaderProgram->getUniformLocation("world");
-	if (uni_world_matrix != -1)
-		glUniformMatrix4fv(uni_world_matrix, 1, GL_TRUE, (GLfloat*)&node->getMatrix());
-
-	GLint uni_perspective_matrix = m_xDefaultShaderProgram->getUniformLocation("perspective");
-	if (uni_perspective_matrix != -1)
-		glUniformMatrix4fv(uni_perspective_matrix, 1, GL_TRUE, (GLfloat*)&m_mPerspective);
+	m_xDefaultShaderProgram->uniformMatrix4fv("world", 1, GL_TRUE, (GLfloat*)&node->getMatrix());
+	m_xDefaultShaderProgram->uniformMatrix4fv("perspective", 1, GL_TRUE, (GLfloat*)&m_mPerspective);
 
 	glDrawElements(GL_TRIANGLES, mesh->getIndexCount(), GL_UNSIGNED_INT, 0);
 
