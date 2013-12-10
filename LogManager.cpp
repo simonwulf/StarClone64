@@ -48,7 +48,8 @@ bool LogManager::WriteFile( std::string text )
 std::string LogManager::GenerateFileName()
 {
 	time_t t = time(0);
-	struct tm* now = localtime(&t);
+	struct tm* now = new struct tm();
+	localtime_s(now, &t);
 
 	std::stringstream str;
 	str << (now->tm_year+1900) << "-"
@@ -58,19 +59,22 @@ std::string LogManager::GenerateFileName()
 		<< now->tm_min << "-"
 		<< now->tm_sec << ".log";
 
+	delete now;
 	return str.str();
 }
 
 std::string LogManager::GetTimestamp()
 {
 	time_t t = time(0);
-	struct tm* now = localtime(&t);
+	struct tm* now = new struct tm();
+	localtime_s(now, &t);
 
 	std::stringstream str;
 	str << "[" << now->tm_hour << ":"
 		<< now->tm_min << ":"
 		<< now->tm_sec << "]";
 
+	delete now;
 	return str.str();
 }
 
@@ -85,7 +89,7 @@ void LogManager::VerifyLogPath()
 		return;
 	else if(fileAttrib == INVALID_FILE_ATTRIBUTES)
 	{
-		mkdir(logPath.c_str());
+		_mkdir(logPath.c_str());
 	}
 	else
 	{
