@@ -1,7 +1,99 @@
 #include "Mesh.h"
 
+#include "LogManager.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <vector>
+#include <sstream>
+
 Mesh::Mesh() {
 
+	Assimp::Importer importer;
+	const aiScene* scene = importer.ReadFile("test/mesh_test/teapot.obj", 
+		aiProcess_JoinIdenticalVertices);
+
+	if(!scene)
+	{
+		Log::Err("Error loading mesh: " + std::string(importer.GetErrorString()));
+		system("PAUSE >NUL");
+		exit(-1);
+	}
+	else
+	{
+		int totalVertices = 0;
+
+		std::vector<vertex*> tempVertexBuffer;
+		std::vector<GLuint*> tempIndexBuffer;
+		for(int i = 0; i < scene->mNumMeshes; i++)
+		{
+			aiMesh* mesh = scene->mMeshes[i];
+
+			int numVertices = mesh->mNumVertices;
+
+			for(int v = 0; v < mesh->mNumVertices; v++)
+			{
+				vertex* vert = new vertex();
+				vert->position.x = mesh->mVertices[v].x;
+				vert->position.y = mesh->mVertices[v].y;
+				vert->position.z = mesh->mVertices[v].z;
+
+				vert->color = glm::vec4(
+					(float)(rand())/((float)(RAND_MAX))+0.2f,
+					(float)(rand())/((float)(RAND_MAX))+0.2f,
+					(float)(rand())/((float)(RAND_MAX))+0.2f,
+					1);
+				tempVertexBuffer.push_back(vert);
+			}
+
+			for(int j = 0; j < mesh->mNumFaces; j++)
+			{
+				const aiFace& face = mesh->mFaces[j];
+
+				for(int k = 0; k < 3; k++)
+				{
+					tempIndexBuffer.push_back(new GLuint(face.mIndices[k]));
+				}
+			}
+		}
+
+
+		m_iVertexCount = tempVertexBuffer.size();
+		m_iIndexCount = tempIndexBuffer.size();
+
+		m_xVertices = new vertex[m_iVertexCount];
+		m_iIndices = new GLuint[m_iIndexCount];
+
+		for(int i = 0; i < tempVertexBuffer.size(); i++)
+		{
+			m_xVertices[i] = *tempVertexBuffer[i];
+			std::stringstream ss;
+			ss << "[" << i << "] " << 
+				m_xVertices[i].position.x << ", " <<
+				m_xVertices[i].position.y << ", " <<
+				m_xVertices[i].position.z;
+
+			//Log::Writeln(ss.str(), Log::COLOR_LIGHT_BLUE);
+		}
+		for(int i = 0; i < tempIndexBuffer.size(); i++)
+		{
+			m_iIndices[i] = *tempIndexBuffer[i];
+		}
+
+		void* ptr = &m_xGLBuffers;
+		glGenBuffers(2, (GLuint*)&m_xGLBuffers);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_xGLBuffers.vertex);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_xGLBuffers.index);
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(m_xVertices[0])*m_iVertexCount, m_xVertices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_iIndices[0])*m_iIndexCount, m_iIndices, GL_STATIC_DRAW);
+
+		Log::Writeln("Loaded mesh", Log::COLOR_LIGHT_GREEN);
+	}
+
+	/*
+#pragma region Pyramid test code
 	m_iVertexCount = 5;
 	m_xVertices = new vertex[m_iVertexCount];
 	
@@ -61,6 +153,8 @@ Mesh::Mesh() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_iIndices[0])*m_iIndexCount, m_iIndices, GL_STATIC_DRAW);
 	//glBufferStorage(GL_ARRAY_BUFFER, sizeof(m_xVertices[0])*m_iVertexCount, m_xVertices, 0);
 	//glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_iIndices[0])*m_iIndexCount, m_iIndices, 0);
+#pragma endregion Pyramid test code
+	*/
 }
 
 Mesh::~Mesh() {
