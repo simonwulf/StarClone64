@@ -28,11 +28,16 @@ class Game {
 
   private:
 
+	static Game* s_xInstance;
+
 	static const unsigned int TARGET_FPS = 60;
 
 	GLFWwindow* m_xWindow;
 	Renderer* m_xRenderer;
 	Scene* m_xScene;
+
+	GameObject* m_xTestObj;
+	GameObject* m_xTestCam;
 
 	clock_t m_iLastTime;
 	clock_t m_iStartTime;

@@ -3,13 +3,24 @@
 Component::Component(Component::Type type) {
 
 	m_iType = type;
+
+	m_xGameObject = nullptr;
 }
 
 Component::~Component() {
 
 }
 
-Component::Type Component::type() {
+void Component::update(float delta, float elapsedTime) {
+
+}
+
+Component::Type Component::getType() {
 
 	return m_iType;
+}
+
+GameObject* Component::getGameObject() {
+
+	return m_xGameObject;
 }

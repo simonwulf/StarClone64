@@ -8,6 +8,7 @@
 
 #include "Scene.h"
 #include "Shader.h"
+#include "Camera.h"
 
 class Renderer {
 

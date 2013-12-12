@@ -1,5 +1,9 @@
 #include "Game.h"
 
+#include "RenderComponent.h"
+
+Game* Game::s_xInstance = nullptr;
+
 Game::Game() {
 
 }
@@ -7,6 +11,12 @@ Game::Game() {
 Game::~Game() {
 
 	glfwTerminate();
+
+	delete m_xRenderer;
+	delete m_xScene;
+
+	delete m_xTestObj;
+	delete m_xTestCam;
 }
 
 int Game::init() {
@@ -43,13 +53,14 @@ int Game::init() {
 	m_xScene = new Scene();
 
 	//Test purposes
-	m_xScene->getRoot()->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+	m_xTestObj = new GameObject();
+	m_xTestObj->addComponent(new RenderComponent());
+	m_xTestObj->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+	m_xScene->getRoot()->addChild(m_xTestObj);
 
-	GameObject* test = new GameObject();
-
-	m_xScene->getRoot()->addChild(test);
-
-	test->setPosition(glm::vec3(1.0f, 1.0f, 1.0f));
+	m_xTestCam = new GameObject();
+	m_xTestCam->addComponent(new CameraComponent());
+	m_xScene->getRoot()->addChild(m_xTestCam);
 }
 
 void Game::loop() {
@@ -67,29 +78,46 @@ void Game::loop() {
 
 		clock_t now = clock();
 		delta = (float)(now - m_iLastTime) / (float)CLOCKS_PER_SEC;
-		m_fElapsedTime = (float)(now - m_iStartTime) / (float)CLOCKS_PER_SEC;
+		if (delta > 0.1f)
+			delta = 0.1f;
+		m_fElapsedTime += delta;
 		m_iLastTime = now;
 	}
 }
 
 void Game::update(float delta, float elapsedTime) {
 
-	m_xScene->getRoot()->setPosition(glm::vec3(
+	/*m_xTestObj->setPosition(glm::vec3(
 		sinf(elapsedTime * 1.0f),
 		sinf(elapsedTime * 2.0f),
 		-5.0f + sinf(elapsedTime * 3.0f) * 1.0f
-	));
+	));*/
+
+	/*m_xTestObj->setPosition(glm::vec3(
+		0.0f,
+		0.0f,
+		-1.0f * elapsedTime
+	));*/
 	
-	/*m_xScene->getRoot()->setScale(glm::vec3(
+	/*m_xTestObj->setScale(glm::vec3(
 		0.55f + sinf(elapsedTime * 2.0f) * 0.45f,
 		1.0f,
 		0.55f + sinf(elapsedTime * 2.0f) * 0.45f
 	));*/
 
-	m_xScene->getRoot()->setRotation(glm::angleAxis(
+	/* */
+	m_xTestObj->setRotation(glm::angleAxis(
 		elapsedTime * 90.0f,
 		glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))
 	));
-	//m_xScene->getRoot()->childAt(0)->setRotation(glm::angleAxis(180.0f, glm::normalize(glm::vec3(1.0f, 0.0f, 0.0f))) * glm::angleAxis(elapsedTime * -90.0f, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))));
-	//m_xScene->getRoot()->childAt(0)->setRotation(glm::angleAxis(elapsedTime * -90.0f, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))));
+	/* */
+
+	/* *
+	m_xTestCam->setRotation(glm::angleAxis(
+		elapsedTime * 90.0f,
+		glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))
+	));
+	/* */
+
+	//m_xTestCam->setPosition(glm::vec3(1.0f, 0.0f, 0.0f) * elapsedTime);
 }

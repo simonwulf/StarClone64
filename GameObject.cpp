@@ -8,15 +8,17 @@ GameObject::GameObject() {
 	m_qRotation = glm::quat(0.0f, 0.0f, 0.0f, 0.0f);
 
 	m_bUpdateMatrix = true;
+	m_bUpdateInverseMatrix = true;
 
 	m_xParent = nullptr;
-
-	//Test render component
-	m_xRenderComponent = new RenderComponent();
 }
 
 GameObject::~GameObject() {
 	
+	for (unsigned int i = 0; i < m_xComponents.size(); ++i) {
+	
+		delete m_xComponents[i];
+	}
 }
 
 const glm::mat4& GameObject::getMatrix() {
@@ -35,10 +37,18 @@ const glm::mat4& GameObject::getMatrix() {
 	return m_mMatrix;
 }
 
-RenderComponent* GameObject::getRenderComponent() const {
+const glm::mat4& GameObject::getInverseMatrix() {
+
+	if (m_bUpdateInverseMatrix)
+		m_mInverseMatrix = glm::inverse(getMatrix());
+
+	return m_mInverseMatrix;
+}
+
+/*RenderComponent* GameObject::getRenderComponent() const {
 
 	return m_xRenderComponent;
-}
+}*/
 
 unsigned int GameObject::numChildren() const {
 
@@ -84,6 +94,55 @@ void GameObject::removeChild(GameObject* child) {
 	}
 }
 
+void GameObject::addComponent(Component* component) {
+
+	if (component->m_xGameObject != nullptr)
+		throw std::invalid_argument("A component can not be moved between GameObjects");
+
+	component->m_xGameObject = this;
+	m_xComponents.push_back(component);
+}
+
+void GameObject::removeComponent(Component* component) {
+
+	if (component->m_xGameObject != this)
+		throw std::invalid_argument("A component can only be removed from it's own GameObject container");
+
+	for (unsigned int i = 0; i < m_xComponents.size(); ++i) {
+	
+		if (m_xComponents[i] == component) {
+		
+			delete m_xComponents[i];
+			m_xComponents.erase(m_xComponents.begin() + i);
+			break;
+		}
+	}
+}
+
+Component* GameObject::getComponent(unsigned int type, unsigned int offset) {
+
+	for (unsigned int i = offset; i < m_xComponents.size(); ++i) {
+	
+		if (m_xComponents[i]->getType() == type)
+			return m_xComponents[i];
+	}
+
+	return nullptr;
+}
+
+unsigned int GameObject::getComponents(unsigned int type, Component* dest[]) {
+
+	unsigned int num_found = 0;
+
+	for (unsigned int i = 0; i < m_xComponents.size(); ++i) {
+	
+		if (m_xComponents[i]->getType() == type)
+			dest[num_found++] = m_xComponents[i];
+	}
+
+	return num_found;
+}
+
 const glm::vec3& GameObject::getPosition() const {
 
 	return m_vPosition;
@@ -120,6 +179,7 @@ void GameObject::setRotation(const glm::quat& rotation) {
 void GameObject::invalidateMatrix() {
 
 	m_bUpdateMatrix = true;
+	m_bUpdateInverseMatrix = true;
 
 	for (unsigned int i = 0; i < m_xChildren.size(); ++i) {
 	

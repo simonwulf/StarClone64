@@ -4,12 +4,14 @@
 #include "Component.h"
 #include <glm/glm.hpp>
 
-class Camera : public Component {
+class CameraComponent : public Component {
 
   public:
 
-	Camera();
-	~Camera();
+	CameraComponent();
+	~CameraComponent();
+
+	const glm::mat4& getMatrix();
 
   private:
 

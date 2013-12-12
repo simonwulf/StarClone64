@@ -7,7 +7,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <vector>
 
-class RenderComponent;
+class Component;
 
 class GameObject {
 
@@ -17,14 +17,20 @@ class GameObject {
 	~GameObject();
 
 	const glm::mat4& getMatrix();
+	const glm::mat4& getInverseMatrix();
 
-	RenderComponent* getRenderComponent() const;
+	//RenderComponent* getRenderComponent() const;
 
 	unsigned int numChildren() const;
 	GameObject* childAt(unsigned int index) const;
-
 	void addChild(GameObject* child);
 	void removeChild(GameObject* child);
+
+	unsigned int numComponents() const;
+	void addComponent(Component* component);
+	void removeComponent(Component* component);
+	Component* getComponent(unsigned int type, unsigned int offset = 0);
+	unsigned int getComponents(unsigned int type, Component* dest[]);
 
 	const glm::vec3& getPosition() const;
 	const glm::vec3& getScale() const;
@@ -40,15 +46,15 @@ class GameObject {
 	glm::vec3 m_vScale;
 	glm::quat m_qRotation;
 
-	glm::mat4x4 m_mMatrix;
+	glm::mat4 m_mMatrix;
+	glm::mat4 m_mInverseMatrix;
 	bool m_bUpdateMatrix;
-
-	RenderComponent* m_xRenderComponent;
+	bool m_bUpdateInverseMatrix;
 
 	GameObject* m_xParent;
 
 	std::vector<GameObject*> m_xChildren;
-	//std::vector<Component*> m_xComponents;
+	std::vector<Component*> m_xComponents;
 
 	void invalidateMatrix();
 };

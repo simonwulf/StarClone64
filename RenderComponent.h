@@ -11,7 +11,9 @@ class RenderComponent : public Component {
 	RenderComponent();
 	~RenderComponent();
 
-	Mesh* getMesh() const;
+	//Mesh* getMesh() const;
+
+	void render() const;
 
   private:
 
