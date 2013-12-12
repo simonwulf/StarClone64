@@ -128,3 +128,8 @@ bool Log::Err( std::string err )
 {
 	return Log::Writeln(err, Log::COLOR_ERROR);
 }
+
+bool Log::Success( std::string msg )
+{
+	return Log::Writeln(msg, Log::COLOR_SUCCESS);
+}

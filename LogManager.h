@@ -29,11 +29,13 @@ namespace Log {
 	const static int COLOR_DEFAULT	= COLOR_LIGHT_WHITE;
 	const static int COLOR_ERROR	= COLOR_LIGHT_RED;
 	const static int COLOR_WARNING	= COLOR_LIGHT_YELLOW;
+	const static int COLOR_SUCCESS	= COLOR_LIGHT_GREEN;
 
 	bool Write(std::string text, int color = Log::COLOR_DEFAULT);
 	bool Writeln(std::string text, int color = Log::COLOR_DEFAULT);
 	bool Warn(std::string warn);
 	bool Err(std::string err);
+	bool Success(std::string msg);
 }
 
 class LogManager {
@@ -48,11 +50,13 @@ class LogManager {
 
 	private:
 		LogManager();
+		LogManager(const LogManager&);
+		void operator=(const LogManager&);
 
 		std::string m_logFilePath;
 		std::string m_logFileName;
 		std::ofstream* m_logFile;
-		HANDLE m_hstdout;
+		void* m_hstdout;
 		bool bDisableFile;
 
 		static LogManager m_instance;

@@ -8,7 +8,12 @@
 #include <sstream>
 
 Mesh::Mesh() {
+	
+	m_xVertices = nullptr;
+	m_iIndices = nullptr;
 
+	/*
+#pragma region Mesh test
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile("test/mesh_test/teapot.obj", 
 		aiProcess_JoinIdenticalVertices);
@@ -91,6 +96,8 @@ Mesh::Mesh() {
 
 		Log::Writeln("Loaded mesh", Log::COLOR_LIGHT_GREEN);
 	}
+#pragma endregion Mesh test
+	*/
 
 	/*
 #pragma region Pyramid test code
@@ -143,7 +150,8 @@ Mesh::Mesh() {
 	m_iIndices[17] = 1;
 
 	//Set up OpenGL buffers
-	void* ptr = &m_xGLBuffers;
+	//void* ptr = &m_xGLBuffers;
+
 	glGenBuffers(2, (GLuint*)&m_xGLBuffers);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, m_xGLBuffers.vertex);
@@ -159,10 +167,11 @@ Mesh::Mesh() {
 
 Mesh::~Mesh() {
 
-	delete [] m_xVertices;
-	delete [] m_iIndices;
+	/* MeshManger handles cleanup */
+	//delete [] m_xVertices;
+	//delete [] m_iIndices;
 
-	glDeleteBuffers(2, (GLuint*)&m_xGLBuffers);
+	//glDeleteBuffers(meshBufferIDs::length, (GLuint*)&m_xGLBuffers);
 }
 
 unsigned int Mesh::getVertexCount() const {
@@ -180,12 +189,48 @@ unsigned int Mesh::getTriCount() const {
 	return m_iIndexCount / 3;
 }
 
-GLuint Mesh::getVertexBufferID() const {
+vertex* Mesh::getVertexArray() const {
+
+	return m_xVertices;
+}
+
+GLuint* Mesh::getIndexArray() const {
+
+	return m_iIndices;
+}
+
+GLuint Mesh::getVertexBufferID() {
 
 	return m_xGLBuffers.vertex;
 }
 
-GLuint Mesh::getIndexBufferID() const {
+GLuint Mesh::getIndexBufferID() {
 
 	return m_xGLBuffers.index;
+}
+
+void Mesh::setVertexArray( unsigned int vertCount, vertex* vertexArray ) {
+
+	if(m_xVertices != nullptr)
+		delete[] m_xVertices;
+	m_iVertexCount = vertCount;
+	m_xVertices = vertexArray;
+}
+
+void Mesh::setIndexArray( unsigned int indicesCount, GLuint* indexArray ) {
+
+	if(m_iIndices != nullptr)
+		delete[] m_iIndices;
+	m_iIndexCount = indicesCount;
+	m_iIndices = indexArray;
+}
+
+meshBufferIDs& Mesh::getBufferIDs() {
+
+	return m_xGLBuffers;
+}
+
+bool Mesh::isDummy() {
+
+	return m_iVertexCount == 0;
 }

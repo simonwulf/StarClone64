@@ -1,6 +1,8 @@
 #include "Renderer.h"
 #include "RenderComponent.h"
 
+#include <sstream>
+
 Renderer::Renderer(GLFWwindow* window) {
 
 	m_xWindow = window;
