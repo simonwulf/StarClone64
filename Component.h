@@ -15,11 +15,17 @@ class Component {
 		SUN,
 
 		CONTROLLER,
-		COLLIDER
+		COLLIDER,
+
+		TYPE_N
 	};
 
 	Component(Type type);
-	~Component();
+	virtual ~Component();
+
+	static void* operator new(size_t size);
+	static void operator delete(void* ptr);
+	static unsigned int getAllocatedMemorySize();
 
 	virtual void update(float delta, float elapsedTime);
 
@@ -27,6 +33,8 @@ class Component {
 	GameObject* getGameObject();
 
   private:
+
+	static unsigned int s_iAllocatedMemorySize;
 
 	Type m_iType;
 

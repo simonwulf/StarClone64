@@ -1,5 +1,7 @@
 #include "Component.h"
 
+unsigned int Component::s_iAllocatedMemorySize = 0;
+
 Component::Component(Component::Type type) {
 
 	m_iType = type;
@@ -9,6 +11,25 @@ Component::Component(Component::Type type) {
 
 Component::~Component() {
 
+}
+
+void* Component::operator new(size_t size) {
+
+	void* ptr = ::operator new(size);
+	s_iAllocatedMemorySize += _msize(ptr);
+
+	return ptr;
+}
+
+void Component::operator delete(void* ptr) {
+
+	s_iAllocatedMemorySize -= _msize(ptr);
+	::operator delete(ptr);
+}
+
+unsigned int Component::getAllocatedMemorySize() {
+
+	return s_iAllocatedMemorySize;
 }
 
 void Component::update(float delta, float elapsedTime) {

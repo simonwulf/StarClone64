@@ -16,10 +16,16 @@ class GameObject {
 	GameObject();
 	~GameObject();
 
+	static void* operator new(size_t size);
+	static void operator delete(void* ptr);
+	static unsigned int getAllocatedMemorySize();
+
 	const glm::mat4& getMatrix();
 	const glm::mat4& getInverseMatrix();
 
 	//RenderComponent* getRenderComponent() const;
+
+	GameObject* getParent();
 
 	unsigned int numChildren() const;
 	GameObject* childAt(unsigned int index) const;
@@ -40,7 +46,13 @@ class GameObject {
 	void setScale(const glm::vec3& scale);
 	void setRotation(const glm::quat& rotation);
 
+	void appendPosition(const glm::vec3& position);
+	void appendScale(const glm::vec3& scale);
+	void appendRotation(const glm::quat& rotation);
+
   private:
+
+	static unsigned int s_iAllocatedMemorySize;
 
 	glm::vec3 m_vPosition;
 	glm::vec3 m_vScale;

@@ -21,17 +21,19 @@ MeshManager::~MeshManager() {
 
 Mesh* MeshManager::getMesh( std::string meshName, unsigned int loadFlags /*= 0*/ ) {
 
-	Log::Write("Mesh requested " + meshName + "\t");
+	//Log::Write("Mesh requested " + meshName + "\t");
 	try {
 		Mesh* mesh = getInstance().m_meshTable->at(meshName);
 
 		#pragma region Logging
+		/* *
 		Log::Write("returned from cache", Log::COLOR_LIGHT_AQUA);
 
 		if(mesh->isDummy())
 			Log::Warn("\twarning: dummy mesh!");
 		else
 			Log::Writeln("");
+		/* */
 		#pragma endregion
 
 		return mesh;

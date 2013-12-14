@@ -1,6 +1,7 @@
 #include "Game.h"
 
-#include "RenderComponent.h"
+#include "GOFactory.h"
+#include "ComponentFactory.h"
 
 Game* Game::s_xInstance = nullptr;
 
@@ -12,11 +13,23 @@ Game::~Game() {
 
 	glfwTerminate();
 
+	//delete m_xTestObj;
+	delete m_xTestCam;
+
+	GOFactory::instance()->cleanUp();
+
 	delete m_xRenderer;
 	delete m_xScene;
 
-	delete m_xTestObj;
-	delete m_xTestCam;
+	if (GameObject::getAllocatedMemorySize() > 0) {
+		
+		Log::Warn("All GameObjects have not been deallocated");
+	}
+
+	if (Component::getAllocatedMemorySize() > 0) {
+		
+		Log::Warn("All Components have not been deallocated");
+	}
 }
 
 int Game::init() {
@@ -53,14 +66,31 @@ int Game::init() {
 	m_xScene = new Scene();
 
 	//Test purposes
-	m_xTestObj = new GameObject();
-	m_xTestObj->addComponent(new RenderComponent());
-	m_xTestObj->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
-	m_xScene->getRoot()->addChild(m_xTestObj);
+	unsigned int count = 10;
+	float dist = 5.0f;
+	for (unsigned int z = 0; z < count; ++z) {
+		for (unsigned int y = 0; y < count; ++y) {
+			for (unsigned int x = 0; x < count; ++x) {
+	
+				float start = -dist * (float)(count-1)/2.0f;
+
+				GameObject* obj = GOFactory::instance()->createTeapot();
+				obj->setPosition(
+					glm::vec3(start, start, start) +
+					glm::vec3(dist * x, dist * y, dist * z)
+				);
+				m_xScene->getRoot()->addChild(obj);
+			}
+		}
+	}
 
 	m_xTestCam = new GameObject();
-	m_xTestCam->addComponent(new CameraComponent());
+	//m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+	m_xTestCam->addComponent(ComponentFactory::instance()->create<CameraComponent>());
 	m_xScene->getRoot()->addChild(m_xTestCam);
+
+	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
+	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
 }
 
 void Game::loop() {
@@ -87,6 +117,8 @@ void Game::loop() {
 
 void Game::update(float delta, float elapsedTime) {
 
+	ComponentFactory::instance()->update(Component::CONTROLLER, delta, elapsedTime);
+
 	/*m_xTestObj->setPosition(glm::vec3(
 		sinf(elapsedTime * 1.0f),
 		sinf(elapsedTime * 2.0f),
@@ -105,16 +137,16 @@ void Game::update(float delta, float elapsedTime) {
 		0.55f + sinf(elapsedTime * 2.0f) * 0.45f
 	));*/
 
-	/* */
+	/* *
 	m_xTestObj->setRotation(glm::angleAxis(
 		elapsedTime * 90.0f,
 		glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))
 	));
 	/* */
 
-	/* *
+	/* */
 	m_xTestCam->setRotation(glm::angleAxis(
-		elapsedTime * 90.0f,
+		elapsedTime * 30.0f,
 		glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))
 	));
 	/* */

@@ -1,15 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <GL/glew.h>
-#include <GL/wglew.h>
-#include <gl/GLU.h>
-#include <GLFW/glfw3.h>
-#include <glext.h>
-#include <wglext.h>
+#include "stdafx.h"
+
 #include <iostream>
 #include <ctime>
-#include <Windows.h>
 
 #include "LogManager.h"
 #include "Renderer.h"

@@ -14,7 +14,7 @@ Renderer::Renderer(GLFWwindow* window) {
 	m_mPerspective = glm::perspective(60.0f, (float)width/(float)height, 0.1f, 1000.0f);
 
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 
 	glClearColor(0.1f, 0.0f, 0.2f, 0.0f);
 }
@@ -66,6 +66,4 @@ void Renderer::renderNode(GameObject* node) {
 	
 		renderNode(node->childAt(i));
 	}
-
-	glDisableVertexAttribArray(0);
 }

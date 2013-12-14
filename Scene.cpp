@@ -8,6 +8,7 @@ Scene::Scene() {
 
 Scene::~Scene() {
 
+	delete m_xRoot;
 }
 
 GameObject* Scene::getRoot() const {

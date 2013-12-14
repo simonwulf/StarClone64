@@ -31,6 +31,18 @@
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{eb687444-174d-4cbd-bd02-29a7052259fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameSpecific">
+      <UniqueIdentifier>{a2f28f67-3a05-4a82-9fc2-dca12e851a5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameSpecific">
+      <UniqueIdentifier>{f14428df-40ff-4f5c-917c-5784ea0b3fa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameSpecific\Components">
+      <UniqueIdentifier>{b258ce22-db72-439a-af66-19eab851e57b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameSpecific\Components">
+      <UniqueIdentifier>{649bc4a4-d6e1-4a61-a429-f0d0617e18fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -84,6 +96,18 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Visual</Filter>
     </ClCompile>
+    <ClCompile Include="GOFactory.cpp">
+      <Filter>Source Files\GameSpecific</Filter>
+    </ClCompile>
+    <ClCompile Include="TeapotSpin.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentFactory.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogManager.h">
@@ -133,6 +157,27 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GOFactory.h">
+      <Filter>Header Files\GameSpecific</Filter>
+    </ClInclude>
+    <ClInclude Include="TeapotSpin.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentFactory.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

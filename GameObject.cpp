@@ -1,5 +1,7 @@
 #include "GameObject.h"
-#include "RenderComponent.h"
+#include "ComponentFactory.h"
+
+unsigned int GameObject::s_iAllocatedMemorySize = 0;
 
 GameObject::GameObject() {
 
@@ -17,8 +19,27 @@ GameObject::~GameObject() {
 	
 	for (unsigned int i = 0; i < m_xComponents.size(); ++i) {
 	
-		delete m_xComponents[i];
+		ComponentFactory::instance()->destroy(m_xComponents[i]);
 	}
+}
+
+void* GameObject::operator new(size_t size) {
+
+	void* ptr = ::operator new(size);
+	s_iAllocatedMemorySize += _msize(ptr);
+
+	return ptr;
+}
+
+void GameObject::operator delete(void* ptr) {
+
+	s_iAllocatedMemorySize -= _msize(ptr);
+	::operator delete(ptr);
+}
+
+unsigned int GameObject::getAllocatedMemorySize() {
+
+	return s_iAllocatedMemorySize;
 }
 
 const glm::mat4& GameObject::getMatrix() {
@@ -45,10 +66,10 @@ const glm::mat4& GameObject::getInverseMatrix() {
 	return m_mInverseMatrix;
 }
 
-/*RenderComponent* GameObject::getRenderComponent() const {
+GameObject* GameObject::getParent() {
 
-	return m_xRenderComponent;
-}*/
+	return m_xParent;
+}
 
 unsigned int GameObject::numChildren() const {
 
@@ -72,7 +93,7 @@ void GameObject::addChild(GameObject* child) {
 		current = current->m_xParent;
 	}
 
-	if (child->m_xParent)
+	if (child->m_xParent != nullptr)
 		m_xParent->removeChild(m_xParent);
 
 	child->m_xParent = this;
@@ -173,6 +194,24 @@ void GameObject::setScale(const glm::vec3& scale) {
 void GameObject::setRotation(const glm::quat& rotation) {
 
 	m_qRotation = rotation;
+	invalidateMatrix();
+}
+
+void GameObject::appendPosition(const glm::vec3& position) {
+
+	m_vPosition += position;
+	invalidateMatrix();
+}
+
+void GameObject::appendScale(const glm::vec3& scale) {
+
+	m_vScale *= scale;
+	invalidateMatrix();
+}
+
+void GameObject::appendRotation(const glm::quat& rotation) {
+
+	m_qRotation = m_qRotation * rotation;
 	invalidateMatrix();
 }
 
