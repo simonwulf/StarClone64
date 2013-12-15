@@ -23,20 +23,38 @@ class Renderer {
 
   private:
 
+	static const unsigned int DIR_LIGHT_BLOCK_SIZE = 32;
+	static const unsigned int POINT_LIGHT_BLOCK_SIZE = 32;
+
+	enum LightType {
+	
+		LT_DIRECTIONAL,
+		LT_POINT
+	};
+
+	enum BindingPoints {
+	
+		BP_DIRECTIONAL_LIGHTS,
+		BP_POINT_LIGHTS
+	};
+
 	GLFWwindow* m_xWindow;
 
 	glm::mat4 m_mWorld;
 	glm::mat4 m_mPerspective;
 	glm::mat4 m_mView;
 
-	//std::vector<glm::mat4> m_mStack;
-
 	ShaderProgram* m_xDefaultShaderProgram;
+
+	GLuint m_iDirLightsIndex;
+	GLuint m_iPointLightsIndex;
+
+	GLuint m_iDirLightsBuffer;
+	GLuint m_iPointLightsBuffer;
 
 	void renderNode(GameObject* node);
 
-	/*void pushMatrix();
-	void popMatrix();*/
+	void updateLights(LightType type);
 };
 
 #endif

@@ -7,7 +7,7 @@ GameObject::GameObject() {
 
 	m_vPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_vScale = glm::vec3(1.0f);
-	m_qRotation = glm::quat(0.0f, 0.0f, 0.0f, 0.0f);
+	m_qRotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f);
 
 	m_bUpdateMatrix = true;
 	m_bUpdateInverseMatrix = true;

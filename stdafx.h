@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <glext.h>
 #include <wglext.h>
+#include <glm/glm.hpp>
 #include <Windows.h>
 
 #endif

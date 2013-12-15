@@ -21,6 +21,9 @@ Game::~Game() {
 	delete m_xRenderer;
 	delete m_xScene;
 
+	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
+	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
+
 	if (GameObject::getAllocatedMemorySize() > 0) {
 		
 		Log::Warn("All GameObjects have not been deallocated");
@@ -87,7 +90,80 @@ int Game::init() {
 	m_xTestCam = new GameObject();
 	//m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
 	m_xTestCam->addComponent(ComponentFactory::instance()->create<CameraComponent>());
-	m_xScene->getRoot()->addChild(m_xTestCam);
+	m_xScene->add(m_xTestCam);
+
+	/*m_xTestSun = GOFactory::instance()->createSun(
+		glm::vec3(-0.5f, -1.0f, -0.5f),
+		glm::vec3(1.0f, 1.0f, 1.0f),
+		1.0f
+	);
+	m_xScene->add(m_xTestSun);*/
+
+	m_xTestPointLight = GOFactory::instance()->createPointLight(
+		glm::vec3(0.0f, 0.5f, 1.0f),
+		12.0f,
+		1.0f
+	);
+	m_xScene->add(m_xTestPointLight);
+
+	m_xTestPointLight2 = GOFactory::instance()->createPointLight(
+		glm::vec3(1.0f, 0.0f, 0.5f),
+		12.0f,
+		1.0f
+	);
+	m_xScene->add(m_xTestPointLight2);
+
+	float hue = 0.0f;
+	float r, g, b;
+
+	for (unsigned int i = 0; i < 62; ++i) {
+
+		if (hue < 60.0f) {
+		
+			r = 1.0f;
+			g = hue / 60.0f;
+			b = 0.0f;
+		
+		} else if (hue < 120.0f) {
+		
+			r = 1.0f - ((hue-60.0f) / 60.0f);
+			g = 1.0f;
+			b = 0.0f;
+		
+		} else if (hue < 180.0f) {
+		
+			r = 0.0f;
+			g = 1.0f;
+			b = (hue - 120.0f) / 60.0f;
+
+		} else if (hue < 240.0f) {
+		
+			r = 0.0f;
+			g = 1.0f - ((hue - 180.0f) / 60.0f);
+			b = 1.0f;
+
+		} else if (hue < 300.0f) {
+		
+			r = (hue - 240.0f) / 60.0f;
+			g = 0.0f;
+			b = 1.0f;
+
+		} else {
+		
+			r = 1.0f;
+			g = 0.0f;
+			b = 1.0f - ((hue - 300.0f) / 60.0f);
+		}
+
+		hue += 360.0f / 62.0f;
+
+		GameObject* pl = GOFactory::instance()->createPointLight(
+			glm::vec3(r, g, b),
+			8.0f,
+			1.0f
+		);
+		m_xScene->add(pl);
+	}
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
@@ -119,37 +195,25 @@ void Game::update(float delta, float elapsedTime) {
 
 	ComponentFactory::instance()->update(Component::CONTROLLER, delta, elapsedTime);
 
-	/*m_xTestObj->setPosition(glm::vec3(
-		sinf(elapsedTime * 1.0f),
-		sinf(elapsedTime * 2.0f),
-		-5.0f + sinf(elapsedTime * 3.0f) * 1.0f
-	));*/
-
-	/*m_xTestObj->setPosition(glm::vec3(
-		0.0f,
-		0.0f,
-		-1.0f * elapsedTime
-	));*/
-	
-	/*m_xTestObj->setScale(glm::vec3(
-		0.55f + sinf(elapsedTime * 2.0f) * 0.45f,
-		1.0f,
-		0.55f + sinf(elapsedTime * 2.0f) * 0.45f
-	));*/
-
 	/* *
-	m_xTestObj->setRotation(glm::angleAxis(
-		elapsedTime * 90.0f,
-		glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f))
-	));
-	/* */
-
-	/* */
 	m_xTestCam->setRotation(glm::angleAxis(
 		elapsedTime * 30.0f,
 		glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))
 	));
 	/* */
 
-	//m_xTestCam->setPosition(glm::vec3(1.0f, 0.0f, 0.0f) * elapsedTime);
+	/*m_xTestPointLight->setPosition(glm::vec3(
+		cosf(elapsedTime * 2.0f) * 8.0f,
+		sinf(elapsedTime * 2.0f) * 8.0f,
+		0.0f
+	));
+
+	m_xTestPointLight2->setPosition(glm::vec3(
+		0.0f,
+		0.0f,
+		cosf(elapsedTime) * 20.0f
+	));*/
+
+	if (elapsedTime >= 3.0f && elapsedTime < 40.0f)
+		m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 1.0f) * (elapsedTime - 3.0f));
 }

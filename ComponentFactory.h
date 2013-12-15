@@ -11,6 +11,8 @@ class ComponentFactory {
 
   public:
 
+	typedef std::vector<Component*> ComponentList;
+
 	template <class T>
 	Component* create() {
 	
@@ -24,6 +26,8 @@ class ComponentFactory {
 	void destroy(Component* component);
 	void update(Component::Type type, float delta, float elapsedTime);
 
+	const ComponentList* getList(Component::Type type);
+
 	static ComponentFactory* instance();
 
   private:
@@ -32,7 +36,7 @@ class ComponentFactory {
 
 	static ComponentFactory s_xInstance;
 
-	std::vector<Component*> m_xComponents[Component::TYPE_N];
+	ComponentList m_xComponents[Component::TYPE_N];
 };
 
 #endif

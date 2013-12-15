@@ -15,3 +15,8 @@ GameObject* Scene::getRoot() const {
 
 	return m_xRoot;
 }
+
+void Scene::add(GameObject* gameObject) {
+
+	m_xRoot->addChild(gameObject);
+}

@@ -37,3 +37,8 @@ void ComponentFactory::update(Component::Type type, float delta, float elapsedTi
 		m_xComponents[type][i]->update(delta, elapsedTime);
 	}
 }
+
+const ComponentFactory::ComponentList* ComponentFactory::getList(Component::Type type) {
+
+	return &m_xComponents[type];
+}

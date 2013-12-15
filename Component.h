@@ -12,7 +12,8 @@ class Component {
 		CAMERA,
 		RENDER,
 		
-		SUN,
+		DIRECTIONAL_LIGHT,
+		POINT_LIGHT,
 
 		CONTROLLER,
 		COLLIDER,

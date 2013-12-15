@@ -4,6 +4,7 @@
 #include "stdafx.h"
 
 #include <iostream>
+#include <random>
 #include <ctime>
 
 #include "LogManager.h"
@@ -25,14 +26,15 @@ class Game {
 
 	static Game* s_xInstance;
 
-	static const unsigned int TARGET_FPS = 60;
-
 	GLFWwindow* m_xWindow;
 	Renderer* m_xRenderer;
 	Scene* m_xScene;
 
 	GameObject* m_xTestObj;
 	GameObject* m_xTestCam;
+	GameObject* m_xTestSun;
+	GameObject* m_xTestPointLight;
+	GameObject* m_xTestPointLight2;
 
 	clock_t m_iLastTime;
 	clock_t m_iStartTime;

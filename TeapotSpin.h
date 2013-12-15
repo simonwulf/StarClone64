@@ -10,7 +10,7 @@ class TeapotSpin : public ControllerComponent {
 	TeapotSpin();
 	~TeapotSpin();
 
-	void update(float delta, float deltaTime);
+	void update(float delta, float elapsedTime);
 };
 
 #endif

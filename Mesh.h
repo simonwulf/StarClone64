@@ -15,9 +15,8 @@ for loading and returning meshes to object which utilize them.
 struct vertex {
 
 	glm::vec3 position;
-	glm::vec4 color;
-	glm::vec2 texcoords;
 	glm::vec3 normal;
+	glm::vec2 texcoords;
 };
 
 //Grouping buffer IDs as struct for readability

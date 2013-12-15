@@ -1,10 +1,14 @@
 #include "stdafx.h"
 
 #include <iostream>
+#include <random>
+#include <ctime>
 
 #include "Game.h"
 
 int main(int argc, const char* argv[]){
+
+	srand(time(nullptr));
 
 	Game game;
 
