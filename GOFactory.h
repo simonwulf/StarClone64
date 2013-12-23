@@ -13,6 +13,7 @@ class GOFactory {
 
 	GameObject* createEmpty();
 	GameObject* createTeapot();
+	GameObject* createPlayer();
 	GameObject* createSun(glm::vec3 direction, glm::vec3 color, float strength);
 	GameObject* createPointLight(glm::vec3 color, float radius, float strength);
 	//GameObject* createControlledCamera();

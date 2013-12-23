@@ -7,11 +7,12 @@
 #include <random>
 #include <ctime>
 
+#include "Event.h"
 #include "LogManager.h"
 #include "Renderer.h"
 #include "Scene.h"
 
-class Game {
+class Game : public EventDispatcher {
 
   public:
 
@@ -21,6 +22,9 @@ class Game {
 	int init();
 
 	void loop();
+	void quit();
+
+	static Game* instance();
 
   private:
 

@@ -23,6 +23,8 @@ class GameObject {
 	const glm::mat4& getMatrix();
 	const glm::mat4& getInverseMatrix();
 
+	void setMatrix(const glm::mat4& matrix);
+
 	//RenderComponent* getRenderComponent() const;
 
 	GameObject* getParent();

@@ -120,6 +120,12 @@
     <ClCompile Include="RandomMover.cpp">
       <Filter>Source Files\GameSpecific\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogManager.h">
@@ -198,6 +204,12 @@
       <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="RandomMover.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
       <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
   </ItemGroup>

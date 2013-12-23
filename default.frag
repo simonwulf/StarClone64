@@ -44,18 +44,21 @@ void main() {
 	);*/
 
 	vec3 color = vec3(0.0);
+	vec3 world_normal = normalize(::world_normal);
 
 	//Directional lighting test
 	/* */
 	for (uint i = 0; i < dir_light_count; ++i) {
 		
 		vec3 light_dir = normalize(dir_lights[i].direction);
-		float cos_theta = max(dot(normalize(world_normal), -light_dir), 0.0);
+		float cos_theta = max(dot(world_normal, -light_dir), 0.0);
 		
-		color += dir_lights[i].color * cos_theta * dir_lights[i].strength
-			+ vec3(1.0, 1.0, 0.0) * pow(cos_theta, 50);
+		color += dir_lights[i].color * cos_theta * dir_lights[i].strength;
+			//+ vec3(1.0, 1.0, 0.0) * pow(cos_theta, 50);
 	}
 	/* */
+
+	float light_wrap = 0.0;
 
 	//Point lights test
 	/* */
@@ -68,15 +71,16 @@ void main() {
 			continue;
 
 		vec3 light_dir = normalize(diff);
-		float cos_theta = max(dot(normalize(world_normal), -light_dir), 0.0);
+		float cos_theta = max((light_wrap + dot(world_normal, -light_dir)) / (1.0 + light_wrap), 0.0);
+		//cos_theta = pow(cos_theta, 2);
 
 		color +=
 			point_lights[i].color * min(cos_theta * falloff * point_lights[i].strength, 1.0) +
-			point_lights[i].color * min(pow(cos_theta, 50.0) * falloff * point_lights[i].strength, 1.0);
+			point_lights[i].color * min(pow(cos_theta, 50) * falloff * point_lights[i].strength, 1.0);
 
 		//Rim light test
-		//cos_theta = max(dot(normalize(cam_normal), normalize(-cam_position)), 0.0);
-		//color += point_lights[i].color * max(1.0 - cos_theta * 2.0, 0.0) * falloff * point_lights[i].strength;
+		float rim_cos_theta = max(dot(normalize(cam_normal), normalize(-cam_position)), 0.0);
+		color += point_lights[i].color * pow(max(1.0 - rim_cos_theta, 0.0), 2) * falloff * point_lights[i].strength * (1.0 - cos_theta);
 	}
 	/* */
 

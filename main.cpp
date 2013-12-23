@@ -8,7 +8,7 @@
 
 int main(int argc, const char* argv[]){
 
-	srand(time(nullptr));
+	srand((unsigned int)time(nullptr));
 
 	Game game;
 

@@ -2,11 +2,49 @@
 
 #include "GOFactory.h"
 #include "ComponentFactory.h"
+#include "RenderComponent.h"
+#include "PlayerController.h"
+
+#pragma region glfw_callbacks
+
+void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+
+	if (key == GLFW_KEY_ESCAPE)
+		Game::instance()->quit();
+
+	Event e;
+
+	switch (action) {
+
+		case GLFW_RELEASE:
+			e.type = Event::KEY_UP;
+			break;
+
+		case GLFW_PRESS:
+			
+			e.type = Event::KEY_DOWN;
+			break;
+
+		case GLFW_REPEAT:
+			return;
+	}
+
+	e.keyboard.charCode = key;
+	e.keyboard.keyCode = scancode;
+
+	Game::instance()->dispatchEvent(e);
+}
+
+#pragma endregion glfw_callbacks
 
 Game* Game::s_xInstance = nullptr;
 
 Game::Game() {
 
+	if (s_xInstance != nullptr)
+		throw std::exception("Singleton class Game has already been instantiated");
+
+	s_xInstance = this;
 }
 
 Game::~Game() {
@@ -35,6 +73,11 @@ Game::~Game() {
 	}
 }
 
+Game* Game::instance() {
+
+	return s_xInstance;
+}
+
 int Game::init() {
 
 	glewExperimental = true;
@@ -49,6 +92,8 @@ int Game::init() {
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", NULL/*glfwGetPrimaryMonitor()*/, NULL);
 	glfwMakeContextCurrent(m_xWindow);
+
+	glfwSetKeyCallback(m_xWindow, glfwKeyCallback);
 
 	int MajorVersion;
 	int MinorVersion;
@@ -69,6 +114,7 @@ int Game::init() {
 	m_xScene = new Scene();
 
 	//Test purposes
+	/* Teapots */
 	unsigned int count = 10;
 	float dist = 5.0f;
 	for (unsigned int z = 0; z < count; ++z) {
@@ -86,19 +132,34 @@ int Game::init() {
 			}
 		}
 	}
+	/* */
 
 	m_xTestCam = new GameObject();
 	//m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
 	m_xTestCam->addComponent(ComponentFactory::instance()->create<CameraComponent>());
 	m_xScene->add(m_xTestCam);
 
-	/*m_xTestSun = GOFactory::instance()->createSun(
+	GameObject* player = GOFactory::instance()->createPlayer();
+	player->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+	m_xScene->add(player);
+
+	/* */
+	m_xTestSun = GOFactory::instance()->createSun(
 		glm::vec3(-0.5f, -1.0f, -0.5f),
 		glm::vec3(1.0f, 1.0f, 1.0f),
 		1.0f
 	);
-	m_xScene->add(m_xTestSun);*/
+	m_xScene->add(m_xTestSun);
 
+	GameObject* sun = GOFactory::instance()->createSun(
+		glm::vec3(0.0f, 1.0f, 0.5f),
+		glm::vec3(0.0f, 0.5f, 1.0f),
+		1.0f
+	);
+	m_xScene->add(sun);
+	/* */
+
+	/* *
 	m_xTestPointLight = GOFactory::instance()->createPointLight(
 		glm::vec3(0.0f, 0.5f, 1.0f),
 		12.0f,
@@ -112,11 +173,14 @@ int Game::init() {
 		1.0f
 	);
 	m_xScene->add(m_xTestPointLight2);
+	/* */
 
+	/* *
 	float hue = 0.0f;
 	float r, g, b;
+	unsigned int numLights = 64;
 
-	for (unsigned int i = 0; i < 62; ++i) {
+	for (unsigned int i = 0; i < numLights; ++i) {
 
 		if (hue < 60.0f) {
 		
@@ -155,7 +219,7 @@ int Game::init() {
 			b = 1.0f - ((hue - 300.0f) / 60.0f);
 		}
 
-		hue += 360.0f / 62.0f;
+		hue += 360.0f / (float)numLights;
 
 		GameObject* pl = GOFactory::instance()->createPointLight(
 			glm::vec3(r, g, b),
@@ -164,9 +228,12 @@ int Game::init() {
 		);
 		m_xScene->add(pl);
 	}
+	/* */
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
+
+	return 0;
 }
 
 void Game::loop() {
@@ -191,6 +258,11 @@ void Game::loop() {
 	}
 }
 
+void Game::quit() {
+
+	glfwSetWindowShouldClose(m_xWindow, true);
+}
+
 void Game::update(float delta, float elapsedTime) {
 
 	ComponentFactory::instance()->update(Component::CONTROLLER, delta, elapsedTime);
@@ -202,18 +274,20 @@ void Game::update(float delta, float elapsedTime) {
 	));
 	/* */
 
-	/*m_xTestPointLight->setPosition(glm::vec3(
+	/* *
+	m_xTestPointLight->setPosition(glm::vec3(
 		cosf(elapsedTime * 2.0f) * 8.0f,
 		sinf(elapsedTime * 2.0f) * 8.0f,
 		0.0f
 	));
-
+	
 	m_xTestPointLight2->setPosition(glm::vec3(
 		0.0f,
 		0.0f,
 		cosf(elapsedTime) * 20.0f
-	));*/
+	));
+	/* */
 
-	if (elapsedTime >= 3.0f && elapsedTime < 40.0f)
-		m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 1.0f) * (elapsedTime - 3.0f));
+	//if (elapsedTime >= 3.0f && elapsedTime < 40.0f)
+	//	m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 1.0f) * (elapsedTime - 3.0f));
 }

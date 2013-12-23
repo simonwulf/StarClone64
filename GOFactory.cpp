@@ -8,6 +8,7 @@
 #include "PointLightComponent.h"
 #include "TeapotSpin.h"
 #include "RandomMover.h"
+#include "PlayerController.h"
 
 GOFactory GOFactory::s_xInstance;
 
@@ -31,13 +32,23 @@ GameObject* GOFactory::createEmpty() {
 GameObject* GOFactory::createTeapot() {
 
 	GameObject* teapot = createEmpty();
-	teapot->setRotation(glm::angleAxis(90.0f, 1.0f, 0.0f, 0.0f));
+	teapot->setRotation(glm::angleAxis(-90.0f, 1.0f, 0.0f, 0.0f));
 	teapot->addComponent(ComponentFactory::instance()->create<RenderComponent>());
 	teapot->addComponent(ComponentFactory::instance()->create<TeapotSpin>());
 
 	//teapot->addComponent(ComponentFactory::instance()->create<RandomMover>());
 
 	return teapot;
+}
+
+GameObject* GOFactory::createPlayer() {
+
+	GameObject* player = createEmpty();
+
+	player->addComponent(ComponentFactory::instance()->create<RenderComponent>());
+	player->addComponent(ComponentFactory::instance()->create<PlayerController>());
+
+	return player;
 }
 
 GameObject* GOFactory::createSun(glm::vec3 direction, glm::vec3 color, float strength) {
@@ -60,6 +71,7 @@ GameObject* GOFactory::createPointLight(glm::vec3 color, float radius, float str
 	
 	PointLightComponent* lightComponent = (PointLightComponent*)ComponentFactory::instance()->create<PointLightComponent>();
 	light->addComponent(lightComponent);
+	//light->addComponent(ComponentFactory::instance()->create<RenderComponent>());
 
 	lightComponent->setColor(color);
 	lightComponent->setRadius(radius);

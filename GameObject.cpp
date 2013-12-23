@@ -7,7 +7,7 @@ GameObject::GameObject() {
 
 	m_vPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_vScale = glm::vec3(1.0f);
-	m_qRotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f);
+	m_qRotation = glm::quat();
 
 	m_bUpdateMatrix = true;
 	m_bUpdateInverseMatrix = true;
@@ -60,10 +60,21 @@ const glm::mat4& GameObject::getMatrix() {
 
 const glm::mat4& GameObject::getInverseMatrix() {
 
-	if (m_bUpdateInverseMatrix)
+	if (m_bUpdateInverseMatrix) {
+		
 		m_mInverseMatrix = glm::inverse(getMatrix());
 
+		m_bUpdateInverseMatrix = false;
+	}
+
 	return m_mInverseMatrix;
+}
+
+void GameObject::setMatrix(const glm::mat4& matrix) {
+
+	m_mMatrix = matrix;
+
+	invalidateMatrix();
 }
 
 GameObject* GameObject::getParent() {

@@ -64,8 +64,15 @@ void Renderer::render(Scene* scene) {
 	updateLights(LT_DIRECTIONAL);
 	updateLights(LT_POINT);
 
-	//TODO: move away from recursive approach in favor of a linear loop through all RenderComponents
-	renderNode(scene->getRoot());
+	const ComponentFactory::ComponentList* rc_list = ComponentFactory::instance()->getList(Component::RENDER);
+	for (unsigned int i = 0; i < rc_list->size(); ++i) {
+	
+		RenderComponent* rc = (RenderComponent*)rc_list->at(i);
+		m_xDefaultShaderProgram->uniformMatrix4fv("model", 1, GL_FALSE, (GLfloat*)&rc->getGameObject()->getMatrix());
+
+		if (rc != nullptr)
+			rc->render();
+	}
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
