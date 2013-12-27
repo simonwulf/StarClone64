@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="ControllerComponent.cpp" />
@@ -111,6 +112,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CameraController.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="ControllerComponent.h" />

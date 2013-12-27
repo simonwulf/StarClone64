@@ -3,22 +3,15 @@
 
 #include <vector>
 
-/**
- * Event system
- *
- * I'm doing some weird stuff here, converting between void pointers
- * and method pointers. The internet says that this is bad practice
- * and could lead to undefined behaviour, but it seems to be working fine
- * to me. A safer approach could be taken if we only allow one handler per
- * event type per object. //Simon
- **/
-
 class Event {
 
   public:
 
 	enum Type {
 	
+		GAME_START,
+		GAME_UPDATE,
+
 		KEY_DOWN,
 		KEY_UP,
 
@@ -33,6 +26,14 @@ class Event {
 		COLLISION,
 
 		EVENT_N
+	};
+
+#pragma region event_type_structs
+	
+	struct GameEvent {
+	
+		float delta;
+		float elapsedTime;
 	};
 
 	struct KeyboardEvent {
@@ -63,8 +64,13 @@ class Event {
 		float value;
 	};
 
+#pragma endregion event_type_structs
+
+	Event(Type type);
+
 	union {
 	
+		GameEvent game;
 		KeyboardEvent keyboard;
 		MouseEvent mouse;
 		JoyButtonEvent joyButton;
@@ -81,10 +87,10 @@ class EventDispatcher {
 	virtual ~EventDispatcher();
 
 	template <class T>
-	void addHandler(Event::Type type, T* context, void (T::*handler)(const Event&)) {
+	void registerEventHandler(Event::Type type, T* context, void (T::*handler)(const Event&)) {
 
 		for (unsigned int i = 0; i < m_xHandlers[type].size(); ++i) {
-			if (m_xHandlers[type][i]->handles(context, *(void**)&handler))
+			if (((EventHandler<T>*)m_xHandlers[type][i])->handles(context, handler))
 				return;
 		}
 
@@ -92,10 +98,10 @@ class EventDispatcher {
 	}
 
 	template <class T>
-	void removeHandler(Event::Type type, T* context, void (T::*handler)(const Event&)) {
+	void removeEventHandler(Event::Type type, T* context, void (T::*handler)(const Event&)) {
 	
 		for (unsigned int i = 0; i < m_xHandlers[type].size(); ++i) {
-			if (m_xHandlers[type][i]->handles(context, *(void**)&handler)) {
+			if (((EventHandler<T>*)m_xHandlers[type][i])->handles(context, handler)) {
 				
 				delete m_xHandlers[type][i];
 				m_xHandlers[type].erase(m_xHandlers[type].begin() + i);
@@ -118,13 +124,6 @@ class EventDispatcher {
 	  public:
 
 		virtual void handle(const Event& e) = 0;
-
-		bool handles(void* context, void* handler);
-
-	  protected:
-
-		void* m_xContext;
-		void* m_xHandler;
 	};
 
 	template <class T>
@@ -135,14 +134,23 @@ class EventDispatcher {
 		EventHandler(T* context, void (T::*handler)(const Event&)) {
 
 			m_xContext = context;
-			m_xHandler = *(void**)&handler; //Haxx cast
+			m_xHandler = handler;
 		}
 
 		void handle(const Event& e) {
 		
-			void (T::*handler)(const Event& e) = *(void (T::**)(const Event& e))&m_xHandler; //Haxx cast
-			(((T*)m_xContext)->*handler)(e);
+			(m_xContext->*m_xHandler)(e);
 		}
+
+		bool handles(T* context, void (T::*handler)(const Event&)) {
+		
+			return m_xContext == context && m_xHandler == handler;
+		}
+
+	  private:
+
+		T* m_xContext;
+		void (T::*m_xHandler)(const Event&);
 	};
 
 	typedef std::vector<AbstractEventHandler*> HandlerList;

@@ -11,14 +11,20 @@ class PlayerController : public ControllerComponent {
 	PlayerController();
 	~PlayerController();
 
-	void update(float delta, float elapsedTime);
+	void update(const Event& e);
 
 	void keyDownHandler(const Event& e);
 	void keyUpHandler(const Event& e);
 
   private:
 
-	glm::vec3 m_vVelocity;
+	float m_fMovementSpeed;
+	float m_fYawVelocity;
+	float m_fPitchVelocity;
+
+	float m_fPitch; //radians
+	float m_fYaw; //radians
+	float m_fRoll; //radians
 };
 
 #endif

@@ -28,7 +28,7 @@ class Component {
 	static void operator delete(void* ptr);
 	static unsigned int getAllocatedMemorySize();
 
-	virtual void update(float delta, float elapsedTime);
+	//virtual void update(float delta, float elapsedTime);
 
 	Type getType();
 	GameObject* getGameObject();

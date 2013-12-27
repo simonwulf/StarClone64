@@ -32,9 +32,9 @@ unsigned int Component::getAllocatedMemorySize() {
 	return s_iAllocatedMemorySize;
 }
 
-void Component::update(float delta, float elapsedTime) {
+/*void Component::update(float delta, float elapsedTime) {
 
-}
+}*/
 
 Component::Type Component::getType() {
 

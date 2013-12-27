@@ -24,7 +24,7 @@ class ComponentFactory {
 	}
 
 	void destroy(Component* component);
-	void update(Component::Type type, float delta, float elapsedTime);
+	//void update(Component::Type type, float delta, float elapsedTime);
 
 	const ComponentList* getList(Component::Type type);
 

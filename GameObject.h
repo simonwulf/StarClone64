@@ -25,7 +25,9 @@ class GameObject {
 
 	void setMatrix(const glm::mat4& matrix);
 
-	//RenderComponent* getRenderComponent() const;
+	const glm::vec3& forward();
+	const glm::vec3& up();
+	const glm::vec3& right();
 
 	GameObject* getParent();
 

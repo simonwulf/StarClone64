@@ -74,7 +74,23 @@ void GameObject::setMatrix(const glm::mat4& matrix) {
 
 	m_mMatrix = matrix;
 
-	invalidateMatrix();
+	m_bUpdateMatrix = false;
+	m_bUpdateInverseMatrix = true;
+}
+
+const glm::vec3& GameObject::forward() {
+
+	return glm::vec3(getMatrix() * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
+}
+
+const glm::vec3& GameObject::up() {
+
+	return glm::vec3(getMatrix() * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
+}
+
+const glm::vec3& GameObject::right() {
+
+	return glm::vec3(getMatrix() * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));
 }
 
 GameObject* GameObject::getParent() {

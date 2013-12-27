@@ -1,5 +1,10 @@
 #include "Event.h"
 
+Event::Event(Type type) {
+
+	this->type = type;
+}
+
 EventDispatcher::~EventDispatcher() {
 
 	for (unsigned int t = 0; t < Event::EVENT_N; ++t) {
@@ -8,9 +13,4 @@ EventDispatcher::~EventDispatcher() {
 			delete m_xHandlers[t][i];
 		}
 	}
-}
-
-bool EventDispatcher::AbstractEventHandler::handles(void* context, void* handler) {
-
-	return (m_xContext == context && m_xHandler == handler);
 }

@@ -3,7 +3,7 @@
 #include "GOFactory.h"
 #include "ComponentFactory.h"
 #include "RenderComponent.h"
-#include "PlayerController.h"
+#include "CameraController.h"
 
 #pragma region glfw_callbacks
 
@@ -12,7 +12,7 @@ void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
 	if (key == GLFW_KEY_ESCAPE)
 		Game::instance()->quit();
 
-	Event e;
+	Event e((Event::Type)-1);
 
 	switch (action) {
 
@@ -132,16 +132,18 @@ int Game::init() {
 			}
 		}
 	}
-	/* */
-
-	m_xTestCam = new GameObject();
-	//m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
-	m_xTestCam->addComponent(ComponentFactory::instance()->create<CameraComponent>());
-	m_xScene->add(m_xTestCam);
 
 	GameObject* player = GOFactory::instance()->createPlayer();
 	player->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
 	m_xScene->add(player);
+
+	m_xTestCam = new GameObject();
+	//m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+	m_xTestCam->addComponent(ComponentFactory::instance()->create<CameraComponent>());
+	CameraController* cc = (CameraController*)ComponentFactory::instance()->create<CameraController>();
+	cc->init(player);
+	m_xTestCam->addComponent(cc);
+	m_xScene->add(m_xTestCam);
 
 	/* */
 	m_xTestSun = GOFactory::instance()->createSun(
@@ -242,6 +244,8 @@ void Game::loop() {
 	m_fElapsedTime = 0.0f;
 	float delta = 0.0f;
 
+	dispatchEvent(Event(Event::GAME_START));
+
 	while(!glfwWindowShouldClose(m_xRenderer->getWindow())) {
 	
 		glfwPollEvents();
@@ -265,7 +269,13 @@ void Game::quit() {
 
 void Game::update(float delta, float elapsedTime) {
 
-	ComponentFactory::instance()->update(Component::CONTROLLER, delta, elapsedTime);
+	Event e(Event::GAME_UPDATE);
+	e.game.delta = delta;
+	e.game.elapsedTime = elapsedTime;
+
+	dispatchEvent(e);
+
+	//ComponentFactory::instance()->update(Component::CONTROLLER, delta, elapsedTime);
 
 	/* *
 	m_xTestCam->setRotation(glm::angleAxis(

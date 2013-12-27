@@ -2,6 +2,7 @@
 #define TEAPOTSPIN_H
 
 #include "ControllerComponent.h"
+#include "Event.h"
 
 class TeapotSpin : public ControllerComponent {
 
@@ -10,7 +11,7 @@ class TeapotSpin : public ControllerComponent {
 	TeapotSpin();
 	~TeapotSpin();
 
-	void update(float delta, float elapsedTime);
+	void update(const Event& e);
 };
 
 #endif
