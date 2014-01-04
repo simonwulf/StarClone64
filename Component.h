@@ -41,8 +41,9 @@ class Component {
 
 	GameObject* m_xGameObject;
 
-	friend void GameObject::addComponent(Component* component);
-	friend void GameObject::removeComponent(Component* component);
+	//friend Component* GameObject::addComponent(Component* component);
+	//friend void GameObject::removeComponent(Component* component);
+	friend class GameObject;
 };
 
 #endif

@@ -58,7 +58,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;glu32.lib;opengl32.lib;glfw3dll.lib;FreeImage.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glu32.lib;opengl32.lib;glfw3dll.lib;FreeImage.lib;assimp.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -76,7 +76,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glew32.lib;glu32.lib;opengl32.lib;glfw3dll.lib;FreeImage.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glu32.lib;opengl32.lib;glfw3dll.lib;FreeImage.lib;assimp.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -95,8 +95,11 @@
     <ClCompile Include="LightComponent.cpp" />
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshManager.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelManager.cpp" />
+    <ClCompile Include="ModelRenderComponent.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
     <ClCompile Include="RandomMover.cpp" />
@@ -125,7 +128,9 @@
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshManager.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelManager.h" />
+    <ClInclude Include="ModelRenderComponent.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PointLightComponent.h" />
     <ClInclude Include="RandomMover.h" />

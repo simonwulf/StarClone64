@@ -1,8 +1,9 @@
 #ifndef RANDOMMOVER_H
 #define RANDOMMOVER_H
 
-#include "stdafx.h"
+#include <glm/core/type_vec3.hpp>
 #include "ControllerComponent.h"
+#include "Event.h"
 
 class RandomMover : public ControllerComponent {
 
@@ -11,7 +12,7 @@ class RandomMover : public ControllerComponent {
 	RandomMover();
 	~RandomMover();
 
-	void update(float delta, float elapsedTime);
+	void update(const Event& e);
 
 private:
 

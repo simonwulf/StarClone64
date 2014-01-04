@@ -27,11 +27,16 @@ layout(std140) uniform PointLights {
 
 uniform uint dir_light_count;
 uniform uint point_light_count;
+uniform vec3 ambient_light;
+
+uniform sampler2D diffuse;
 
 in vec3 world_position;
 in vec3 cam_position;
 in vec3 world_normal;
 in vec3 cam_normal;
+
+in vec2 texture_coords;
 
 out vec4 color_out;
 
@@ -43,22 +48,22 @@ void main() {
 		1.0
 	);*/
 
-	vec3 color = vec3(0.0);
-	vec3 world_normal = normalize(::world_normal);
+	vec3 lighting = vec3(0.0);
+	vec3 world_normal = normalize(world_normal);
+
+	float light_wrap = 0.0;
 
 	//Directional lighting test
 	/* */
 	for (uint i = 0; i < dir_light_count; ++i) {
 		
 		vec3 light_dir = normalize(dir_lights[i].direction);
-		float cos_theta = max(dot(world_normal, -light_dir), 0.0);
+		float cos_theta = max((light_wrap + dot(world_normal, -light_dir)) / (1.0 + light_wrap), 0.0);
 		
-		color += dir_lights[i].color * cos_theta * dir_lights[i].strength;
-			//+ vec3(1.0, 1.0, 0.0) * pow(cos_theta, 50);
+		lighting += dir_lights[i].color * cos_theta * dir_lights[i].strength
+			+ dir_lights[i].color * min(pow(cos_theta, 50) * dir_lights[i].strength, 1.0);
 	}
 	/* */
-
-	float light_wrap = 0.0;
 
 	//Point lights test
 	/* */
@@ -74,16 +79,17 @@ void main() {
 		float cos_theta = max((light_wrap + dot(world_normal, -light_dir)) / (1.0 + light_wrap), 0.0);
 		//cos_theta = pow(cos_theta, 2);
 
-		color +=
+		lighting +=
 			point_lights[i].color * min(cos_theta * falloff * point_lights[i].strength, 1.0) +
 			point_lights[i].color * min(pow(cos_theta, 50) * falloff * point_lights[i].strength, 1.0);
 
 		//Rim light test
 		float rim_cos_theta = max(dot(normalize(cam_normal), normalize(-cam_position)), 0.0);
-		color += point_lights[i].color * pow(max(1.0 - rim_cos_theta, 0.0), 2) * falloff * point_lights[i].strength * (1.0 - cos_theta);
+		lighting += point_lights[i].color * pow(max(1.0 - rim_cos_theta, 0.0), 2) * falloff * point_lights[i].strength * (1.0 - cos_theta);
 	}
 	/* */
 
-	color_out = vec4(color, 1.0);
+	color_out = vec4(lighting + ambient_light, 1.0) * texture2D(diffuse, texture_coords);
+	//color_out = vec4(lighting, 1.0);
 	//color_out = vec4(normal * light_amount, 1.0);
 }

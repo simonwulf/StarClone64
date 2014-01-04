@@ -90,7 +90,7 @@ int Game::init() {
 
 	glfwWindowHint(GLFW_RESIZABLE, 0);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", NULL/*glfwGetPrimaryMonitor()*/, NULL);
+	m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", nullptr/*glfwGetPrimaryMonitor()*/, nullptr);
 	glfwMakeContextCurrent(m_xWindow);
 
 	glfwSetKeyCallback(m_xWindow, glfwKeyCallback);
@@ -115,7 +115,7 @@ int Game::init() {
 
 	//Test purposes
 	/* Teapots */
-	unsigned int count = 10;
+	unsigned int count = 1;
 	float dist = 5.0f;
 	for (unsigned int z = 0; z < count; ++z) {
 		for (unsigned int y = 0; y < count; ++y) {
@@ -139,10 +139,8 @@ int Game::init() {
 
 	m_xTestCam = new GameObject();
 	//m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
-	m_xTestCam->addComponent(ComponentFactory::instance()->create<CameraComponent>());
-	CameraController* cc = (CameraController*)ComponentFactory::instance()->create<CameraController>();
-	cc->init(player);
-	m_xTestCam->addComponent(cc);
+	m_xTestCam->addComponent<CameraComponent>();
+	m_xTestCam->addComponent<CameraController>()->init(player);
 	m_xScene->add(m_xTestCam);
 
 	/* */
@@ -177,7 +175,7 @@ int Game::init() {
 	m_xScene->add(m_xTestPointLight2);
 	/* */
 
-	/* *
+	/* */
 	float hue = 0.0f;
 	float r, g, b;
 	unsigned int numLights = 64;

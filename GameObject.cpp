@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "ComponentFactory.h"
+#include "Component.h"
 
 unsigned int GameObject::s_iAllocatedMemorySize = 0;
 
@@ -142,15 +143,6 @@ void GameObject::removeChild(GameObject* child) {
 	}
 }
 
-void GameObject::addComponent(Component* component) {
-
-	if (component->m_xGameObject != nullptr)
-		throw std::invalid_argument("A component can not be moved between GameObjects");
-
-	component->m_xGameObject = this;
-	m_xComponents.push_back(component);
-}
-
 void GameObject::removeComponent(Component* component) {
 
 	if (component->m_xGameObject != this)
@@ -169,9 +161,9 @@ void GameObject::removeComponent(Component* component) {
 
 Component* GameObject::getComponent(unsigned int type, unsigned int offset) {
 
-	for (unsigned int i = offset; i < m_xComponents.size(); ++i) {
+	for (unsigned int i = 0; i < m_xComponents.size(); ++i) {
 	
-		if (m_xComponents[i]->getType() == type)
+		if (m_xComponents[i]->getType() == type && i == offset++)
 			return m_xComponents[i];
 	}
 

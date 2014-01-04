@@ -1,31 +1,70 @@
 #include "TextureManager.h"
 #include "LogManager.h"
 
-TextureManager TextureManager::m_instance;
+TextureManager TextureManager::m_sInstance;
 
 TextureManager::TextureManager() {
 
-	m_textureTable = new std::unordered_map<std::string, Texture*>();
+	//m_textureTable = new std::unordered_map<std::string, Texture*>();
 	Log::Writeln("TextureManager started.");
 }
 
 TextureManager::~TextureManager(void) {
 
 	clearCache();
-	delete m_textureTable;
+	//delete m_textureTable;
 }
 
-Texture* TextureManager::getTexture2D( std::string textureName ) {
+TextureManager* TextureManager::instance() {
 
-	Log::Write("Texture requested " + textureName + "\t");
-	try {
+	return &m_sInstance;
+}
+
+Texture* TextureManager::getTexture2D(std::string filepath) {
+
+	Log::Write("Texture requested " + filepath + "\t");
+
+	TextureMap::iterator itr = m_xTextureCache.find(filepath);
+	Texture* ret;
+
+	if (itr == m_xTextureCache.end()) {
+	
+		ret = new Texture(filepath);
+		m_xTextureCache[filepath] = ret;
+
+		#pragma region Logging
+		Log::Write("loaded first time", Log::COLOR_LIGHT_AQUA);
+
+		if(ret == nullptr)
+			Log::Warn("\twarning: null texture!");
+		else
+			Log::Writeln("");
+		#pragma endregion
+
+	} else {
+	
+		ret = itr->second;
+
+		#pragma region Logging
+		Log::Write("returned from cache", Log::COLOR_LIGHT_AQUA);
+
+		if(ret == nullptr)
+			Log::Warn("\twarning: null texture!");
+		else
+			Log::Writeln("");
+		#pragma endregion
+	}
+
+	return ret;
+
+	/*try {
 		Texture* texture = getInstance().m_textureTable->at(textureName);
 
 		#pragma region Logging
 		Log::Write("returned from cache", Log::COLOR_LIGHT_AQUA);
 
-		if(texture->isDummy())
-			Log::Warn("\twarning: dummy texture!");
+		if(texture == nullptr)
+			Log::Warn("\twarning: null texture!");
 		else
 			Log::Writeln("");
 		#pragma endregion
@@ -35,10 +74,10 @@ Texture* TextureManager::getTexture2D( std::string textureName ) {
 	catch (std::out_of_range) {
 		getInstance().loadTexture(textureName);
 		return getInstance().getTexture2D(textureName);
-	}
+	}*/
 }
 
-void TextureManager::loadTexture( std::string textureName ) {
+/*void TextureManager::loadTexture( std::string textureName ) {
 
 	Log::Write("loading texture " + textureName + "\t");
 	FREE_IMAGE_FORMAT fileFormat;
@@ -91,24 +130,23 @@ void TextureManager::loadTexture( std::string textureName ) {
 	m_textureTable->insert(std::make_pair<std::string, Texture*>(textureName, texture));
 
 	Log::Success("success!");
-}
+}*/
 
 void TextureManager::clearCache() {
 
-	for(std::unordered_map<std::string, Texture*>::iterator it = getInstance().m_textureTable->begin();
-		it != getInstance().m_textureTable->end(); ++it) {
+	for(TextureMap::iterator it = m_xTextureCache.begin(); it != m_xTextureCache.end(); ++it) {
 
-		Texture* texture = it->second;
+		//Texture* texture = it->second;
 
-		glDeleteTextures(1, &(texture->getTexID()));
-		delete texture;
+		//glDeleteTextures(1, &(texture->getTexID()));
+		delete it->second;
 	}
 
-	getInstance().m_textureTable->clear();
+	m_xTextureCache.clear();
 	Log::Writeln("TextureManager cache cleared");
 }
 
-Texture* TextureManager::generateDummy() {
+/*Texture* TextureManager::generateDummy() {
 
 	return new Texture();
-}
+}*/

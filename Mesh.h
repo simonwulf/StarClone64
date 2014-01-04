@@ -12,6 +12,8 @@ for loading and returning meshes to object which utilize them.
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+#include "Material.h"
+
 struct vertex {
 
 	glm::vec3 position;
@@ -19,45 +21,46 @@ struct vertex {
 	glm::vec2 texcoords;
 };
 
-//Grouping buffer IDs as struct for readability
-struct meshBufferIDs {
-	GLuint vertex;
-	GLuint index;
-	const static short length = 2;
-};
-
 class Mesh {
 
   public:
 
-	Mesh();
+	Mesh(unsigned int vertexCount, vertex* vertexArray, unsigned int indexCount, GLuint* indexArray, Material* material);
 	~Mesh();
 
 	unsigned int getVertexCount() const;
 	unsigned int getIndexCount() const;
 	unsigned int getTriCount() const;
 
-	vertex* getVertexArray() const;
-	GLuint* getIndexArray() const;
+	const Material* getMaterial() const;
 
-	void setVertexArray(unsigned int vertCount, vertex* vertexArray);
-	void setIndexArray(unsigned int indicesCount, GLuint* indexArray);
+	//vertex* getVertexArray() const;
+	//GLuint* getIndexArray() const;
 
-	meshBufferIDs& getBufferIDs();
-	GLuint getVertexBufferID();
-	GLuint getIndexBufferID();
+	//void setVertexArray(unsigned int vertCount, vertex* vertexArray);
+	//void setIndexArray(unsigned int indicesCount, GLuint* indexArray);
 
-	bool isDummy();
+	GLuint getVertexBufferID() const;
+	GLuint getIndexBufferID() const;
+
+	//bool isDummy();
 
   private:
 
 	unsigned int m_iVertexCount;
-	vertex* m_xVertices;
+	//vertex* m_xVertices;
 
 	unsigned int m_iIndexCount;
-	GLuint* m_iIndices;
+	//GLuint* m_iIndices;
 
-	meshBufferIDs m_xGLBuffers;
+	Material* m_xMaterial;
+
+	struct meshBufferIDs {
+		
+		GLuint vertex;
+		GLuint index;
+	
+	} m_xGLBuffers;
 };
 
 #endif

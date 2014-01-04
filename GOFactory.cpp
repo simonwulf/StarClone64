@@ -3,7 +3,7 @@
 #include "LogManager.h"
 #include "ComponentFactory.h"
 #include "CameraComponent.h"
-#include "RenderComponent.h"
+#include "ModelRenderComponent.h"
 #include "DirectionalLightComponent.h"
 #include "PointLightComponent.h"
 #include "TeapotSpin.h"
@@ -32,9 +32,10 @@ GameObject* GOFactory::createEmpty() {
 GameObject* GOFactory::createTeapot() {
 
 	GameObject* teapot = createEmpty();
-	teapot->setRotation(glm::angleAxis(-90.0f, 1.0f, 0.0f, 0.0f));
-	teapot->addComponent(ComponentFactory::instance()->create<RenderComponent>());
-	teapot->addComponent(ComponentFactory::instance()->create<TeapotSpin>());
+	//teapot->setRotation(glm::angleAxis(-90.0f, 1.0f, 0.0f, 0.0f));
+	//teapot->addComponent(ComponentFactory::instance()->create<RenderComponent>());
+	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/Zelda.obj");
+	//teapot->addComponent<TeapotSpin>();
 
 	//teapot->addComponent(ComponentFactory::instance()->create<RandomMover>());
 
@@ -45,8 +46,8 @@ GameObject* GOFactory::createPlayer() {
 
 	GameObject* player = createEmpty();
 
-	player->addComponent(ComponentFactory::instance()->create<RenderComponent>());
-	player->addComponent(ComponentFactory::instance()->create<PlayerController>());
+	player->addComponent<ModelRenderComponent>()->init("test/mesh_test/teapot.obj");
+	player->addComponent<PlayerController>();
 
 	return player;
 }
@@ -55,8 +56,7 @@ GameObject* GOFactory::createSun(glm::vec3 direction, glm::vec3 color, float str
 
 	GameObject* sun = createEmpty();
 	
-	DirectionalLightComponent* lightComponent = (DirectionalLightComponent*)ComponentFactory::instance()->create<DirectionalLightComponent>();
-	sun->addComponent(lightComponent);
+	DirectionalLightComponent* lightComponent = sun->addComponent<DirectionalLightComponent>();
 
 	lightComponent->setDirection(direction);
 	lightComponent->setColor(color);
@@ -69,15 +69,14 @@ GameObject* GOFactory::createPointLight(glm::vec3 color, float radius, float str
 
 	GameObject* light = createEmpty();
 	
-	PointLightComponent* lightComponent = (PointLightComponent*)ComponentFactory::instance()->create<PointLightComponent>();
-	light->addComponent(lightComponent);
+	PointLightComponent* lightComponent = light->addComponent<PointLightComponent>();
 	//light->addComponent(ComponentFactory::instance()->create<RenderComponent>());
 
 	lightComponent->setColor(color);
 	lightComponent->setRadius(radius);
 	lightComponent->setStrength(strength);
 
-	light->addComponent(ComponentFactory::instance()->create<RandomMover>());
+	light->addComponent<RandomMover>();
 
 	return light;
 }

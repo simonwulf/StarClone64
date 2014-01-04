@@ -5,28 +5,31 @@
 #include <GL/glew.h>
 #include <string>
 #include <unordered_map>
-#include "FreeImage.h"
 
 class TextureManager {
 
-	public:
-		~TextureManager();
+  public:
+	
+	~TextureManager();
 
-		static TextureManager& getInstance(){ return m_instance; }
-		static void clearCache();
+	static TextureManager* instance();
+	void clearCache();
 
-		static Texture* getTexture2D(std::string textureName);
+	Texture* getTexture2D(std::string textureName);
 
-	private:
-		TextureManager();
-		TextureManager(const TextureManager&);
-		void operator=(const TextureManager&);
+  private:
 
-		static TextureManager m_instance;
-		std::unordered_map<std::string, Texture*>* m_textureTable;
+	TextureManager();
+	TextureManager(const TextureManager&);
+	void operator=(const TextureManager&);
 
-		void loadTexture(std::string textureName);
-		Texture* generateDummy();
+	static TextureManager m_sInstance;
+
+	typedef std::unordered_map<std::string, Texture*> TextureMap;
+	TextureMap m_xTextureCache;
+
+	//void loadTexture(std::string textureName);
+	//Texture* generateDummy();
 };
 
 #endif

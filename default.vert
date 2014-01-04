@@ -2,6 +2,7 @@
 
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec3 vertex_normal;
+layout(location = 2) in vec2 vertex_texture_coords;
 
 uniform mat4 model;
 uniform mat4 projection;
@@ -11,6 +12,8 @@ out vec3 world_position;
 out vec3 cam_position;
 out vec3 world_normal;
 out vec3 cam_normal;
+
+out vec2 texture_coords;
 
 void main() {
 
@@ -23,4 +26,6 @@ void main() {
 	cam_normal = (view * world_space_normal).xyz;
 	world_position = world_space_position.xyz;
 	cam_position = cam_space_position.xyz;
+
+	texture_coords = vertex_texture_coords;
 }

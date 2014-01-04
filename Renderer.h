@@ -52,7 +52,7 @@ class Renderer {
 	GLuint m_iDirLightsBuffer;
 	GLuint m_iPointLightsBuffer;
 
-	void renderNode(GameObject* node);
+	//void renderNode(GameObject* node);
 
 	void updateLights(LightType type);
 };

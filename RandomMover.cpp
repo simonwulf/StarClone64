@@ -1,17 +1,25 @@
+#include "stdafx.h"
+
 #include "RandomMover.h"
+
+#include "Game.h"
 
 RandomMover::RandomMover() {
 
 	updateTarget();
 
 	m_fSpeed = 10.0f;
+
+	Game::instance()->registerEventHandler<RandomMover>(Event::GAME_UPDATE, this, &RandomMover::update);
 }
 
 RandomMover::~RandomMover() {
 
 }
 
-void RandomMover::update(float delta, float elapsedTime) {
+void RandomMover::update(const Event& e) {
+
+	float delta = e.game.delta;
 
 	GameObject* go = getGameObject();
 

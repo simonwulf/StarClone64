@@ -9,17 +9,9 @@ class RenderComponent : public Component {
   public:
 
 	RenderComponent();
-	~RenderComponent();
+	virtual ~RenderComponent();
 
-	//Mesh* getMesh() const;
-
-	void render() const;
-
-  private:
-
-	Mesh* m_xMesh;
-	//Material* m_xMaterial;
-	//ShaderProgram* m_xShaderProgram;
+	virtual void render() = 0;
 };
 
 #endif

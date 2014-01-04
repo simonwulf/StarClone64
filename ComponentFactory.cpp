@@ -1,11 +1,18 @@
 #include "ComponentFactory.h"
 
 #include "LogManager.h"
+#include "Component.h"
 
 ComponentFactory ComponentFactory::s_xInstance;
 
 ComponentFactory::ComponentFactory() {
 
+	m_xComponents = new ComponentList[Component::TYPE_N];
+}
+
+ComponentFactory::~ComponentFactory() {
+
+	delete [] m_xComponents;
 }
 
 ComponentFactory* ComponentFactory::instance() {
@@ -38,7 +45,7 @@ void ComponentFactory::destroy(Component* component) {
 	}
 }*/
 
-const ComponentFactory::ComponentList* ComponentFactory::getList(Component::Type type) {
+const ComponentFactory::ComponentList* ComponentFactory::getList(unsigned int type) {
 
 	return &m_xComponents[type];
 }

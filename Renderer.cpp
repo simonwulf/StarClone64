@@ -49,17 +49,9 @@ void Renderer::render(Scene* scene) {
 
 	glUseProgram(m_xDefaultShaderProgram->glID());
 
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-
-	//Vertex positions
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), 0);
-	
-	//Vertex normals
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (const GLvoid*)sizeof(glm::vec3));
-
 	m_xDefaultShaderProgram->uniformMatrix4fv("projection", 1, GL_FALSE, (GLfloat*)&m_mPerspective);
 	m_xDefaultShaderProgram->uniformMatrix4fv("view", 1, GL_FALSE, (GLfloat*)&Camera::currentCamera->getMatrix());
+	m_xDefaultShaderProgram->uniform3f("ambient_light", 0.5f, 0.5f, 0.5f);
 
 	updateLights(LT_DIRECTIONAL);
 	updateLights(LT_POINT);
@@ -69,29 +61,13 @@ void Renderer::render(Scene* scene) {
 	
 		RenderComponent* rc = (RenderComponent*)rc_list->at(i);
 		m_xDefaultShaderProgram->uniformMatrix4fv("model", 1, GL_FALSE, (GLfloat*)&rc->getGameObject()->getMatrix());
+		m_xDefaultShaderProgram->uniform1i("diffuse", 0);
 
 		if (rc != nullptr)
 			rc->render();
 	}
 
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-
 	glfwSwapBuffers(m_xWindow);
-}
-
-void Renderer::renderNode(GameObject* node) {
-
-	m_xDefaultShaderProgram->uniformMatrix4fv("model", 1, GL_FALSE, (GLfloat*)&node->getMatrix());
-
-	RenderComponent* rc = (RenderComponent*)node->getComponent(Component::RENDER);
-	if (rc != nullptr)
-		rc->render();
-
-	for (unsigned int i = 0; i < node->numChildren(); ++i) {
-	
-		renderNode(node->childAt(i));
-	}
 }
 
 void Renderer::updateLights(Renderer::LightType type) {

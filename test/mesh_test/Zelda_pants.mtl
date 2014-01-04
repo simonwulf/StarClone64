@@ -1,0 +1,101 @@
+# Blender MTL File: 'Zelda_pants.blend'
+# Material Count: 9
+
+newmtl Zelda_Belt_Zelda_Belt.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd Zelda_Belt.png
+map_d Zelda_Belt.png
+
+newmtl Zelda_Body_Zelda_Body.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Zelda_Body.png
+map_d Zelda_Body.png
+
+newmtl Zelda_Eye_0_Zelda_Eye.0.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd Zelda_Eye.0.png
+map_d Zelda_Eye.0.png
+
+newmtl Zelda_Eyeball_Zelda_Eyeball.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.544118 0.544118 0.544118
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Zelda_Eyeball.png
+map_d Zelda_Eyeball.png
+
+newmtl Zelda_Face_Zelda_Face.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Zelda_Face.png
+map_d Zelda_Face.png
+
+newmtl Zelda_Hair_Zelda_Hair.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.176471 0.176471 0.176471
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Zelda_Hair.png
+map_d Zelda_Hair.png
+
+newmtl Zelda_Hand.001_Zelda_Hand.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Zelda_Hand.png
+map_d Zelda_Hand.png
+
+newmtl Zelda_Hand_Zelda_Hand.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Zelda_Hand.png
+map_d Zelda_Hand.png
+
+newmtl Zelda_Stole_Zelda_Stole.png
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.512000 0.512000 0.512000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Zelda_Stole.png
+map_d Zelda_Stole.png

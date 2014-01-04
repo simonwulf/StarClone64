@@ -2,20 +2,22 @@
 #define TEXTURE_H
 
 #include <GL/glew.h>
+#include <string>
 
 class Texture {
 
   public:
 
-	Texture();
+	Texture(const std::string& filepath);
 	~Texture();
 
-	GLuint& getTexID();
+	GLuint getTexID() const;
 
-	bool isDummy();
+	//bool isDummy();
 
-	private:
-		GLuint m_texID;
+  private:
+	
+	GLuint m_iGLTextureID;
 };
 
 #endif

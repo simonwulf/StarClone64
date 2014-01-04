@@ -8,6 +8,8 @@
 #include <glext.h>
 #include <wglext.h>
 #include <glm/glm.hpp>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
 #include <Windows.h>
 
 #endif

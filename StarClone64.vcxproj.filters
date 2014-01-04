@@ -87,9 +87,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="MeshManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -128,6 +125,18 @@
     </ClCompile>
     <ClCompile Include="CameraController.cpp">
       <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelRenderComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\Visual</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,9 +185,6 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="MeshManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TextureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -217,6 +223,15 @@
     </ClInclude>
     <ClInclude Include="CameraController.h">
       <Filter>Header Files\GameSpecific\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\Visual</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelRenderComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

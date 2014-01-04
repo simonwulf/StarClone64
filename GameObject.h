@@ -7,7 +7,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <vector>
 
-class Component;
+#include "ComponentFactory.h"
 
 class GameObject {
 
@@ -36,9 +36,21 @@ class GameObject {
 	void addChild(GameObject* child);
 	void removeChild(GameObject* child);
 
-	unsigned int numComponents() const;
-	void addComponent(Component* component);
+	template <class T>
+	T* addComponent() {
+		
+		T* component = ComponentFactory::instance()->create<T>();
+
+		if (component->m_xGameObject != nullptr)
+		throw std::invalid_argument("A component can not be moved between GameObjects");
+
+		component->m_xGameObject = this;
+		m_xComponents.push_back(component);
+
+		return component;
+	}
 	void removeComponent(Component* component);
+	unsigned int numComponents() const;
 	Component* getComponent(unsigned int type, unsigned int offset = 0);
 	unsigned int getComponents(unsigned int type, Component* dest[]);
 
