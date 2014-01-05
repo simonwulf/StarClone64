@@ -7,14 +7,22 @@
 #include <random>
 #include <ctime>
 
-#include "Event.h"
+#include "EventDispatcher.h"
 #include "LogManager.h"
 #include "Renderer.h"
-#include "Scene.h"
+
+class Scene;
 
 class Game : public EventDispatcher {
 
   public:
+
+	enum State {
+	
+		MENU_STATE,
+		PLAY_STATE,
+		PAUSE_STATE
+	};
 
 	Game();
 	~Game();
@@ -24,21 +32,19 @@ class Game : public EventDispatcher {
 	void loop();
 	void quit();
 
+	void setState(State state);
+
 	static Game* instance();
 
   private:
 
 	static Game* s_xInstance;
 
+	State m_iState;
+
 	GLFWwindow* m_xWindow;
 	Renderer* m_xRenderer;
-	Scene* m_xScene;
-
-	GameObject* m_xTestObj;
-	GameObject* m_xTestCam;
-	GameObject* m_xTestSun;
-	GameObject* m_xTestPointLight;
-	GameObject* m_xTestPointLight2;
+	Scene* m_xPlayScene;
 
 	clock_t m_iLastTime;
 	clock_t m_iStartTime;
@@ -46,6 +52,8 @@ class Game : public EventDispatcher {
 
 	void update(float delta, float elapsedTime);
 	void render();
+
+	Event& makeGameEvent(Event::Type type);
 };
 
 #endif

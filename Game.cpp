@@ -1,9 +1,7 @@
 #include "Game.h"
-
 #include "GOFactory.h"
-#include "ComponentFactory.h"
-#include "RenderComponent.h"
-#include "CameraController.h"
+
+#include "PlayScene.h"
 
 #pragma region glfw_callbacks
 
@@ -51,13 +49,10 @@ Game::~Game() {
 
 	glfwTerminate();
 
-	//delete m_xTestObj;
-	delete m_xTestCam;
-
 	GOFactory::instance()->cleanUp();
 
 	delete m_xRenderer;
-	delete m_xScene;
+	delete m_xPlayScene;
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
@@ -90,7 +85,8 @@ int Game::init() {
 
 	glfwWindowHint(GLFW_RESIZABLE, 0);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", nullptr/*glfwGetPrimaryMonitor()*/, nullptr);
+	//m_xWindow = glfwCreateWindow(1920, 1080, "OpenGL Window", glfwGetPrimaryMonitor(), nullptr);
+	m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", nullptr, nullptr);
 	glfwMakeContextCurrent(m_xWindow);
 
 	glfwSetKeyCallback(m_xWindow, glfwKeyCallback);
@@ -111,127 +107,12 @@ int Game::init() {
 	std::cout << "GLEW version " << glewGetString(GLEW_VERSION) << "\n";
 
 	m_xRenderer = new Renderer(m_xWindow);
-	m_xScene = new Scene();
-
-	//Test purposes
-	/* Teapots */
-	unsigned int count = 1;
-	float dist = 5.0f;
-	for (unsigned int z = 0; z < count; ++z) {
-		for (unsigned int y = 0; y < count; ++y) {
-			for (unsigned int x = 0; x < count; ++x) {
-	
-				float start = -dist * (float)(count-1)/2.0f;
-
-				GameObject* obj = GOFactory::instance()->createTeapot();
-				obj->setPosition(
-					glm::vec3(start, start, start) +
-					glm::vec3(dist * x, dist * y, dist * z)
-				);
-				m_xScene->getRoot()->addChild(obj);
-			}
-		}
-	}
-
-	GameObject* player = GOFactory::instance()->createPlayer();
-	player->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
-	m_xScene->add(player);
-
-	m_xTestCam = new GameObject();
-	//m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
-	m_xTestCam->addComponent<CameraComponent>();
-	m_xTestCam->addComponent<CameraController>()->init(player);
-	m_xScene->add(m_xTestCam);
-
-	/* */
-	m_xTestSun = GOFactory::instance()->createSun(
-		glm::vec3(-0.5f, -1.0f, -0.5f),
-		glm::vec3(1.0f, 1.0f, 1.0f),
-		1.0f
-	);
-	m_xScene->add(m_xTestSun);
-
-	GameObject* sun = GOFactory::instance()->createSun(
-		glm::vec3(0.0f, 1.0f, 0.5f),
-		glm::vec3(0.0f, 0.5f, 1.0f),
-		1.0f
-	);
-	m_xScene->add(sun);
-	/* */
-
-	/* *
-	m_xTestPointLight = GOFactory::instance()->createPointLight(
-		glm::vec3(0.0f, 0.5f, 1.0f),
-		12.0f,
-		1.0f
-	);
-	m_xScene->add(m_xTestPointLight);
-
-	m_xTestPointLight2 = GOFactory::instance()->createPointLight(
-		glm::vec3(1.0f, 0.0f, 0.5f),
-		12.0f,
-		1.0f
-	);
-	m_xScene->add(m_xTestPointLight2);
-	/* */
-
-	/* */
-	float hue = 0.0f;
-	float r, g, b;
-	unsigned int numLights = 64;
-
-	for (unsigned int i = 0; i < numLights; ++i) {
-
-		if (hue < 60.0f) {
-		
-			r = 1.0f;
-			g = hue / 60.0f;
-			b = 0.0f;
-		
-		} else if (hue < 120.0f) {
-		
-			r = 1.0f - ((hue-60.0f) / 60.0f);
-			g = 1.0f;
-			b = 0.0f;
-		
-		} else if (hue < 180.0f) {
-		
-			r = 0.0f;
-			g = 1.0f;
-			b = (hue - 120.0f) / 60.0f;
-
-		} else if (hue < 240.0f) {
-		
-			r = 0.0f;
-			g = 1.0f - ((hue - 180.0f) / 60.0f);
-			b = 1.0f;
-
-		} else if (hue < 300.0f) {
-		
-			r = (hue - 240.0f) / 60.0f;
-			g = 0.0f;
-			b = 1.0f;
-
-		} else {
-		
-			r = 1.0f;
-			g = 0.0f;
-			b = 1.0f - ((hue - 300.0f) / 60.0f);
-		}
-
-		hue += 360.0f / (float)numLights;
-
-		GameObject* pl = GOFactory::instance()->createPointLight(
-			glm::vec3(r, g, b),
-			8.0f,
-			1.0f
-		);
-		m_xScene->add(pl);
-	}
-	/* */
+	m_xPlayScene = new PlayScene();
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
+
+	setState(PLAY_STATE);
 
 	return 0;
 }
@@ -249,7 +130,7 @@ void Game::loop() {
 		glfwPollEvents();
 
 		update(delta, m_fElapsedTime);
-		m_xRenderer->render(m_xScene);
+		render();
 
 		clock_t now = clock();
 		delta = (float)(now - m_iLastTime) / (float)CLOCKS_PER_SEC;
@@ -265,37 +146,37 @@ void Game::quit() {
 	glfwSetWindowShouldClose(m_xWindow, true);
 }
 
+//Using a very decentralised, event based approach to game states.
+//Gameobjects are free to react to state changes any way they like.
+void Game::setState(State state) {
+
+	if ((int)m_iState != -1)
+		dispatchEvent(makeGameEvent(Event::GAME_LEAVE_STATE));
+
+	m_iState = state;
+
+	dispatchEvent(makeGameEvent(Event::GAME_ENTER_STATE));
+}
+
 void Game::update(float delta, float elapsedTime) {
 
-	Event e(Event::GAME_UPDATE);
+	Event e = makeGameEvent(Event::GAME_UPDATE);
 	e.game.delta = delta;
-	e.game.elapsedTime = elapsedTime;
 
 	dispatchEvent(e);
+}
 
-	//ComponentFactory::instance()->update(Component::CONTROLLER, delta, elapsedTime);
+void Game::render() {
 
-	/* *
-	m_xTestCam->setRotation(glm::angleAxis(
-		elapsedTime * 30.0f,
-		glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))
-	));
-	/* */
+	m_xRenderer->render(m_xPlayScene);
+}
 
-	/* *
-	m_xTestPointLight->setPosition(glm::vec3(
-		cosf(elapsedTime * 2.0f) * 8.0f,
-		sinf(elapsedTime * 2.0f) * 8.0f,
-		0.0f
-	));
-	
-	m_xTestPointLight2->setPosition(glm::vec3(
-		0.0f,
-		0.0f,
-		cosf(elapsedTime) * 20.0f
-	));
-	/* */
+Event& Game::makeGameEvent(Event::Type type) {
 
-	//if (elapsedTime >= 3.0f && elapsedTime < 40.0f)
-	//	m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 1.0f) * (elapsedTime - 3.0f));
+	Event e(type);
+	e.game.delta = 0.0f;
+	e.game.elapsedTime = m_fElapsedTime;
+	e.game.state = m_iState;
+
+	return e;
 }

@@ -43,6 +43,12 @@
     <Filter Include="Header Files\GameSpecific\Components">
       <UniqueIdentifier>{649bc4a4-d6e1-4a61-a429-f0d0617e18fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameSpecific\Scenes">
+      <UniqueIdentifier>{607950bf-da72-4dca-9671-eac36249d2e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameSpecific\Scenes">
+      <UniqueIdentifier>{c2054978-0a57-4125-9234-0434823e2224}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -80,9 +86,6 @@
     </ClCompile>
     <ClCompile Include="utils.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameState.cpp">
-      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Core</Filter>
@@ -138,6 +141,12 @@
     <ClCompile Include="Material.cpp">
       <Filter>Source Files\Visual</Filter>
     </ClCompile>
+    <ClCompile Include="EventDispatcher.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayScene.cpp">
+      <Filter>Source Files\GameSpecific\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogManager.h">
@@ -178,9 +187,6 @@
     </ClInclude>
     <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Core</Filter>
@@ -232,6 +238,12 @@
     </ClInclude>
     <ClInclude Include="ModelManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventDispatcher.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayScene.h">
+      <Filter>Header Files\GameSpecific\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

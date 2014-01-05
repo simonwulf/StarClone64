@@ -88,9 +88,9 @@
     <ClCompile Include="ControllerComponent.cpp" />
     <ClCompile Include="DirectionalLightComponent.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventDispatcher.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GOFactory.cpp" />
     <ClCompile Include="LightComponent.cpp" />
     <ClCompile Include="LogManager.cpp" />
@@ -101,6 +101,7 @@
     <ClCompile Include="ModelManager.cpp" />
     <ClCompile Include="ModelRenderComponent.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
     <ClCompile Include="RandomMover.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
@@ -120,9 +121,9 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="EventDispatcher.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameState.h" />
     <ClInclude Include="GOFactory.h" />
     <ClInclude Include="LightComponent.h" />
     <ClInclude Include="LogManager.h" />
@@ -132,6 +133,7 @@
     <ClInclude Include="ModelManager.h" />
     <ClInclude Include="ModelRenderComponent.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PointLightComponent.h" />
     <ClInclude Include="RandomMover.h" />
     <ClInclude Include="RenderComponent.h" />

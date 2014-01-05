@@ -14,24 +14,9 @@ void ModelRenderComponent::init(const Model* model) {
 void ModelRenderComponent::render() {
 
 	const Mesh* meshes;
-	const Material* materials;
 
 	if (m_xModel == nullptr || (meshes = m_xModel->getMeshes()) == nullptr)
 		return;
-
-	//if ((materials = m_xModel->getMaterials()) != nullptr) {
-		
-		/*for (unsigned int i = 0; i < 1; ++i) { //Only using the first material for now
-			for (unsigned int j = 0; j < materials[i].numTextures() && j < 32; ++j) {
-			
-				glActiveTexture(GL_TEXTURE0 + j);
-				glBindTexture(GL_TEXTURE_2D, materials[i].getTexture(j)->getTexID());
-			}
-		}*/
-
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, materials[1].getTexture(0)->getTexID());
-	//}
 
 	for (unsigned int i = 0; i < m_xModel->numMeshes(); ++i) {
 

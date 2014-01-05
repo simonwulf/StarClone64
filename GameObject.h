@@ -9,6 +9,8 @@
 
 #include "ComponentFactory.h"
 
+class Scene;
+
 class GameObject {
 
   public:
@@ -30,6 +32,7 @@ class GameObject {
 	const glm::vec3& right();
 
 	GameObject* getParent();
+	Scene* getScene();
 
 	unsigned int numChildren() const;
 	GameObject* childAt(unsigned int index) const;
@@ -40,9 +43,6 @@ class GameObject {
 	T* addComponent() {
 		
 		T* component = ComponentFactory::instance()->create<T>();
-
-		if (component->m_xGameObject != nullptr)
-		throw std::invalid_argument("A component can not be moved between GameObjects");
 
 		component->m_xGameObject = this;
 		m_xComponents.push_back(component);
@@ -80,11 +80,16 @@ class GameObject {
 	bool m_bUpdateInverseMatrix;
 
 	GameObject* m_xParent;
+	Scene* m_xScene;
 
 	std::vector<GameObject*> m_xChildren;
 	std::vector<Component*> m_xComponents;
 
+	void setScene(Scene* scene);
+
 	void invalidateMatrix();
+
+	friend class Scene;
 };
 
 #endif

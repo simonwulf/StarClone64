@@ -52,11 +52,12 @@ void Renderer::render(Scene* scene) {
 	m_xDefaultShaderProgram->uniformMatrix4fv("projection", 1, GL_FALSE, (GLfloat*)&m_mPerspective);
 	m_xDefaultShaderProgram->uniformMatrix4fv("view", 1, GL_FALSE, (GLfloat*)&Camera::currentCamera->getMatrix());
 	m_xDefaultShaderProgram->uniform3f("ambient_light", 0.5f, 0.5f, 0.5f);
+	m_xDefaultShaderProgram->uniform1i("diffuse", 0);
 
-	updateLights(LT_DIRECTIONAL);
-	updateLights(LT_POINT);
+	updateLights(LT_DIRECTIONAL, scene);
+	updateLights(LT_POINT, scene);
 
-	const ComponentFactory::ComponentList* rc_list = ComponentFactory::instance()->getList(Component::RENDER);
+	/*const ComponentFactory::ComponentList* rc_list = ComponentFactory::instance()->getList(Component::RENDER);
 	for (unsigned int i = 0; i < rc_list->size(); ++i) {
 	
 		RenderComponent* rc = (RenderComponent*)rc_list->at(i);
@@ -65,12 +66,32 @@ void Renderer::render(Scene* scene) {
 
 		if (rc != nullptr)
 			rc->render();
-	}
+	}*/
+
+	renderNode(scene->getRoot());
 
 	glfwSwapBuffers(m_xWindow);
 }
 
-void Renderer::updateLights(Renderer::LightType type) {
+//Went back to recursive approach in order to support multiple scenes
+void Renderer::renderNode(GameObject* node) {
+
+	RenderComponent* rc = (RenderComponent*)node->getComponent(Component::RENDER);
+
+	if (rc != nullptr) {
+
+		m_xDefaultShaderProgram->uniformMatrix4fv("model", 1, GL_FALSE, (GLfloat*)&rc->getGameObject()->getMatrix());
+
+		rc->render();
+	}
+
+	for (unsigned int i = 0; i < node->numChildren(); ++i) {
+	
+		renderNode(node->childAt(i));
+	}
+}
+
+void Renderer::updateLights(Renderer::LightType type, Scene* scene) {
 
 	float* data;
 	unsigned int data_size;
@@ -106,10 +127,21 @@ void Renderer::updateLights(Renderer::LightType type) {
 	data_size = light_list->size() * block_size;
 	data = new float[data_size];
 
+	//Unoptimized and ugly, but this will have to do for now
+	//Would perhaps be better to move creation of gameobjects and components
+	//into Scene and not allow moving objects between scenes. Then a scene
+	//could keep lists of the components in the scene as ComponentFactory is
+	//doing now.
 	float* dst = data;
+	unsigned int count = 0;
 	for (unsigned int i = 0; i < light_list->size(); ++i) {
 	
-		((LightComponent*)light_list->at(i))->glData(dst);
+		LightComponent* light = (LightComponent*)light_list->at(i);
+		if (light->getGameObject()->getScene() != scene)
+			continue;
+
+		light->glData(dst);
+		++count;
 
 		dst += block_size / sizeof(float);
 	}
@@ -117,7 +149,7 @@ void Renderer::updateLights(Renderer::LightType type) {
 	glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer);
 	glBufferData(GL_UNIFORM_BUFFER, data_size * sizeof(float), data, GL_DYNAMIC_DRAW);
 
-	m_xDefaultShaderProgram->uniform1ui(count_uniform, light_list->size());
+	m_xDefaultShaderProgram->uniform1ui(count_uniform, count);
 	
 	delete [] data;
 }

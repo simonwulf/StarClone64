@@ -76,8 +76,6 @@ GameObject* GOFactory::createPointLight(glm::vec3 color, float radius, float str
 	lightComponent->setRadius(radius);
 	lightComponent->setStrength(strength);
 
-	light->addComponent<RandomMover>();
-
 	return light;
 }
 

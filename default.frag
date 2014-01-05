@@ -48,7 +48,7 @@ void main() {
 		1.0
 	);*/
 
-	vec3 lighting = vec3(0.0);
+	vec3 lighting = ambient_light;
 	vec3 world_normal = normalize(world_normal);
 
 	float light_wrap = 0.0;
@@ -89,7 +89,7 @@ void main() {
 	}
 	/* */
 
-	color_out = vec4(lighting + ambient_light, 1.0) * texture2D(diffuse, texture_coords);
+	color_out = vec4(lighting, 1.0) * texture2D(diffuse, texture_coords);
 	//color_out = vec4(lighting, 1.0);
 	//color_out = vec4(normal * light_amount, 1.0);
 }

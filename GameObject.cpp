@@ -14,6 +14,7 @@ GameObject::GameObject() {
 	m_bUpdateInverseMatrix = true;
 
 	m_xParent = nullptr;
+	m_xScene = nullptr;
 }
 
 GameObject::~GameObject() {
@@ -99,6 +100,11 @@ GameObject* GameObject::getParent() {
 	return m_xParent;
 }
 
+Scene* GameObject::getScene() {
+
+	return m_xScene;
+}
+
 unsigned int GameObject::numChildren() const {
 
 	return m_xChildren.size();
@@ -125,6 +131,7 @@ void GameObject::addChild(GameObject* child) {
 		m_xParent->removeChild(m_xParent);
 
 	child->m_xParent = this;
+	child->setScene(m_xScene);
 	child->invalidateMatrix();
 
 	m_xChildren.push_back(child);
@@ -161,9 +168,10 @@ void GameObject::removeComponent(Component* component) {
 
 Component* GameObject::getComponent(unsigned int type, unsigned int offset) {
 
+	unsigned int count = 0;
 	for (unsigned int i = 0; i < m_xComponents.size(); ++i) {
 	
-		if (m_xComponents[i]->getType() == type && i == offset++)
+		if (m_xComponents[i]->getType() == type && offset == count++)
 			return m_xComponents[i];
 	}
 
@@ -232,6 +240,16 @@ void GameObject::appendRotation(const glm::quat& rotation) {
 
 	m_qRotation = m_qRotation * rotation;
 	invalidateMatrix();
+}
+
+void GameObject::setScene(Scene* scene) {
+
+	m_xScene = scene;
+
+	for (unsigned int i = 0; i < m_xChildren.size(); ++i) {
+	
+		m_xChildren[i]->setScene(scene);
+	}
 }
 
 void GameObject::invalidateMatrix() {
