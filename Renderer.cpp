@@ -5,6 +5,7 @@
 
 #include <sstream>
 
+ShaderProgram* Renderer::m_xDefaultShaderProgram;
 Renderer::Renderer(GLFWwindow* window) {
 
 	m_xWindow = window;
@@ -53,10 +54,10 @@ void Renderer::render(Scene* scene) {
 	glEnableVertexAttribArray(1);
 
 	//Vertex positions
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 	
 	//Vertex normals
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (const GLvoid*)sizeof(glm::vec3));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)sizeof(glm::vec3));
 
 	m_xDefaultShaderProgram->uniformMatrix4fv("projection", 1, GL_FALSE, (GLfloat*)&m_mPerspective);
 	m_xDefaultShaderProgram->uniformMatrix4fv("view", 1, GL_FALSE, (GLfloat*)&Camera::currentCamera->getMatrix());

@@ -21,6 +21,8 @@ class Renderer {
 
 	void render(Scene* scene);
 
+	static ShaderProgram* m_xDefaultShaderProgram;
+
   private:
 
 	static const unsigned int DIR_LIGHT_BLOCK_SIZE = 32;
@@ -43,8 +45,6 @@ class Renderer {
 	glm::mat4 m_mWorld;
 	glm::mat4 m_mPerspective;
 	glm::mat4 m_mView;
-
-	ShaderProgram* m_xDefaultShaderProgram;
 
 	GLuint m_iDirLightsIndex;
 	GLuint m_iPointLightsIndex;

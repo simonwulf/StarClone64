@@ -93,9 +93,6 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files\Visual</Filter>
-    </ClCompile>
     <ClCompile Include="GOFactory.cpp">
       <Filter>Source Files\GameSpecific</Filter>
     </ClCompile>
@@ -125,16 +122,10 @@
     <ClInclude Include="LogManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Header Files\Visual</Filter>
-    </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Header Files\Visual</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
-      <Filter>Header Files\Visual</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
       <Filter>Header Files\Visual</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
@@ -200,6 +191,12 @@
     <ClInclude Include="RandomMover.h">
       <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
+    <ClInclude Include="MeshData.h">
+      <Filter>Header Files\Visual</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -208,5 +205,16 @@
     <None Include="default.frag">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="test\shader\diffuse.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="test\shader\diffuse.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="StarClone64.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -1,63 +1,45 @@
 #ifndef MESH_H
 #define MESH_H
-/************************************************************************
-
-Mesh is just a container for mesh data. It does not implement any 
-functionality in itself except for getting and setting its values. 
-All functionality is implemented by MeshManager which is also responsible 
-for loading and returning meshes to object which utilize them.
-
-************************************************************************/
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <vector>
+#include "MeshData.h"
 
-struct vertex {
+class SubMesh {
 
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec2 texcoords;
-};
+	public:
 
-//Grouping buffer IDs as struct for readability
-struct meshBufferIDs {
-	GLuint vertex;
-	GLuint index;
-	const static short length = 2;
+		SubMesh();
+		SubMesh(std::vector<Vertex>* vertexData, std::vector<GLuint>* indexData, std::vector<Texture>* textureData = nullptr);
+		~SubMesh();
+
+		void draw(GLuint shader);
+
+		const GLuint getVBO(){ return m_iVBO; }
+		const GLuint getIND(){ return m_iIND; }
+		const GLuint getICount() { return m_iIndices.size(); }
+
+	private:
+
+		std::vector<Vertex> m_xVertices;
+		std::vector<Texture> m_xTextures;
+		std::vector<GLuint> m_iIndices;
+		GLuint m_iVBO, m_iIND;
+
 };
 
 class Mesh {
 
-  public:
+	public:
+		Mesh();
+		~Mesh();
 
-	Mesh();
-	~Mesh();
+		std::vector<SubMesh*>* m_xMeshes;
 
-	unsigned int getVertexCount() const;
-	unsigned int getIndexCount() const;
-	unsigned int getTriCount() const;
+		void draw(GLuint shader);
 
-	vertex* getVertexArray() const;
-	GLuint* getIndexArray() const;
-
-	void setVertexArray(unsigned int vertCount, vertex* vertexArray);
-	void setIndexArray(unsigned int indicesCount, GLuint* indexArray);
-
-	meshBufferIDs& getBufferIDs();
-	GLuint getVertexBufferID();
-	GLuint getIndexBufferID();
-
-	bool isDummy();
-
-  private:
-
-	unsigned int m_iVertexCount;
-	vertex* m_xVertices;
-
-	unsigned int m_iIndexCount;
-	GLuint* m_iIndices;
-
-	meshBufferIDs m_xGLBuffers;
+		void quickTestDraw();
 };
 
 #endif

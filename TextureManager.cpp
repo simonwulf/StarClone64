@@ -15,30 +15,31 @@ TextureManager::~TextureManager(void) {
 	delete m_textureTable;
 }
 
-Texture* TextureManager::getTexture2D( std::string textureName ) {
+Texture* TextureManager::getTexture2D( std::string textureName, GLuint textureType ) {
 
-	Log::Write("Texture requested " + textureName + "\t");
+	textureName = "test/mesh_test/teapot_d.png";
+	//Log::Write("Texture requested " + textureName + "\t");
 	try {
 		Texture* texture = getInstance().m_textureTable->at(textureName);
 
 		#pragma region Logging
-		Log::Write("returned from cache", Log::COLOR_LIGHT_AQUA);
+		//Log::Write("returned from cache", Log::COLOR_LIGHT_AQUA);
 
-		if(texture->isDummy())
-			Log::Warn("\twarning: dummy texture!");
-		else
-			Log::Writeln("");
+		//if(texture->type >= 1000)
+		//	Log::Warn("\twarning: dummy texture!");
+		//else
+		//	Log::Writeln("");
 		#pragma endregion
 
 		return texture;
 	}
 	catch (std::out_of_range) {
-		getInstance().loadTexture(textureName);
-		return getInstance().getTexture2D(textureName);
+		getInstance().loadTexture(textureName, textureType);
+		return getInstance().getTexture2D(textureName, textureType);
 	}
 }
 
-void TextureManager::loadTexture( std::string textureName ) {
+void TextureManager::loadTexture( std::string textureName, GLuint textureType ) {
 
 	Log::Write("loading texture " + textureName + "\t");
 	FREE_IMAGE_FORMAT fileFormat;
@@ -71,9 +72,10 @@ void TextureManager::loadTexture( std::string textureName ) {
 	FreeImage_Unload(temp);
 
 	Texture* texture = new Texture();
+	texture->type = textureType;
 
-	glGenTextures(1, &(texture->getTexID()));
-	glBindTexture(GL_TEXTURE_2D, texture->getTexID());
+	glGenTextures(1, &(texture->id));
+	glBindTexture(GL_TEXTURE_2D, texture->id);
 	glTexImage2D(
 		GL_TEXTURE_2D, 
 		0, 
@@ -100,7 +102,7 @@ void TextureManager::clearCache() {
 
 		Texture* texture = it->second;
 
-		glDeleteTextures(1, &(texture->getTexID()));
+		glDeleteTextures(1, &(texture->id));
 		delete texture;
 	}
 
@@ -110,5 +112,7 @@ void TextureManager::clearCache() {
 
 Texture* TextureManager::generateDummy() {
 
-	return new Texture();
+	Texture* texture = new Texture();
+	texture->type = 1000;
+	return texture;
 }

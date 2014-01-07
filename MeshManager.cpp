@@ -1,6 +1,7 @@
 #include "MeshManager.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include <assimp/postprocess.h>
 #include "LogManager.h"
 #include <vector>
 #include "TextureManager.h"
@@ -9,21 +10,21 @@ MeshManager MeshManager::m_instance;
 
 MeshManager::MeshManager() {
 
-	m_meshTable = new std::unordered_map<std::string, Mesh*>();
+	m_xMeshTable = new std::unordered_map<std::string, Mesh*>();
 	Log::Writeln("MeshManager started.");
 }
 
 MeshManager::~MeshManager() {
 
 	clearCache();
-	delete m_meshTable;
+	delete m_xMeshTable;
 }
 
 Mesh* MeshManager::getMesh( std::string meshName, unsigned int loadFlags /*= 0*/ ) {
 
 	//Log::Write("Mesh requested " + meshName + "\t");
 	try {
-		Mesh* mesh = getInstance().m_meshTable->at(meshName);
+		Mesh* mesh = getInstance().m_xMeshTable->at(meshName);
 
 		#pragma region Logging
 		/* *
@@ -46,136 +47,139 @@ Mesh* MeshManager::getMesh( std::string meshName, unsigned int loadFlags /*= 0*/
 
 void MeshManager::loadMesh( std::string meshName, unsigned int loadFlags /*= 0*/ ) {
 
-	Log::Write("loading mesh " + meshName + "\t");
-
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(meshName, loadFlags);
+	const aiScene* scene = importer.ReadFile(meshName, loadFlags | 
+		aiProcess_GenSmoothNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
-	if(!scene) {
-		Log::Err("error: couldn't load mesh!");
-		Mesh* dummy = new Mesh();
-		dummy->setIndexArray(0, nullptr);
-		dummy->setVertexArray(0, nullptr);
-		m_meshTable->insert(std::make_pair<std::string, Mesh*>(meshName, dummy));
-	} else {
+	if(scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	{
+		Log::Err("Failed to load mesh " + meshName);
+		m_xMeshTable->insert(std::make_pair<std::string, Mesh*>(meshName, new Mesh())); //Dummy mesh
+		return;
+	}
 
-		/* dump that shit into that mesh and put that gfx card to use son! */
-		Log::Writeln("...");
-		std::vector<vertex*> tempVertexArray;
-		std::vector<GLuint*> tempIndexArray;
-		vertex* tempVertexBuffer;
-		GLuint* tempIndexBuffer;
+	std::vector<SubMesh*>* meshes = new std::vector<SubMesh*>();
+	loadMesh_RecursiveProcess(scene->mRootNode, scene, *meshes);
+	Mesh* mesh = new Mesh();
+	mesh->m_xMeshes = meshes;
+	m_xMeshTable->insert(std::make_pair<std::string, Mesh*>(meshName, mesh)); //Dummy mesh
 
-		const aiVector3D zeroVec(0.0f, 0.0f, 0.0f);
-		/* Iterate through all meshes (elements/objects) in the file */
-		for(unsigned int i = 0; i < scene->mNumMeshes; i++) {
+}
 
-			aiMesh* mesh = scene->mMeshes[i];
+void MeshManager::loadMesh_RecursiveProcess( aiNode* node, const aiScene* scene, std::vector<SubMesh*>& meshes ) {
 
-			/* Collect all vertices */
-			for(unsigned int j = 0; j < mesh->mNumVertices; j++) {
+	for(unsigned int i = 0; i < node->mNumMeshes; i++) {
 
-				vertex* vert = new vertex();
-				vert->position.x = mesh->mVertices[j].x;
-				vert->position.y = mesh->mVertices[j].y;
-				vert->position.z = mesh->mVertices[j].z;
+		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		processMesh(mesh, scene, meshes);
+	}
 
-				if(&mesh->mNormals[j]) {
+	//Recursion
+	for(unsigned int i = 0; i < node->mNumChildren; i++) {
 
-					vert->normal.x = mesh->mNormals[j].x;
-					vert->normal.y = mesh->mNormals[j].y;
-					vert->normal.z = mesh->mNormals[j].z;
-				}
-				else {
-
-					vert->normal.x = zeroVec.x;
-					vert->normal.y = zeroVec.y;
-					vert->normal.z = zeroVec.z;
-				}
-
-				if(mesh->HasTextureCoords(0)) {
-
-					vert->texcoords.x = mesh->mTextureCoords[0]->x;
-					vert->texcoords.y = mesh->mTextureCoords[0]->y;
-				}
-				else {
-
-					vert->texcoords.x = zeroVec.x;
-					vert->texcoords.y = zeroVec.y;
-				}
-
-				tempVertexArray.push_back(vert);
-			}
-
-			/* Collect all indices */
-			for(unsigned int j = 0; j < mesh->mNumFaces; j++) {
-
-				for(int k = 0; k < 3 /* verts per face */; k++) {
-
-					tempIndexArray.push_back(new GLuint(mesh->mFaces[j].mIndices[k]));
-				}
-			}
-		}
-
-		for(unsigned int i = 0; i < scene->mNumMaterials; i++) {
-
-			const aiMaterial* material = scene->mMaterials[i];
-
-			if(material->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-
-				aiString path;
-
-				if(material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS) {
-
-					std::string fullPath = "test/mesh_test/" + std::string(path.data);
-					TextureManager::getTexture2D(fullPath);
-				}
-			}
-		}
-		
-		tempVertexBuffer = new vertex[tempVertexArray.size()];
-		tempIndexBuffer = new GLuint[tempIndexArray.size()];
-
-		for(unsigned int i = 0; i < tempVertexArray.size(); i++)
-			tempVertexBuffer[i] = *tempVertexArray[i];
-		for(unsigned int i = 0; i < tempIndexArray.size(); i++)
-			tempIndexBuffer[i] = *tempIndexArray[i];
-
-		Mesh* mesh = new Mesh();
-		mesh->setVertexArray(tempVertexArray.size(), tempVertexBuffer);
-		mesh->setIndexArray(tempIndexArray.size(), tempIndexBuffer);
-
-		meshBufferIDs& bufferIDs = mesh->getBufferIDs();
-		
-		glGenBuffers(meshBufferIDs::length, (GLuint*)&bufferIDs);
-
-		glBindBuffer(GL_ARRAY_BUFFER, bufferIDs.vertex);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferIDs.index);
-
-		glBufferData(GL_ARRAY_BUFFER, sizeof(tempVertexBuffer[0])*tempVertexArray.size(), tempVertexBuffer, GL_STATIC_DRAW);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(tempIndexBuffer[0])*tempIndexArray.size(), tempIndexBuffer, GL_STATIC_DRAW);
-
-		m_meshTable->insert(std::make_pair<std::string, Mesh*>(meshName, mesh));
-
-		Log::Success("mesh " + meshName + " loaded!");
+		loadMesh_RecursiveProcess(node->mChildren[i], scene, meshes);
 	}
 }
 
-void MeshManager::clearCache() {
+void MeshManager::processMesh( aiMesh* mesh, const aiScene* scene, std::vector<SubMesh*>& meshes ) {
 
-	/* Loops the mesh table and free data held by the meshes */
-	for(std::unordered_map<std::string, Mesh*>::iterator it = getInstance().m_meshTable->begin();
-		it != getInstance().m_meshTable->end(); ++it) {
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
+	std::vector<Texture> textures;
+	aiColor4D col;
+	aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
 
-		//std::string meshName = it->first;
-		Mesh* mesh = it->second;
+	aiGetMaterialColor(mat, AI_MATKEY_COLOR_DIFFUSE, &col);
+	glm::vec3 defaultColor(col.r, col.g, col.b);
 
-		delete[] mesh->getVertexArray();
-		delete[] mesh->getIndexArray();
+	for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
 
-		glDeleteBuffers(meshBufferIDs::length, (GLuint*)&mesh->getBufferIDs());
+		Vertex tmpVertex;
+		glm::vec3 tmpVec;
+
+		//Vertices
+		tmpVec.x = mesh->mVertices[i].x;
+		tmpVec.y = mesh->mVertices[i].y;
+		tmpVec.z = mesh->mVertices[i].z;
+		tmpVertex.position = tmpVec;
+
+		//Normals
+		tmpVec.x = mesh->mNormals[i].x;
+		tmpVec.y = mesh->mNormals[i].y;
+		tmpVec.z = mesh->mNormals[i].z;
+		tmpVertex.normal = tmpVec;
+
+		//Tangents
+		if(mesh->mTangents != nullptr) {
+
+			tmpVec.x = mesh->mTangents[i].x;
+			tmpVec.y = mesh->mTangents[i].y;
+			tmpVec.z = mesh->mTangents[i].z;
+		} else {
+
+			tmpVec.x = 1.0f;
+			tmpVec.y = 0.0f;
+			tmpVec.z = 0.0f;
+		}
+		tmpVertex.tangent = tmpVec;
+
+		//Color
+		if(mesh->mColors[0] != nullptr) {
+
+			tmpVec.x = mesh->mColors[0][i].r;
+			tmpVec.y = mesh->mColors[0][i].g;
+			tmpVec.z = mesh->mColors[0][i].b;
+		} else {
+			tmpVec = defaultColor;
+		}
+		tmpVertex.color = tmpVec;
+
+		//UV
+		if(mesh->mTextureCoords[0] != nullptr) {
+
+			tmpVec.x = mesh->mTextureCoords[0][i].x;
+			tmpVec.y = mesh->mTextureCoords[0][i].y;
+			tmpVec.z = mesh->mTextureCoords[0][i].z;
+		} else {
+			tmpVec.x = 0.0f;
+			tmpVec.y = 0.0f;
+			tmpVec.z = 0.0f;
+		}
+		tmpVertex.uv = glm::vec2(tmpVec);
+
+		vertices.push_back(tmpVertex);
 	}
 
-	getInstance().m_meshTable->clear();
+	for(unsigned int i = 0; i < mesh->mNumFaces; i++) {
+
+		aiFace face = mesh->mFaces[i];
+
+		for(unsigned int j = 0; j < face.mNumIndices; j++) {
+
+			indices.push_back(face.mIndices[j]);
+		}
+	}
+	unsigned int num = mat->GetTextureCount(aiTextureType_DIFFUSE);
+	for(unsigned int i = 0; i < num; i++) {
+
+		aiString str;
+		mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
+		Texture* texture = TextureManager::getTexture2D(str.C_Str(), TEX_TYPE_DIFFUSE);
+
+		textures.push_back(*texture);
+	}
+
+	meshes.push_back(new SubMesh(&vertices, &indices, &textures));
+}
+
+void MeshManager::clearCache() {
+	for(std::unordered_map<std::string, Mesh*>::iterator it = getInstance().m_xMeshTable->begin(); it != getInstance().m_xMeshTable->end(); ++it) {
+	
+		Mesh* mesh = it->second;
+
+		delete mesh;
+	}
+
+	getInstance().m_xMeshTable->clear();
 	Log::Writeln("MeshManager cache cleared");
 }
