@@ -1,12 +1,17 @@
 #include "PlayScene.h"
-#include "GOFactory.h"
 
+#include <random>
+
+#include "GOFactory.h"
+#include "Game.h"
 #include "CameraComponent.h"
 #include "CameraController.h"
 #include "RandomMover.h"
 #include "ModelRenderComponent.h"
 
 PlayScene::PlayScene() {
+
+	setAmbientLight(glm::vec3(0.5f, 0.5f, 0.5f));
 
 	//Test purposes
 	/* Teapots */
@@ -34,10 +39,8 @@ PlayScene::PlayScene() {
 	player->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
 	add(player);
 
-	GameObject* camera = GOFactory::instance()->createEmpty();
-	//m_xTestCam->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
-	camera->addComponent<CameraComponent>();
-	camera->addComponent<CameraController>()->init(player);
+	glm::ivec2 window_size = Game::instance()->getWindowSize();
+	GameObject* camera = GOFactory::instance()->createPlayerCamera(player, 60.0f, 0.1f, 1000.0f, (float)window_size.x/(float)window_size.y);
 	add(camera);
 
 	useCamera((CameraComponent*)camera->getComponent(Component::CAMERA));

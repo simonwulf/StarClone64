@@ -10,7 +10,7 @@
 //#include <sstream>
 #include <iostream>
 
-Mesh::Mesh(unsigned int vertexCount, vertex* vertexArray, unsigned int indexCount, GLuint* indexArray, Material* material) {
+Mesh::Mesh(unsigned int vertexCount, vertex* vertexArray, unsigned int indexCount, GLuint* indexArray, Material* material, GLuint usage) {
 	
 	m_iVertexCount = vertexCount;
 	//m_xVertices = vertexArray;
@@ -24,8 +24,8 @@ Mesh::Mesh(unsigned int vertexCount, vertex* vertexArray, unsigned int indexCoun
 	glBindBuffer(GL_ARRAY_BUFFER, m_xGLBuffers.vertex);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_xGLBuffers.index);
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex) * m_iVertexCount, vertexArray, GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_iIndexCount, indexArray, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex) * m_iVertexCount, vertexArray, usage);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * m_iIndexCount, indexArray, usage);
 }
 
 Mesh::~Mesh() {

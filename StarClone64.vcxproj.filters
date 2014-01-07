@@ -49,6 +49,24 @@
     <Filter Include="Source Files\GameSpecific\Scenes">
       <UniqueIdentifier>{c2054978-0a57-4125-9234-0434823e2224}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components\Render">
+      <UniqueIdentifier>{f5ef8b72-081f-40d6-ba8d-a18c31ad587a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components\Camera">
+      <UniqueIdentifier>{7815d172-09dc-4a8d-95d6-8dea82165f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components\Light">
+      <UniqueIdentifier>{6c23477b-a5fc-4a0e-b7f5-8af855a1e8d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Render">
+      <UniqueIdentifier>{a913b5b3-7316-416a-a7dd-ba7fdb32786e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Camera">
+      <UniqueIdentifier>{bcb2b428-ecae-4d6d-93ed-86faa01f3204}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Light">
+      <UniqueIdentifier>{4d4f6bad-c8f6-4e46-9212-af50bd8933b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -78,12 +96,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="CameraComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -108,15 +120,6 @@
     <ClCompile Include="ControllerComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionalLightComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PointLightComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="LightComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="RandomMover.cpp">
       <Filter>Source Files\GameSpecific\Components</Filter>
     </ClCompile>
@@ -132,9 +135,6 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Visual</Filter>
     </ClCompile>
-    <ClCompile Include="ModelRenderComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="ModelManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -146,6 +146,36 @@
     </ClCompile>
     <ClCompile Include="PlayScene.cpp">
       <Filter>Source Files\GameSpecific\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="HUDScene.cpp">
+      <Filter>Source Files\GameSpecific\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderComponent.cpp">
+      <Filter>Source Files\Components\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelRenderComponent.cpp">
+      <Filter>Source Files\Components\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLightComponent.cpp">
+      <Filter>Source Files\Components\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="LightComponent.cpp">
+      <Filter>Source Files\Components\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightComponent.cpp">
+      <Filter>Source Files\Components\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Source Files\Components\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="OrthographicCameraComponent.cpp">
+      <Filter>Source Files\Components\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="PerspectiveCameraComponent.cpp">
+      <Filter>Source Files\Components\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GUITextureRenderComponent.cpp">
+      <Filter>Source Files\Components\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,12 +209,6 @@
     <ClInclude Include="Scene.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="RenderComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -209,15 +233,6 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DirectionalLightComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="PointLightComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="LightComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="RandomMover.h">
       <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
@@ -233,9 +248,6 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files\Visual</Filter>
     </ClInclude>
-    <ClInclude Include="ModelRenderComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="ModelManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -244,6 +256,36 @@
     </ClInclude>
     <ClInclude Include="PlayScene.h">
       <Filter>Header Files\GameSpecific\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="HUDScene.h">
+      <Filter>Header Files\GameSpecific\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelRenderComponent.h">
+      <Filter>Header Files\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderComponent.h">
+      <Filter>Header Files\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="OrthographicCameraComponent.h">
+      <Filter>Header Files\Components\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="PerspectiveCameraComponent.h">
+      <Filter>Header Files\Components\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Header Files\Components\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLightComponent.h">
+      <Filter>Header Files\Components\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="LightComponent.h">
+      <Filter>Header Files\Components\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightComponent.h">
+      <Filter>Header Files\Components\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="GUITextureRenderComponent.h">
+      <Filter>Header Files\Components\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

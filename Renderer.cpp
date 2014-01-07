@@ -11,10 +11,6 @@ Renderer::Renderer(GLFWwindow* window) {
 
 	m_xDefaultShaderProgram = new ShaderProgram("default.vert", "default.frag");
 
-	int width, height;
-	glfwGetWindowSize(m_xWindow, &width, &height);
-	m_mPerspective = glm::perspective(60.0f, (float)width/(float)height, 0.1f, 1000.0f);
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
@@ -45,13 +41,13 @@ GLFWwindow* Renderer::getWindow() const {
 
 void Renderer::render(Scene* scene) {
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(scene->getClearFlags());
 
 	glUseProgram(m_xDefaultShaderProgram->glID());
 
-	m_xDefaultShaderProgram->uniformMatrix4fv("projection", 1, GL_FALSE, (GLfloat*)&m_mPerspective);
-	m_xDefaultShaderProgram->uniformMatrix4fv("view", 1, GL_FALSE, (GLfloat*)&Camera::currentCamera->getMatrix());
-	m_xDefaultShaderProgram->uniform3f("ambient_light", 0.5f, 0.5f, 0.5f);
+	m_xDefaultShaderProgram->uniformMatrix4fv("projection", 1, GL_FALSE, (GLfloat*)&scene->getCamera()->getProjectionMatrix());
+	m_xDefaultShaderProgram->uniformMatrix4fv("view", 1, GL_FALSE, (GLfloat*)&scene->getCamera()->getViewMatrix());
+	m_xDefaultShaderProgram->uniform3fv("ambient_light", 1, (GLfloat*)&scene->getAmbientLight());
 	m_xDefaultShaderProgram->uniform1i("diffuse", 0);
 
 	updateLights(LT_DIRECTIONAL, scene);
@@ -69,8 +65,6 @@ void Renderer::render(Scene* scene) {
 	}*/
 
 	renderNode(scene->getRoot());
-
-	glfwSwapBuffers(m_xWindow);
 }
 
 //Went back to recursive approach in order to support multiple scenes

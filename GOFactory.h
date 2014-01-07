@@ -5,6 +5,9 @@
 
 #include "GameObject.h"
 
+#undef near
+#undef far
+
 class GOFactory {
 
   public:
@@ -14,10 +17,12 @@ class GOFactory {
 	GameObject* createEmpty();
 	GameObject* createTeapot();
 	GameObject* createPlayer();
+	GameObject* createPlayerCamera(GameObject* player, float fov, float near, float far, float ratio);
+	GameObject* createGUICamera(float width, float height);
 	GameObject* createSun(glm::vec3 direction, glm::vec3 color, float strength);
 	GameObject* createPointLight(glm::vec3 color, float radius, float strength);
-	//GameObject* createControlledCamera();
-	
+	GameObject* createGUITest();
+
 	void destroy(GameObject* gameObject);
 
 	static GOFactory* instance();

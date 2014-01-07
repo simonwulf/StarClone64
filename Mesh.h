@@ -25,7 +25,7 @@ class Mesh {
 
   public:
 
-	Mesh(unsigned int vertexCount, vertex* vertexArray, unsigned int indexCount, GLuint* indexArray, Material* material);
+	Mesh(unsigned int vertexCount, vertex* vertexArray, unsigned int indexCount, GLuint* indexArray, Material* material, GLuint usage = GL_STATIC_DRAW);
 	~Mesh();
 
 	unsigned int getVertexCount() const;

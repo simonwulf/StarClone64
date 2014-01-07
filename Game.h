@@ -4,12 +4,13 @@
 #include "stdafx.h"
 
 #include <iostream>
-#include <random>
 #include <ctime>
 
 #include "EventDispatcher.h"
 #include "LogManager.h"
 #include "Renderer.h"
+
+#include "GameObject.h"
 
 class Scene;
 
@@ -34,6 +35,8 @@ class Game : public EventDispatcher {
 
 	void setState(State state);
 
+	const glm::ivec2& getWindowSize() const;
+
 	static Game* instance();
 
   private:
@@ -44,7 +47,11 @@ class Game : public EventDispatcher {
 
 	GLFWwindow* m_xWindow;
 	Renderer* m_xRenderer;
+	
 	Scene* m_xPlayScene;
+	Scene* m_xHUDScene;
+
+	glm::ivec2 m_vWindowSize;
 
 	clock_t m_iLastTime;
 	clock_t m_iStartTime;

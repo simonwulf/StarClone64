@@ -2,25 +2,16 @@
 #define CAMERACOMPONENT_H
 
 #include "Component.h"
-#include <glm/glm.hpp>
+#include <glm/core/type_mat4x4.hpp>
 
 class CameraComponent : public Component {
 
   public:
 
 	CameraComponent();
-	~CameraComponent();
 
-	const glm::mat4& getMatrix();
-
-  private:
-
-	float m_fFov;
-	float m_fNear;
-	float m_fFar;
-	float m_fRatio;
-
-	glm::mat4x4 m_mPerspectiveMatrix;
+	virtual const glm::mat4& getProjectionMatrix() const = 0;
+	const glm::mat4& getViewMatrix() const;
 };
 
 #endif

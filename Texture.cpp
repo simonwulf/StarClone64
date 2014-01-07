@@ -33,14 +33,17 @@ Texture::Texture(const std::string& filepath) {
 	data = FreeImage_ConvertTo32Bits(data);
 	FreeImage_Unload(temp);
 
+	m_vSize.x = FreeImage_GetWidth(data);
+	m_vSize.y = FreeImage_GetHeight(data);
+
 	glGenTextures(1, &m_iGLTextureID);
 	glBindTexture(GL_TEXTURE_2D, m_iGLTextureID);
 	glTexImage2D(
 		GL_TEXTURE_2D,
 		0,
 		GL_RGBA,
-		FreeImage_GetWidth(data), 
-		FreeImage_GetHeight(data),
+		m_vSize.x, 
+		m_vSize.y,
 		0,
 		GL_BGRA,
 		GL_UNSIGNED_BYTE,
@@ -69,4 +72,9 @@ Texture::~Texture() {
 GLuint Texture::getTexID() const {
 
 	return m_iGLTextureID;
+}
+
+const glm::ivec2& Texture::getSize() const {
+
+	return m_vSize;
 }

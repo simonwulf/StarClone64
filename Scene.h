@@ -9,13 +9,20 @@ class Scene {
   public:
 
 	Scene();
-	~Scene();
+	virtual ~Scene();
 
 	GameObject* getRoot();
 
 	void add(GameObject* gameObject);
 
 	void useCamera(CameraComponent* camera);
+	const CameraComponent* getCamera() const;
+
+	GLuint getClearFlags() const;
+	void setClearFlags(GLuint flags);
+
+	const glm::vec3& getAmbientLight() const;
+	void setAmbientLight(const glm::vec3& light);
 
   private:
 
@@ -23,7 +30,7 @@ class Scene {
 
 	CameraComponent* m_xCamera;
 
-	unsigned int m_iClearFlags;
+	GLuint m_iClearFlags;
 	glm::vec3 m_vAmbientLight;
 };
 

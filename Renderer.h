@@ -40,9 +40,9 @@ class Renderer {
 
 	GLFWwindow* m_xWindow;
 
-	glm::mat4 m_mWorld;
-	glm::mat4 m_mPerspective;
-	glm::mat4 m_mView;
+	//glm::mat4 m_mWorld;
+	//glm::mat4 m_mPerspective;
+	//glm::mat4 m_mView;
 
 	ShaderProgram* m_xDefaultShaderProgram;
 

@@ -2,6 +2,7 @@
 #include "GOFactory.h"
 
 #include "PlayScene.h"
+#include "HUDScene.h"
 
 #pragma region glfw_callbacks
 
@@ -43,6 +44,8 @@ Game::Game() {
 		throw std::exception("Singleton class Game has already been instantiated");
 
 	s_xInstance = this;
+
+	m_iState = (State)-1;
 }
 
 Game::~Game() {
@@ -53,6 +56,7 @@ Game::~Game() {
 
 	delete m_xRenderer;
 	delete m_xPlayScene;
+	delete m_xHUDScene;
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
@@ -89,6 +93,8 @@ int Game::init() {
 	m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", nullptr, nullptr);
 	glfwMakeContextCurrent(m_xWindow);
 
+	glfwGetWindowSize(m_xWindow, &m_vWindowSize.x, &m_vWindowSize.y);
+
 	glfwSetKeyCallback(m_xWindow, glfwKeyCallback);
 
 	int MajorVersion;
@@ -107,7 +113,9 @@ int Game::init() {
 	std::cout << "GLEW version " << glewGetString(GLEW_VERSION) << "\n";
 
 	m_xRenderer = new Renderer(m_xWindow);
+	
 	m_xPlayScene = new PlayScene();
+	m_xHUDScene = new HUDScene();
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
@@ -169,6 +177,9 @@ void Game::update(float delta, float elapsedTime) {
 void Game::render() {
 
 	m_xRenderer->render(m_xPlayScene);
+	m_xRenderer->render(m_xHUDScene);
+
+	glfwSwapBuffers(m_xWindow);
 }
 
 Event& Game::makeGameEvent(Event::Type type) {
@@ -179,4 +190,9 @@ Event& Game::makeGameEvent(Event::Type type) {
 	e.game.state = m_iState;
 
 	return e;
+}
+
+const glm::ivec2& Game::getWindowSize() const {
+
+	return m_vWindowSize;
 }

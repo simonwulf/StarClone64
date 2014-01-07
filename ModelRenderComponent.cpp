@@ -23,8 +23,11 @@ void ModelRenderComponent::render() {
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[i].getVertexBufferID());
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[i].getIndexBufferID());
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, meshes[i].getMaterial()->getTexture(0)->getTexID());
+		if (meshes[i].getMaterial()->numTextures() > 0) {
+			
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, meshes[i].getMaterial()->getTexture(0)->getTexID());
+		}
 
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);

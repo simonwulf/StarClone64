@@ -92,6 +92,8 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GOFactory.cpp" />
+    <ClCompile Include="GUITextureRenderComponent.cpp" />
+    <ClCompile Include="HUDScene.cpp" />
     <ClCompile Include="LightComponent.cpp" />
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -100,6 +102,8 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelManager.cpp" />
     <ClCompile Include="ModelRenderComponent.cpp" />
+    <ClCompile Include="OrthographicCameraComponent.cpp" />
+    <ClCompile Include="PerspectiveCameraComponent.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
@@ -125,6 +129,8 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GOFactory.h" />
+    <ClInclude Include="GUITextureRenderComponent.h" />
+    <ClInclude Include="HUDScene.h" />
     <ClInclude Include="LightComponent.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Material.h" />
@@ -132,6 +138,8 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelManager.h" />
     <ClInclude Include="ModelRenderComponent.h" />
+    <ClInclude Include="OrthographicCameraComponent.h" />
+    <ClInclude Include="PerspectiveCameraComponent.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PointLightComponent.h" />

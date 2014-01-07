@@ -9,6 +9,10 @@
 #include "TeapotSpin.h"
 #include "RandomMover.h"
 #include "PlayerController.h"
+#include "CameraController.h"
+#include "PerspectiveCameraComponent.h"
+#include "OrthographicCameraComponent.h"
+#include "GUITextureRenderComponent.h"
 
 GOFactory GOFactory::s_xInstance;
 
@@ -52,6 +56,25 @@ GameObject* GOFactory::createPlayer() {
 	return player;
 }
 
+GameObject* GOFactory::createPlayerCamera(GameObject* player, float fov, float near, float far, float ratio) {
+
+	GameObject* camera = createEmpty();
+
+	camera->addComponent<PerspectiveCameraComponent>()->init(fov, near, far, ratio);
+	camera->addComponent<CameraController>()->init(player);
+
+	return camera;
+}
+
+GameObject* GOFactory::createGUICamera(float width, float height) {
+
+	GameObject* camera = createEmpty();
+
+	camera->addComponent<OrthographicCameraComponent>()->init(0.0f, width, height, 0.0f, -1.0f, 1.0f);
+
+	return camera;
+}
+
 GameObject* GOFactory::createSun(glm::vec3 direction, glm::vec3 color, float strength) {
 
 	GameObject* sun = createEmpty();
@@ -79,13 +102,15 @@ GameObject* GOFactory::createPointLight(glm::vec3 color, float radius, float str
 	return light;
 }
 
-/*GameObject* GOFactory::createControlledCamera() {
+GameObject* GOFactory::createGUITest() {
 
-	GameObject* camera = new GameObject();
-	camera->addComponent(ComponentFactory::instance()->create<CameraComponent>());
+	GameObject* guiTest = createEmpty();
 	
-	m_xProducts.push_back(camera);
-}*/
+	//guiTest->addComponent<ModelRenderComponent>()->init("test/mesh_test/teapot.obj");
+	guiTest->addComponent<GUITextureRenderComponent>()->init("test/GUItest.png");
+
+	return guiTest;
+}
 
 void GOFactory::destroy(GameObject* gameObject) {
 

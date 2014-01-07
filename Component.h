@@ -33,13 +33,15 @@ class Component {
 	Type getType();
 	GameObject* getGameObject();
 
+  protected:
+
+	GameObject* m_xGameObject;
+
   private:
 
 	static unsigned int s_iAllocatedMemorySize;
 
 	Type m_iType;
-
-	GameObject* m_xGameObject;
 
 	//friend Component* GameObject::addComponent(Component* component);
 	//friend void GameObject::removeComponent(Component* component);
