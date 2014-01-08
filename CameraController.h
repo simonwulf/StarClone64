@@ -18,6 +18,7 @@ class CameraController : public ControllerComponent {
   private:
 
 	static const float DISTANCE;
+	static const float ELEVATION;
 
 	GameObject* m_xTarget;
 };

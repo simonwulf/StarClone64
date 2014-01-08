@@ -25,8 +25,6 @@ class GameObject {
 	const glm::mat4& getMatrix();
 	const glm::mat4& getInverseMatrix();
 
-	void setMatrix(const glm::mat4& matrix);
-
 	const glm::vec3& forward();
 	const glm::vec3& up();
 	const glm::vec3& right();

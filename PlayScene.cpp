@@ -36,7 +36,7 @@ PlayScene::PlayScene() {
 	/* */
 
 	GameObject* player = GOFactory::instance()->createPlayer();
-	player->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+	player->setPosition(glm::vec3(0.0f, 5.0f, -5.0f));
 	add(player);
 
 	glm::ivec2 window_size = Game::instance()->getWindowSize();
@@ -45,11 +45,15 @@ PlayScene::PlayScene() {
 
 	useCamera((CameraComponent*)camera->getComponent(Component::CAMERA));
 
+	GameObject* ground = GOFactory::instance()->createGroundPlane();
+	ground->setScale(glm::vec3(1000.0f, 1000.0f, 1000.0f));
+	add(ground);
+
 	/* */
 	GameObject* sun = GOFactory::instance()->createSun(
 		glm::vec3(-0.5f, -1.0f, -0.5f),
 		glm::vec3(1.0f, 1.0f, 1.0f),
-		1.0f
+		0.5f
 	);
 	add(sun);
 

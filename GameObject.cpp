@@ -72,14 +72,6 @@ const glm::mat4& GameObject::getInverseMatrix() {
 	return m_mInverseMatrix;
 }
 
-void GameObject::setMatrix(const glm::mat4& matrix) {
-
-	m_mMatrix = matrix;
-
-	m_bUpdateMatrix = false;
-	m_bUpdateInverseMatrix = true;
-}
-
 const glm::vec3& GameObject::forward() {
 
 	return glm::vec3(getMatrix() * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));

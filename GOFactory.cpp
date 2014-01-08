@@ -49,9 +49,11 @@ GameObject* GOFactory::createTeapot() {
 GameObject* GOFactory::createPlayer() {
 
 	GameObject* player = createEmpty();
+	GameObject* ship = createEmpty();
+	player->addChild(ship);
 
-	player->addComponent<ModelRenderComponent>()->init("test/mesh_test/teapot.obj");
-	player->addComponent<PlayerController>();
+	ship->addComponent<ModelRenderComponent>()->init("data/models/spaceship/Spaceship.obj");
+	player->addComponent<PlayerController>()->init(ship);
 
 	return player;
 }
@@ -63,6 +65,8 @@ GameObject* GOFactory::createPlayerCamera(GameObject* player, float fov, float n
 	camera->addComponent<PerspectiveCameraComponent>()->init(fov, near, far, ratio);
 	camera->addComponent<CameraController>()->init(player);
 
+	camera->setPosition(player->getPosition() + glm::vec3(0.0f, 0.0f, 5.0f));
+
 	return camera;
 }
 
@@ -73,6 +77,15 @@ GameObject* GOFactory::createGUICamera(float width, float height) {
 	camera->addComponent<OrthographicCameraComponent>()->init(0.0f, width, height, 0.0f, -1.0f, 1.0f);
 
 	return camera;
+}
+
+GameObject* GOFactory::createGroundPlane() {
+
+	GameObject* plane = createEmpty();
+
+	plane->addComponent<ModelRenderComponent>()->init("test/mesh_test/terrain_test.obj");
+
+	return plane;
 }
 
 GameObject* GOFactory::createSun(glm::vec3 direction, glm::vec3 color, float strength) {
