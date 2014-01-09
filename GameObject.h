@@ -25,9 +25,9 @@ class GameObject {
 	const glm::mat4& getMatrix();
 	const glm::mat4& getInverseMatrix();
 
-	const glm::vec3& forward();
-	const glm::vec3& up();
-	const glm::vec3& right();
+	glm::vec3 forward();
+	glm::vec3 up();
+	glm::vec3 right();
 
 	GameObject* getParent();
 	Scene* getScene();
@@ -52,18 +52,18 @@ class GameObject {
 	Component* getComponent(unsigned int type, unsigned int offset = 0);
 	unsigned int getComponents(unsigned int type, Component* dest[]);
 
-	const glm::vec3& getPosition() const;
-	const glm::vec3& getWorldPosition();
-	const glm::vec3& getScale() const;
-	const glm::quat& getRotation() const;
+	glm::vec3 getPosition() const;
+	glm::vec3 getWorldPosition();
+	glm::vec3 getScale() const;
+	glm::quat getRotation() const;
 
-	void setPosition(const glm::vec3& position);
-	void setScale(const glm::vec3& scale);
-	void setRotation(const glm::quat& rotation);
+	void setPosition(glm::vec3 position);
+	void setScale(glm::vec3 scale);
+	void setRotation(glm::quat rotation);
 
-	void appendPosition(const glm::vec3& position);
-	void appendScale(const glm::vec3& scale);
-	void appendRotation(const glm::quat& rotation);
+	void appendPosition(glm::vec3 position);
+	void appendScale(glm::vec3 scale);
+	void appendRotation(glm::quat rotation);
 
   private:
 

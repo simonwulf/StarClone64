@@ -16,6 +16,12 @@ PlayScene::PlayScene() {
 	setAmbientLight(glm::vec3(0.5f, 0.5f, 0.5f));
 	setClearFlags(GL_DEPTH_BUFFER_BIT);
 
+	GameObject* obj = GOFactory::instance()->createTeapot();
+ 	obj->setPosition(glm::vec3(0.0f));
+ 	obj->setScale(glm::vec3(0.03f, 0.03f, 0.03f));
+
+	add(obj);
+
 	GameObject* player = GOFactory::instance()->createPlayer();
 	player->setPosition(glm::vec3(0.0f, 5.0f, -5.0f));
 	add(player);

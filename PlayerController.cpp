@@ -1,5 +1,7 @@
 #include "PlayerController.h"
+
 #include "Game.h"
+#include "GOFactory.h"
 #include "Input.h"
 
 const PlayerController::Bounds PlayerController::BOUNDS = {
@@ -10,12 +12,12 @@ const PlayerController::Bounds PlayerController::BOUNDS = {
 
 PlayerController::PlayerController() {
 
-	Input::instance()->registerEventHandler<PlayerController>(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	Input::instance()->registerEventHandler<PlayerController>(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	Input::instance()->registerEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	Input::instance()->registerEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
 
-	Input::instance()->registerEventHandler<PlayerController>(Event::JOY_PLUGGED_IN, this, &PlayerController::joyConnectedHandler);
+	Input::instance()->registerEventHandler(Event::JOY_PLUGGED_IN, this, &PlayerController::joyConnectedHandler);
 
-	Game::instance()->registerEventHandler<PlayerController>(Event::GAME_UPDATE, this, &PlayerController::update);
+	Game::instance()->registerEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
 
 	m_fMovementSpeed = 20.0f;
 	m_fYawVelocity = 0.0f;
@@ -28,14 +30,14 @@ PlayerController::PlayerController() {
 
 PlayerController::~PlayerController() {
 
-	Input::instance()->removeEventHandler<PlayerController>(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	Input::instance()->removeEventHandler<PlayerController>(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	Input::instance()->removeEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	Input::instance()->removeEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
 	
-	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
-	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
-	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
+	Input::instance()->removeEventHandler(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
+	Input::instance()->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
+	Input::instance()->removeEventHandler(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
 
-	Game::instance()->removeEventHandler<PlayerController>(Event::GAME_UPDATE, this, &PlayerController::update);
+	Game::instance()->removeEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
 }
 
 void PlayerController::init(GameObject* spaceship) {
@@ -133,26 +135,26 @@ void PlayerController::keyUpHandler(const Event& e) {
 
 void PlayerController::joyConnectedHandler(const Event& e) {
 
-	Input::instance()->registerEventHandler<PlayerController>(Event::JOY_PLUGGED_OUT, this, &PlayerController::joyDisconnectedHandler);
+	Input::instance()->registerEventHandler(Event::JOY_PLUGGED_OUT, this, &PlayerController::joyDisconnectedHandler);
 
-	Input::instance()->registerEventHandler<PlayerController>(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
-	Input::instance()->registerEventHandler<PlayerController>(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
-	Input::instance()->registerEventHandler<PlayerController>(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
+	Input::instance()->registerEventHandler(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
+	Input::instance()->registerEventHandler(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
+	Input::instance()->registerEventHandler(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
 
-	Input::instance()->removeEventHandler<PlayerController>(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	Input::instance()->removeEventHandler<PlayerController>(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	Input::instance()->removeEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	Input::instance()->removeEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
 }
 
 void PlayerController::joyDisconnectedHandler(const Event& e) {
 
-	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_PLUGGED_OUT, this, &PlayerController::joyDisconnectedHandler);
+	Input::instance()->removeEventHandler(Event::JOY_PLUGGED_OUT, this, &PlayerController::joyDisconnectedHandler);
 
-	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
-	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
-	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
+	Input::instance()->removeEventHandler(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
+	Input::instance()->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
+	Input::instance()->removeEventHandler(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
 
-	Input::instance()->registerEventHandler<PlayerController>(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	Input::instance()->registerEventHandler<PlayerController>(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	Input::instance()->registerEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	Input::instance()->registerEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
 
 	m_fYawVelocity = 0.0f;
 	m_fPitchVelocity = 0.0f;
@@ -191,6 +193,12 @@ void PlayerController::buttonDownHandler(const Event& e) {
 	switch (e.joypad.button) {
 	
 		case 0: //Cross
+			{
+				GameObject* laser = GOFactory::instance()->createLaser();
+				laser->setPosition(m_xGameObject->getWorldPosition() + m_xGameObject->forward() * 8.0f);
+				laser->setRotation(m_xGameObject->getRotation());
+				m_xGameObject->getScene()->add(laser);
+			}
 			break;
 
 		case 1: //Circle

@@ -97,6 +97,7 @@
     <ClCompile Include="GUITextureRenderComponent.cpp" />
     <ClCompile Include="HUDScene.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="LaserController.cpp" />
     <ClCompile Include="LightComponent.cpp" />
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="GUITextureRenderComponent.h" />
     <ClInclude Include="HUDScene.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="LaserController.h" />
     <ClInclude Include="LightComponent.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Material.h" />

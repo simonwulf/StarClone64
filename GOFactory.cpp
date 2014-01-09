@@ -9,6 +9,7 @@
 #include "TeapotSpin.h"
 #include "RandomMover.h"
 #include "PlayerController.h"
+#include "LaserController.h"
 #include "CameraController.h"
 #include "PerspectiveCameraComponent.h"
 #include "OrthographicCameraComponent.h"
@@ -47,25 +48,15 @@ GameObject* GOFactory::createTeapot() {
 	return teapot;
 }
 
-GameObject* GOFactory::createTestMesh1() {
+GameObject* GOFactory::createLaser() {
 
-	GameObject* teapot = createEmpty();
-	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/boss1/tris.md2");
-	return teapot;
-}
+	GameObject* laser = createEmpty();
 
-GameObject* GOFactory::createTestMesh2() {
+	laser->addComponent<ModelRenderComponent>()->init("data/models/laser/Laser.obj");
+	laser->addComponent<LaserController>();
+	laser->addComponent<PointLightComponent>()->init(3.0f, glm::vec3(0.5f, 0.75f, 1.0f), 1.0f);
 
-	GameObject* teapot = createEmpty();
-	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/boss2/tris.md2");
-	return teapot;
-}
-
-GameObject* GOFactory::createTestMesh3() {
-
-	GameObject* teapot = createEmpty();
-	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/teapot.obj");
-	return teapot;
+	return laser;
 }
 
 GameObject* GOFactory::createPlayer() {
@@ -155,12 +146,7 @@ GameObject* GOFactory::createPointLight(glm::vec3 color, float radius, float str
 
 	GameObject* light = createEmpty();
 	
-	PointLightComponent* lightComponent = light->addComponent<PointLightComponent>();
-	//light->addComponent(ComponentFactory::instance()->create<RenderComponent>());
-
-	lightComponent->setColor(color);
-	lightComponent->setRadius(radius);
-	lightComponent->setStrength(strength);
+	light->addComponent<PointLightComponent>()->init(radius, color, strength);
 
 	return light;
 }

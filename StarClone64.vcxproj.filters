@@ -186,6 +186,9 @@
     <ClCompile Include="FMODTest.cpp">
       <Filter>Source Files\GameSpecific\Components</Filter>
     </ClCompile>
+    <ClCompile Include="LaserController.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
     <ClCompile Include="SkyScene.cpp">
       <Filter>Source Files\GameSpecific\Scenes</Filter>
     </ClCompile>
@@ -309,6 +312,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FMODTest.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LaserController.h">
       <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
     <ClInclude Include="SkyScene.h">

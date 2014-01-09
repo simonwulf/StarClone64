@@ -16,9 +16,7 @@ class GOFactory {
 
 	GameObject* createEmpty();
 	GameObject* createTeapot();
-	GameObject* createTestMesh1();
-	GameObject* createTestMesh2();
-	GameObject* createTestMesh3();
+	GameObject* createLaser();
 	GameObject* createPlayer();
 	GameObject* createSkybox();
 	GameObject* createPlayerCamera(GameObject* player, float fov, float near, float far, float ratio);

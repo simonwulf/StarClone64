@@ -11,6 +11,13 @@ PointLightComponent::~PointLightComponent() {
 
 }
 
+void PointLightComponent::init(float radius, glm::vec3 color, float strength) {
+
+	m_fRadius = radius;
+	m_vColor = color;
+	m_fStrength = strength;
+}
+
 void PointLightComponent::setRadius(float radius) {
 
 	m_fRadius = radius;

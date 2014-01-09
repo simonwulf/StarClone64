@@ -72,19 +72,19 @@ const glm::mat4& GameObject::getInverseMatrix() {
 	return m_mInverseMatrix;
 }
 
-const glm::vec3& GameObject::forward() {
+glm::vec3 GameObject::forward() {
 
-	return glm::vec3(getMatrix() * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
+	return glm::normalize(glm::vec3(getMatrix() * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 }
 
-const glm::vec3& GameObject::up() {
+glm::vec3 GameObject::up() {
 
-	return glm::vec3(getMatrix() * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
+	return glm::normalize(glm::vec3(getMatrix() * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)));
 }
 
-const glm::vec3& GameObject::right() {
+glm::vec3 GameObject::right() {
 
-	return glm::vec3(getMatrix() * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));
+	return glm::normalize(glm::vec3(getMatrix() * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)));
 }
 
 GameObject* GameObject::getParent() {
@@ -183,58 +183,58 @@ unsigned int GameObject::getComponents(unsigned int type, Component* dest[]) {
 	return num_found;
 }
 
-const glm::vec3& GameObject::getPosition() const {
+glm::vec3 GameObject::getPosition() const {
 
 	return m_vPosition;
 }
 
-const glm::vec3& GameObject::getWorldPosition() {
+glm::vec3 GameObject::getWorldPosition() {
 
 	return glm::vec3(glm::mat4(getMatrix()) * glm::vec4(0,0,0,1));
 }
 
 
-const glm::vec3& GameObject::getScale() const {
+glm::vec3 GameObject::getScale() const {
 
 	return m_vScale;
 }
 
-const glm::quat& GameObject::getRotation() const {
+glm::quat GameObject::getRotation() const {
 
 	return m_qRotation;
 }
 
-void GameObject::setPosition(const glm::vec3& position) {
+void GameObject::setPosition(glm::vec3 position) {
 
 	m_vPosition = position;
 	invalidateMatrix();
 }
 
-void GameObject::setScale(const glm::vec3& scale) {
+void GameObject::setScale(glm::vec3 scale) {
 
 	m_vScale = scale;
 	invalidateMatrix();
 }
 
-void GameObject::setRotation(const glm::quat& rotation) {
+void GameObject::setRotation(glm::quat rotation) {
 
 	m_qRotation = rotation;
 	invalidateMatrix();
 }
 
-void GameObject::appendPosition(const glm::vec3& position) {
+void GameObject::appendPosition(glm::vec3 position) {
 
 	m_vPosition += position;
 	invalidateMatrix();
 }
 
-void GameObject::appendScale(const glm::vec3& scale) {
+void GameObject::appendScale(glm::vec3 scale) {
 
 	m_vScale *= scale;
 	invalidateMatrix();
 }
 
-void GameObject::appendRotation(const glm::quat& rotation) {
+void GameObject::appendRotation(glm::quat rotation) {
 
 	m_qRotation = m_qRotation * rotation;
 	invalidateMatrix();
