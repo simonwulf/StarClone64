@@ -65,7 +65,7 @@ GameObject* GOFactory::createPlayer() {
 	GameObject* ship = createEmpty();
 	player->addChild(ship);
 
-	ship->addComponent<ModelRenderComponent>()->init("data/models/spaceship/Spaceship.obj");
+	ship->addComponent<ModelRenderComponent>()->init("data/models/spaceship2/Spaceship2.obj");
 	player->addComponent<PlayerController>()->init(ship);
 
 	return player;
@@ -79,7 +79,7 @@ GameObject* GOFactory::createSkybox() {
 	for(unsigned int i = 0; i < mrc->getModel()->numMeshes(); ++i) {
 
 		const Mesh* meshes = mrc->getModel()->getMeshes();
-		GLuint texId = meshes[i].getMaterial()->getTexture(0)->getTexID();
+		GLuint texId = meshes[i].getMaterial()->getTexture(meshes[i].getMaterial()->getIdsOfType(MATERIAL_DIFFUSE)[0])->getTexID();
 		glBindTexture(GL_TEXTURE_2D, texId);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

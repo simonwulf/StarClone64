@@ -22,7 +22,7 @@ GUITextureRenderComponent::GUITextureRenderComponent() {
 		//TODO: make GUI material... or not
 	}
 
-	m_xTexture == nullptr;
+	m_xTexture = nullptr;
 }
 
 void GUITextureRenderComponent::init(const char* texturePath) {

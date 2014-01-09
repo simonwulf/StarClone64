@@ -1,7 +1,7 @@
 #include "CameraComponent.h"
 #include "Camera.h"
 
-CameraComponent::CameraComponent() : Component(Component::Type::CAMERA) {
+CameraComponent::CameraComponent() : Component(CAMERA) {
 
 }
 

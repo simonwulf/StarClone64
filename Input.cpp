@@ -89,7 +89,7 @@ void Input::update(const Event& e) {
 	const float* axes = glfwGetJoystickAxes(0, &m_iNumJoyAxes);
 	const unsigned char* buttons = glfwGetJoystickButtons(0, &m_iNumJoyButtons);
 
-	for (unsigned int i = 0; i < m_iNumJoyAxes; ++i) {
+	for (int i = 0; i < m_iNumJoyAxes; ++i) {
 	
 		if (m_fJoyAxes[i] != axes[i]) {
 		
@@ -106,7 +106,7 @@ void Input::update(const Event& e) {
 		m_fJoyAxes[i] = axes[i];
 	}
 
-	for (unsigned int i = 0; i < m_iNumJoyButtons; ++i) {
+	for (int i = 0; i < m_iNumJoyButtons; ++i) {
 	
 		if (m_bJoyButtons[i] != (bool)buttons[i]) {
 		
@@ -135,7 +135,7 @@ void Input::joyPluggedIn() {
 	memcpy(m_fJoyAxes, axes, sizeof(float) * m_iNumJoyAxes);
 
 	m_bJoyButtons = new bool[m_iNumJoyButtons];
-	for (unsigned int i = 0; i < m_iNumJoyButtons; ++i) {
+	for (int i = 0; i < m_iNumJoyButtons; ++i) {
 	
 		m_bJoyButtons[i] = buttons[i];
 	}

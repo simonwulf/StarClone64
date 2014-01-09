@@ -21,6 +21,8 @@ class Renderer {
 
 	void render(Scene* scene);
 
+	ShaderProgram* getDefaultShader() { return m_xDefaultShaderProgram; };
+
   private:
 
 	static const unsigned int DIR_LIGHT_BLOCK_SIZE = 32;

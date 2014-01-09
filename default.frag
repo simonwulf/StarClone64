@@ -25,20 +25,43 @@ layout(std140) uniform PointLights {
 	PointLight point_lights[64];
 };
 
+uniform mat4 model;
 uniform uint dir_light_count;
 uniform uint point_light_count;
 uniform vec3 ambient_light;
+uniform uint use_normal;
 
 uniform sampler2D diffuse;
+uniform sampler2D normalmap;
 
 in vec3 world_position;
 in vec3 cam_position;
 in vec3 world_normal;
 in vec3 cam_normal;
+in vec3 vert_normal;
 
 in vec2 texture_coords;
+in vec3 tangent;
 
 out vec4 color_out;
+
+vec3 calcNormalmap() {
+
+	vec3 _normal = normalize(vert_normal);
+	vec3 _tangent = normalize(tangent);
+	_tangent = normalize( _tangent - dot(_tangent, _normal) * _normal );
+	vec3 _bitangent = cross(_tangent, _normal);
+	vec3 _bumpMapNormal = texture(normalmap, texture_coords).xyz;
+	_bumpMapNormal = (_bumpMapNormal * 2.0) - vec3(1.0, 1.0, 1.0);
+	
+	vec3 newNormal;
+	vec4 productNormal;
+	mat3 tbn = mat3(_tangent, _bitangent, _normal);
+	newNormal = tbn * _bumpMapNormal;
+	productNormal = model * vec4(newNormal, 0.0);
+	newNormal = normalize(vec3(productNormal));
+	return newNormal;
+}
 
 void main() {
 
@@ -47,9 +70,14 @@ void main() {
 		color.rgb * (1.0 - clamp((-2.0 - position.z) * 0.3, 0.0, 1.0)),
 		1.0
 	);*/
+	
+	vec3 world_normal = normalize(world_normal);
+	if(use_normal > 0) {
+		world_normal = calcNormalmap();
+		//color_out = texture2D(normalmap, texture_coords); return;
+	}
 
 	vec3 lighting = ambient_light;
-	vec3 world_normal = normalize(world_normal);
 
 	float light_wrap = 0.0;
 

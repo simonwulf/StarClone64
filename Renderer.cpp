@@ -49,6 +49,7 @@ void Renderer::render(Scene* scene) {
 	m_xDefaultShaderProgram->uniformMatrix4fv("view", 1, GL_FALSE, (GLfloat*)&scene->getCamera()->getViewMatrix());
 	m_xDefaultShaderProgram->uniform3fv("ambient_light", 1, (GLfloat*)&scene->getAmbientLight());
 	m_xDefaultShaderProgram->uniform1i("diffuse", 0);
+	m_xDefaultShaderProgram->uniform1i("normalmap", 1);
 
 	updateLights(LT_DIRECTIONAL, scene);
 	updateLights(LT_POINT, scene);

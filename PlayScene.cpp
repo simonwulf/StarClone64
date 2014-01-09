@@ -13,7 +13,7 @@
 
 PlayScene::PlayScene() {
 
-	setAmbientLight(glm::vec3(0.5f, 0.5f, 0.5f));
+	setAmbientLight(glm::vec3(0.1f, 0.1f, 0.1f));
 	setClearFlags(GL_DEPTH_BUFFER_BIT);
 
 	GameObject* obj = GOFactory::instance()->createTeapot();
@@ -44,17 +44,17 @@ PlayScene::PlayScene() {
 		glm::vec3(1.0f, 1.0f, 1.0f),
 		0.5f
 	);
-	add(sun);
+	//add(sun);
 
 	sun = GOFactory::instance()->createSun(
 		glm::vec3(0.0f, 1.0f, 0.5f),
 		glm::vec3(0.0f, 0.5f, 1.0f),
 		1.0f
 	);
-	add(sun);
+	//add(sun);
 	/* */
 
-	/* *
+	/* */
 	float hue = 0.0f;
 	float r, g, b;
 	unsigned int numLights = 64;

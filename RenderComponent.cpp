@@ -1,7 +1,7 @@
 #include "RenderComponent.h"
 //#include "MeshManager.h"
 
-RenderComponent::RenderComponent() : Component(Component::Type::RENDER) {
+RenderComponent::RenderComponent() : Component(RENDER) {
 
 	//Simple triangle mesh test
 	//m_xMesh = MeshManager::getMesh("test/mesh_test/teapot.obj");//new Mesh();

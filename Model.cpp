@@ -14,7 +14,7 @@ Model::Model(std::string filepath, unsigned int loadFlags) {
 	Log::Write("loading model " + filepath + "\n");
 	Assimp::Importer importer;
 
-	const aiScene* scene = importer.ReadFile(filepath, loadFlags | aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals);
+	const aiScene* scene = importer.ReadFile(filepath, loadFlags | aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
 
 	if (scene == nullptr) {
 	
@@ -57,7 +57,20 @@ Model::Model(std::string filepath, unsigned int loadFlags) {
 				if (material->GetTexture(aiTextureType_DIFFUSE, j, &texture_path) == AI_SUCCESS &&
 					PathCombineA(fixed_path, model_folder, texture_path.C_Str()) != nullptr) {
 					
-					m_xMaterials[i].addTexture(fixed_path);
+					m_xMaterials[i].addTexture(fixed_path, MATERIAL_DIFFUSE);
+				}
+			}
+
+			for(unsigned int j = 0; j < material->GetTextureCount(aiTextureType_HEIGHT); ++j) {
+
+
+				aiString texture_path;
+				char fixed_path[MAX_PATH];
+
+				if (material->GetTexture(aiTextureType_HEIGHT, j, &texture_path) == AI_SUCCESS &&
+					PathCombineA(fixed_path, model_folder, texture_path.C_Str()) != nullptr) {
+
+						m_xMaterials[i].addTexture(fixed_path, MATERIAL_NORMALMAP);
 				}
 			}
 
@@ -95,6 +108,13 @@ Model::Model(std::string filepath, unsigned int loadFlags) {
 				
 					vertices[j].texcoords.x = mesh->mTextureCoords[0][j].x;
 					vertices[j].texcoords.y = mesh->mTextureCoords[0][j].y;
+				}
+
+				if(mesh->HasTangentsAndBitangents()) {
+
+					vertices[j].tangent.x = mesh->mTangents[j].x;
+					vertices[j].tangent.y = mesh->mTangents[j].y;
+					vertices[j].tangent.z = mesh->mTangents[j].z;
 				}
 			}
 

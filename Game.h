@@ -36,6 +36,7 @@ class Game : public EventDispatcher {
 	void setState(State state);
 
 	const glm::ivec2& getWindowSize() const;
+	Renderer* getRenderer() { return m_xRenderer; };
 
 	static Game* instance();
 

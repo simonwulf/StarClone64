@@ -6,6 +6,19 @@
 #include "Texture.h"
 #include "Shader.h"
 
+enum MatType {
+
+	MATERIAL_DIFFUSE,
+	MATERIAL_NORMALMAP,
+	MATTYPE_LEN
+};
+
+enum MaterialTextureSlots {
+
+	TEXSLOT_DIFFUSE = GL_TEXTURE0,
+	TEXSLOT_NORMAL = GL_TEXTURE1
+};
+
 class Material {
 
   public:
@@ -13,16 +26,19 @@ class Material {
 	Material();
 	~Material();
 
-	void addTexture(const char* filepath);
+	void addTexture(const char* filepath, MatType type);
 
-	unsigned int numTextures() const;
+	unsigned int numTextures(MatType type) const;
+	unsigned int numTexturesTotal() const;
 
 	const Texture* getTexture(unsigned int index) const;
+	const std::vector<int>& getIdsOfType(MatType type) const;
 
   private:
 
 	std::vector<Texture*> m_xTextures;
-	ShaderProgram* m_xShaderProgram; //Is this optimal? Or should we associate a material with only a fragment shader if we won't be using different vertex shaders?
+	std::vector<std::vector<int>> m_xTexLookup;
+	//ShaderProgram* m_xShaderProgram; //Is this optimal? Or should we associate a material with only a fragment shader if we won't be using different vertex shaders?
 };
 
 #endif

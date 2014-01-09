@@ -26,7 +26,7 @@ AudioManager::~AudioManager() {
 
 void AudioManager::checkError( FMOD_RESULT result ) {
 
-	if(result != FMOD_RESULT::FMOD_OK) {
+	if(result != FMOD_OK) {
 
 		Log::Err("FMOD Error: " + std::string(FMOD_ErrorString(result)));
 	}

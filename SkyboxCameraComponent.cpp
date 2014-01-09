@@ -2,7 +2,7 @@
 #include "Game.h"
 #include "LogManager.h"
 
-SkyboxCameraComponent::SkyboxCameraComponent() : Component(Component::Type::CAMERA) {
+SkyboxCameraComponent::SkyboxCameraComponent() : Component(CAMERA) {
 	
 	refObject = nullptr;
 }

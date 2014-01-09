@@ -6,7 +6,7 @@
 HUDScene::HUDScene() {
 
 	glm::ivec2 w_size = Game::instance()->getWindowSize();
-	GameObject* camera = GOFactory::instance()->createGUICamera(w_size.x, w_size.y);
+	GameObject* camera = GOFactory::instance()->createGUICamera((float)w_size.x, (float)w_size.y);
 	add(camera);
 
 	useCamera((CameraComponent*)camera->getComponent(Component::CAMERA));
