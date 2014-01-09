@@ -13,6 +13,7 @@
 #include "PerspectiveCameraComponent.h"
 #include "OrthographicCameraComponent.h"
 #include "GUITextureRenderComponent.h"
+#include "SkyboxCameraComponent.h"
 
 GOFactory GOFactory::s_xInstance;
 
@@ -79,6 +80,25 @@ GameObject* GOFactory::createPlayer() {
 	return player;
 }
 
+GameObject* GOFactory::createSkybox() {
+
+	GameObject* skybox = createEmpty();
+	ModelRenderComponent* mrc = skybox->addComponent<ModelRenderComponent>();
+	mrc->init("data/models/skybox/skybox.obj");
+	for(unsigned int i = 0; i < mrc->getModel()->numMeshes(); ++i) {
+
+		const Mesh* meshes = mrc->getModel()->getMeshes();
+		GLuint texId = meshes[i].getMaterial()->getTexture(0)->getTexID();
+		glBindTexture(GL_TEXTURE_2D, texId);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	}
+	skybox->setPosition(glm::vec3(0, -500, 0));
+	skybox->setScale(glm::vec3(1000));
+	return skybox;
+}
+
+
 GameObject* GOFactory::createPlayerCamera(GameObject* player, float fov, float near, float far, float ratio) {
 
 	GameObject* camera = createEmpty();
@@ -96,6 +116,15 @@ GameObject* GOFactory::createGUICamera(float width, float height) {
 	GameObject* camera = createEmpty();
 
 	camera->addComponent<OrthographicCameraComponent>()->init(0.0f, width, height, 0.0f, -1.0f, 1.0f);
+
+	return camera;
+}
+
+GameObject* GOFactory::createSkyCamera( GameObject* refObj, float fov, float near, float far, float ratio ) {
+
+	GameObject* camera = createEmpty();
+	camera->addComponent<PerspectiveCameraComponent>()->init(fov, near, far, ratio);
+	camera->addComponent<SkyboxCameraComponent>()->init(refObj);
 
 	return camera;
 }

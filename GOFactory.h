@@ -20,8 +20,10 @@ class GOFactory {
 	GameObject* createTestMesh2();
 	GameObject* createTestMesh3();
 	GameObject* createPlayer();
+	GameObject* createSkybox();
 	GameObject* createPlayerCamera(GameObject* player, float fov, float near, float far, float ratio);
 	GameObject* createGUICamera(float width, float height);
+	GameObject* createSkyCamera(GameObject* refObj, float fov, float near, float far, float ratio);
 	GameObject* createGroundPlane();
 	GameObject* createSun(glm::vec3 direction, glm::vec3 color, float strength);
 	GameObject* createPointLight(glm::vec3 color, float radius, float strength);

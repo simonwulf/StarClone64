@@ -115,6 +115,8 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SkyboxCameraComponent.cpp" />
+    <ClCompile Include="SkyScene.cpp" />
     <ClCompile Include="TeapotSpin.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -154,6 +156,8 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SkyboxCameraComponent.h" />
+    <ClInclude Include="SkyScene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="DirectionalLightComponent.h" />
     <ClInclude Include="TeapotSpin.h" />

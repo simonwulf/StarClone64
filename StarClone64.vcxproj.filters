@@ -186,6 +186,12 @@
     <ClCompile Include="FMODTest.cpp">
       <Filter>Source Files\GameSpecific\Components</Filter>
     </ClCompile>
+    <ClCompile Include="SkyScene.cpp">
+      <Filter>Source Files\GameSpecific\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyboxCameraComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogManager.h">
@@ -304,6 +310,12 @@
     </ClInclude>
     <ClInclude Include="FMODTest.h">
       <Filter>Header Files\GameSpecific\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyScene.h">
+      <Filter>Header Files\GameSpecific\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyboxCameraComponent.h">
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

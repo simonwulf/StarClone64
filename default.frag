@@ -91,7 +91,7 @@ void main() {
 
 	//color_out = vec4(lighting, 1.0) * texture2D(diffuse, texture_coords);
 	
-	color_out = (vec4(lighting, 1.0) * texture2D(diffuse, texture_coords)) * (1.0 - clamp((-10.0 - cam_position.z) * 0.3, 0.0, 1.0));
+	color_out = (vec4(lighting, 1.0) * texture2D(diffuse, texture_coords));// * (1.0 - clamp((-10.0 - cam_position.z) * 0.3, 0.0, 1.0));
 	//color_out = vec4(lighting, 1.0);
 	//color_out = vec4(normal * light_amount, 1.0);
 }

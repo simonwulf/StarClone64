@@ -13,6 +13,8 @@ class ModelRenderComponent : public RenderComponent {
 
 	void render();
 
+	const Model* getModel() const { return m_xModel; }
+
   private:
 
 	const Model* m_xModel;

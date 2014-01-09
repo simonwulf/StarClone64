@@ -50,6 +50,7 @@ class Game : public EventDispatcher {
 	
 	Scene* m_xPlayScene;
 	Scene* m_xHUDScene;
+	Scene* m_xSkyScene;
 
 	glm::ivec2 m_vWindowSize;
 

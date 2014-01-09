@@ -5,6 +5,7 @@
 
 #include "PlayScene.h"
 #include "HUDScene.h"
+#include "SkyScene.h"
 
 Game* Game::s_xInstance = nullptr;
 
@@ -27,6 +28,7 @@ Game::~Game() {
 	delete m_xRenderer;
 	delete m_xPlayScene;
 	delete m_xHUDScene;
+	delete m_xSkyScene;
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
@@ -82,7 +84,9 @@ int Game::init() {
 
 	m_xRenderer = new Renderer(m_xWindow);
 	
+	m_xSkyScene = new SkyScene();
 	m_xPlayScene = new PlayScene();
+	((SkyScene*) m_xSkyScene)->init(m_xPlayScene->getCamera()->getGameObject());
 	m_xHUDScene = new HUDScene();
 
 	Input::instance()->init(m_xWindow);
@@ -108,6 +112,7 @@ void Game::loop() {
 		glfwPollEvents();
 
 		update(delta, m_fElapsedTime);
+		dispatchEvent(makeGameEvent(Event::GAME_UPDATE_LATE));
 		render();
 
 		clock_t now = clock();
@@ -146,6 +151,7 @@ void Game::update(float delta, float elapsedTime) {
 
 void Game::render() {
 
+	m_xRenderer->render(m_xSkyScene);
 	m_xRenderer->render(m_xPlayScene);
 	m_xRenderer->render(m_xHUDScene);
 
