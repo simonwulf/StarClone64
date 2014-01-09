@@ -177,6 +177,9 @@
     <ClCompile Include="GUITextureRenderComponent.cpp">
       <Filter>Source Files\Components\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogManager.h">
@@ -286,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="GUITextureRenderComponent.h">
       <Filter>Header Files\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -17,8 +17,13 @@ class PlayerController : public ControllerComponent {
 	void keyDownHandler(const Event& e);
 	void keyUpHandler(const Event& e);
 
-	float getYawVelocity() const;
+	void axisChangeHandler(const Event& e);
+	void buttonDownHandler(const Event& e);
+	void buttonUpHandler(const Event& e);
 
+	void joyConnectedHandler(const Event& e);
+	void joyDisconnectedHandler(const Event& e);
+	
   private:
 
 	static const struct Bounds {

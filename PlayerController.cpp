@@ -1,5 +1,6 @@
 #include "PlayerController.h"
 #include "Game.h"
+#include "Input.h"
 
 const PlayerController::Bounds PlayerController::BOUNDS = {
 	500.0f, -500.0f, //x
@@ -9,8 +10,11 @@ const PlayerController::Bounds PlayerController::BOUNDS = {
 
 PlayerController::PlayerController() {
 
-	Game::instance()->registerEventHandler<PlayerController>(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	Game::instance()->registerEventHandler<PlayerController>(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	Input::instance()->registerEventHandler<PlayerController>(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	Input::instance()->registerEventHandler<PlayerController>(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+
+	Input::instance()->registerEventHandler<PlayerController>(Event::JOY_PLUGGED_IN, this, &PlayerController::joyConnectedHandler);
+
 	Game::instance()->registerEventHandler<PlayerController>(Event::GAME_UPDATE, this, &PlayerController::update);
 
 	m_fMovementSpeed = 20.0f;
@@ -24,8 +28,13 @@ PlayerController::PlayerController() {
 
 PlayerController::~PlayerController() {
 
-	Game::instance()->removeEventHandler<PlayerController>(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	Game::instance()->removeEventHandler<PlayerController>(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	Input::instance()->removeEventHandler<PlayerController>(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	Input::instance()->removeEventHandler<PlayerController>(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	
+	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
+	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
+	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
+
 	Game::instance()->removeEventHandler<PlayerController>(Event::GAME_UPDATE, this, &PlayerController::update);
 }
 
@@ -64,7 +73,7 @@ void PlayerController::update(const Event& e) {
 	
 	m_fYaw += m_fYawVelocity * delta;
 	m_fPitch = m_fPitch + m_fPitchVelocity * 1.5f * delta - m_fPitch * 2.0f * delta;
-	m_fRoll = m_fRoll + m_fYawVelocity * delta - m_fRoll * 2.0f * delta;
+	m_fRoll = m_fRoll + m_fYawVelocity * 1.3f * delta - m_fRoll * 2.0f * delta;
 
 	getGameObject()->setRotation(glm::quat(glm::vec3(m_fPitch, m_fYaw, 0.0f))); //euler angles constructor takes radians
 	m_xSpaceship->setRotation(glm::quat(glm::vec3(0.0f, 0.0f, m_fRoll)));
@@ -122,7 +131,79 @@ void PlayerController::keyUpHandler(const Event& e) {
 	}
 }
 
-float PlayerController::getYawVelocity() const {
+void PlayerController::joyConnectedHandler(const Event& e) {
 
-	return m_fYawVelocity;
+	Input::instance()->registerEventHandler<PlayerController>(Event::JOY_PLUGGED_OUT, this, &PlayerController::joyDisconnectedHandler);
+
+	Input::instance()->registerEventHandler<PlayerController>(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
+	Input::instance()->registerEventHandler<PlayerController>(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
+	Input::instance()->registerEventHandler<PlayerController>(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
+
+	Input::instance()->removeEventHandler<PlayerController>(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	Input::instance()->removeEventHandler<PlayerController>(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+}
+
+void PlayerController::joyDisconnectedHandler(const Event& e) {
+
+	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_PLUGGED_OUT, this, &PlayerController::joyDisconnectedHandler);
+
+	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
+	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
+	Input::instance()->removeEventHandler<PlayerController>(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
+
+	Input::instance()->registerEventHandler<PlayerController>(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	Input::instance()->registerEventHandler<PlayerController>(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+
+	m_fYawVelocity = 0.0f;
+	m_fPitchVelocity = 0.0f;
+	m_fMovementSpeed = 20.0f;
+}
+
+void PlayerController::axisChangeHandler(const Event& e) {
+
+	switch (e.joypad.axis) {
+	
+		case 0: //X-axis
+			m_fYawVelocity = -e.joypad.axisValue;
+			if (abs(m_fYawVelocity) < 0.01f)
+				m_fYawVelocity = 0.0f;
+			break;
+
+		case 1: //Y-axis
+			m_fPitchVelocity = e.joypad.axisValue < 0.0f ?
+				  e.joypad.axisValue*e.joypad.axisValue :
+				-(e.joypad.axisValue*e.joypad.axisValue);
+			if (abs(m_fPitchVelocity) < 0.01f)
+				m_fPitchVelocity = 0.0f;
+			break;
+
+		case 2: //Analog triggers
+			if (abs(e.joypad.axisValue) > 0.9f)
+				m_fMovementSpeed = 10.0f;
+			else
+				m_fMovementSpeed = 20.0f;
+			break;
+	}
+}
+
+void PlayerController::buttonDownHandler(const Event& e) {
+
+	switch (e.joypad.button) {
+	
+		case 0: //Cross
+			break;
+
+		case 1: //Circle
+			break;
+
+		case 2: //Square
+			break;
+
+		case 3: //Triangle
+			break;
+	}
+}
+
+void PlayerController::buttonUpHandler(const Event& e) {
+
 }

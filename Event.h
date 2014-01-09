@@ -24,6 +24,8 @@ class Event {
 		JOY_BUTTON_DOWN,
 		JOY_BUTTON_UP,
 		JOY_AXIS_CHANGE,
+		JOY_PLUGGED_IN,
+		JOY_PLUGGED_OUT,
 
 		COLLISION,
 
@@ -54,17 +56,12 @@ class Event {
 		char button;
 	};
 
-	struct JoyButtonEvent {
+	struct JoypadEvent {
 	
 		unsigned int joypad;
-		unsigned int button;
-	};
-
-	struct JoyAxisEvent {
-	
-		unsigned int joypad;
-		unsigned int axis;
-		float value;
+		int button;
+		int axis;
+		float axisValue;
 	};
 
 #pragma endregion event_type_structs
@@ -76,8 +73,7 @@ class Event {
 		GameEvent game;
 		KeyboardEvent keyboard;
 		MouseEvent mouse;
-		JoyButtonEvent joyButton;
-		JoyAxisEvent joyAxis;
+		JoypadEvent joypad;
 	};
 
 	Type type;

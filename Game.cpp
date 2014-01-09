@@ -1,40 +1,10 @@
 #include "Game.h"
+
+#include "Input.h"
 #include "GOFactory.h"
 
 #include "PlayScene.h"
 #include "HUDScene.h"
-
-#pragma region glfw_callbacks
-
-void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-
-	if (key == GLFW_KEY_ESCAPE)
-		Game::instance()->quit();
-
-	Event e((Event::Type)-1);
-
-	switch (action) {
-
-		case GLFW_RELEASE:
-			e.type = Event::KEY_UP;
-			break;
-
-		case GLFW_PRESS:
-			
-			e.type = Event::KEY_DOWN;
-			break;
-
-		case GLFW_REPEAT:
-			return;
-	}
-
-	e.keyboard.charCode = key;
-	e.keyboard.keyCode = scancode;
-
-	Game::instance()->dispatchEvent(e);
-}
-
-#pragma endregion glfw_callbacks
 
 Game* Game::s_xInstance = nullptr;
 
@@ -95,8 +65,6 @@ int Game::init() {
 
 	glfwGetWindowSize(m_xWindow, &m_vWindowSize.x, &m_vWindowSize.y);
 
-	glfwSetKeyCallback(m_xWindow, glfwKeyCallback);
-
 	int MajorVersion;
 	int MinorVersion;
 	glGetIntegerv(GL_MAJOR_VERSION, &MajorVersion);
@@ -116,6 +84,8 @@ int Game::init() {
 	
 	m_xPlayScene = new PlayScene();
 	m_xHUDScene = new HUDScene();
+
+	Input::instance()->init(m_xWindow);
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
