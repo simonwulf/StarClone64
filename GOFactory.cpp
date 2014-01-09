@@ -38,11 +38,32 @@ GameObject* GOFactory::createTeapot() {
 	GameObject* teapot = createEmpty();
 	//teapot->setRotation(glm::angleAxis(-90.0f, 1.0f, 0.0f, 0.0f));
 	//teapot->addComponent(ComponentFactory::instance()->create<RenderComponent>());
-	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/Zelda.obj");
+	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/boss1/tris.md2");
 	//teapot->addComponent<TeapotSpin>();
 
 	//teapot->addComponent(ComponentFactory::instance()->create<RandomMover>());
 
+	return teapot;
+}
+
+GameObject* GOFactory::createTestMesh1() {
+
+	GameObject* teapot = createEmpty();
+	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/boss1/tris.md2");
+	return teapot;
+}
+
+GameObject* GOFactory::createTestMesh2() {
+
+	GameObject* teapot = createEmpty();
+	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/boss2/tris.md2");
+	return teapot;
+}
+
+GameObject* GOFactory::createTestMesh3() {
+
+	GameObject* teapot = createEmpty();
+	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/teapot.obj");
 	return teapot;
 }
 

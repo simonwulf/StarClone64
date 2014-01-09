@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <Shlwapi.h>
 
+#include <assimp/postprocess.h>
 #include "Model.h"
 
 #include "LogManager.h"
@@ -13,7 +14,7 @@ Model::Model(std::string filepath, unsigned int loadFlags) {
 	Log::Write("loading model " + filepath + "\n");
 	Assimp::Importer importer;
 
-	const aiScene* scene = importer.ReadFile(filepath, loadFlags);
+	const aiScene* scene = importer.ReadFile(filepath, loadFlags | aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals);
 
 	if (scene == nullptr) {
 	

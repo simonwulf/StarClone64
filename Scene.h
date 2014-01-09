@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 #include "CameraComponent.h"
+#include <vector>
 
 class Scene {
 
@@ -16,7 +17,7 @@ class Scene {
 	void add(GameObject* gameObject);
 
 	void useCamera(CameraComponent* camera);
-	const CameraComponent* getCamera() const;
+	CameraComponent* getCamera();
 
 	GLuint getClearFlags() const;
 	void setClearFlags(GLuint flags);

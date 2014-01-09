@@ -12,7 +12,7 @@
 class Scene;
 
 class GameObject {
-
+	friend class Scene;
   public:
 
 	GameObject();
@@ -53,6 +53,7 @@ class GameObject {
 	unsigned int getComponents(unsigned int type, Component* dest[]);
 
 	const glm::vec3& getPosition() const;
+	const glm::vec3& getWorldPosition();
 	const glm::vec3& getScale() const;
 	const glm::quat& getRotation() const;
 

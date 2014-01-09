@@ -180,6 +180,12 @@
     <ClCompile Include="Input.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FMODTest.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogManager.h">
@@ -292,6 +298,12 @@
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FMODTest.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

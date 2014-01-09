@@ -188,6 +188,12 @@ const glm::vec3& GameObject::getPosition() const {
 	return m_vPosition;
 }
 
+const glm::vec3& GameObject::getWorldPosition() {
+
+	return glm::vec3(glm::mat4(getMatrix()) * glm::vec4(0,0,0,1));
+}
+
+
 const glm::vec3& GameObject::getScale() const {
 
 	return m_vScale;
