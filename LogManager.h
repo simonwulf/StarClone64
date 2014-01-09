@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <Windows.h>
+#include <sstream>
 
 namespace Log {
 

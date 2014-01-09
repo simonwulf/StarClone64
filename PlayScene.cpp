@@ -8,6 +8,8 @@
 #include "CameraController.h"
 #include "RandomMover.h"
 #include "ModelRenderComponent.h"
+#include "FMODTest.h"
+#include "AudioManager.h"
 
 PlayScene::PlayScene() {
 
@@ -21,15 +23,46 @@ PlayScene::PlayScene() {
 		for (unsigned int y = 0; y < count; ++y) {
 			for (unsigned int x = 0; x < count; ++x) {
 	
-				float start = -dist * (float)(count-1)/2.0f;
+// 				float start = -dist * (float)(count-1)/2.0f;
+// 
+// 				GameObject* obj = GOFactory::instance()->createTeapot();
+// 				obj->setPosition(
+// 					glm::vec3(start, start, start) +
+// 					glm::vec3(dist * x, dist * y, dist * z)
+// 				);
+// 				obj->setScale(glm::vec3(0.03f, 0.03f, 0.03f));
+// 				
+				GameObject* obj = GOFactory::instance()->createTestMesh1();
+				GameObject* obj2 = GOFactory::instance()->createTestMesh2();
+				GameObject* obj3 = GOFactory::instance()->createTestMesh3();
+				obj3->addComponent<FMODTest>();
 
-				GameObject* obj = GOFactory::instance()->createTeapot();
-				obj->setPosition(
-					glm::vec3(start, start, start) +
-					glm::vec3(dist * x, dist * y, dist * z)
-				);
-				
+				obj->setPosition(glm::vec3(1, 1, -1));
+				obj3->setPosition(glm::vec3(0, 4, 0));
+				obj2->setPosition(glm::vec3(0, 4, 0));
+
+				obj->setScale(glm::vec3(0.03f, 0.03f, 0.03f));
+				obj3->setScale(glm::vec3(0.03f, 0.03f, 0.03f));
+				obj2->setScale(glm::vec3(1));
+
+				obj->addChild(obj2);
+				obj2->setPosition(glm::vec3(0, 4, 0));
+
+				std::stringstream ss;
+				ss << "obj1: L " << obj->getPosition().x << "\t, " <<
+					obj->getPosition().y << "\t, " << obj->getPosition().z << "\t\tW "
+					<< obj->getWorldPosition().x << "\t, " << obj->getWorldPosition().y << 
+					"\t, " << obj->getWorldPosition().z;
+				ss << "\nobj2: L " << obj2->getPosition().x << "\t, " <<
+					obj2->getPosition().y << "\t, " << obj2->getPosition().z << "\t\tW "
+					<< obj2->getWorldPosition().x << "\t, " << obj2->getWorldPosition().y << 
+					"\t, " << obj2->getWorldPosition().z;
+
+				Log::Writeln(ss.str(), Log::COLOR_LIGHT_AQUA);
+
 				add(obj);
+				add(obj3);
+				//add(obj2);
 			}
 		}
 	}
@@ -42,6 +75,8 @@ PlayScene::PlayScene() {
 	glm::ivec2 window_size = Game::instance()->getWindowSize();
 	GameObject* camera = GOFactory::instance()->createPlayerCamera(player, 60.0f, 0.1f, 1000.0f, (float)window_size.x/(float)window_size.y);
 	add(camera);
+
+	AudioManager::instance()->setGlobalListener(camera);
 
 	useCamera((CameraComponent*)camera->getComponent(Component::CAMERA));
 

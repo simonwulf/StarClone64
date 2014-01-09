@@ -40,7 +40,7 @@ void Scene::useCamera(CameraComponent* camera) {
 	m_xCamera = camera;
 }
 
-const CameraComponent* Scene::getCamera() const {
+CameraComponent* Scene::getCamera() {
 
 	return m_xCamera;
 }

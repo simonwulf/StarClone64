@@ -1,5 +1,7 @@
 #include "PlayerController.h"
 #include "Game.h"
+#include "AudioManager.h"
+#include <sstream>
 
 PlayerController::PlayerController() {
 
@@ -7,7 +9,7 @@ PlayerController::PlayerController() {
 	Game::instance()->registerEventHandler<PlayerController>(Event::KEY_UP, this, &PlayerController::keyUpHandler);
 	Game::instance()->registerEventHandler<PlayerController>(Event::GAME_UPDATE, this, &PlayerController::update);
 
-	m_fMovementSpeed = 3.0f;
+	m_fMovementSpeed = 0.0f;
 	m_fYawVelocity = 0.0f;
 	m_fPitchVelocity = 0.0f;
 
@@ -59,6 +61,11 @@ void PlayerController::keyDownHandler(const Event& e) {
 		case GLFW_KEY_LEFT_SHIFT:
 			m_fMovementSpeed = 0.0f;
 			break;
+
+		case GLFW_KEY_SPACE:
+		{
+			break;
+		}
 	}
 }
 

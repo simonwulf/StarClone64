@@ -10,10 +10,6 @@ ModelManager::ModelManager() {
 
 }
 
-ModelManager::ModelManager(const ModelManager&) {
-
-}
-
 ModelManager* ModelManager::instance() {
 
 	return &m_sInstance;

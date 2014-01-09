@@ -177,6 +177,12 @@
     <ClCompile Include="GUITextureRenderComponent.cpp">
       <Filter>Source Files\Components\Render</Filter>
     </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FMODTest.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogManager.h">
@@ -286,6 +292,12 @@
     </ClInclude>
     <ClInclude Include="GUITextureRenderComponent.h">
       <Filter>Header Files\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FMODTest.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

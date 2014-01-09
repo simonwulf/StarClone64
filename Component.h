@@ -18,6 +18,8 @@ class Component {
 		CONTROLLER,
 		COLLIDER,
 
+		CUSTOM,
+
 		TYPE_N
 	};
 
