@@ -32,7 +32,9 @@ class Game : public EventDispatcher {
 
 	void loop();
 	void quit();
+	void pause();
 
+	State getState() const;
 	void setState(State state);
 
 	const glm::ivec2& getWindowSize() const;
@@ -62,7 +64,7 @@ class Game : public EventDispatcher {
 	void update(float delta, float elapsedTime);
 	void render();
 
-	Event& makeGameEvent(Event::Type type);
+	Event makeGameEvent(Event::Type type);
 };
 
 #endif

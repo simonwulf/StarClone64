@@ -84,6 +84,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="ControllerComponent.cpp" />
@@ -100,6 +101,7 @@
     <ClCompile Include="LaserController.cpp" />
     <ClCompile Include="LightComponent.cpp" />
     <ClCompile Include="LogManager.cpp" />
+    <ClCompile Include="LookAtTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -108,6 +110,7 @@
     <ClCompile Include="ModelRenderComponent.cpp" />
     <ClCompile Include="OrthographicCameraComponent.cpp" />
     <ClCompile Include="PerspectiveCameraComponent.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
@@ -118,24 +121,29 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkyboxCameraComponent.cpp" />
     <ClCompile Include="SkyScene.cpp" />
+    <ClCompile Include="SphereColliderComponent.cpp" />
     <ClCompile Include="TeapotSpin.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="utils.cpp" />
+    <ClCompile Include="VectorRenderComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraController.h" />
+    <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventDispatcher.h" />
+    <ClInclude Include="Factory.h" />
     <ClInclude Include="FMODTest.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GOFactory.h" />
     <ClInclude Include="GUITextureRenderComponent.h" />
     <ClInclude Include="HUDScene.h" />
@@ -143,6 +151,7 @@
     <ClInclude Include="LaserController.h" />
     <ClInclude Include="LightComponent.h" />
     <ClInclude Include="LogManager.h" />
+    <ClInclude Include="LookAtTest.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
@@ -150,6 +159,7 @@
     <ClInclude Include="ModelRenderComponent.h" />
     <ClInclude Include="OrthographicCameraComponent.h" />
     <ClInclude Include="PerspectiveCameraComponent.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PointLightComponent.h" />
@@ -160,12 +170,14 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SkyboxCameraComponent.h" />
     <ClInclude Include="SkyScene.h" />
+    <ClInclude Include="SphereColliderComponent.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="DirectionalLightComponent.h" />
     <ClInclude Include="TeapotSpin.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="VectorRenderComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert" />

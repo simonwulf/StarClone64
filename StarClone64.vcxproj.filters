@@ -67,6 +67,15 @@
     <Filter Include="Source Files\Components\Light">
       <UniqueIdentifier>{4d4f6bad-c8f6-4e46-9212-af50bd8933b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components\Collision">
+      <UniqueIdentifier>{f627ddfb-bd1e-47c3-b3d4-4cfab8ee6230}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Collision">
+      <UniqueIdentifier>{a7f27d53-d8e4-49ee-8696-2b302fe022c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameSpecific\GameObjects">
+      <UniqueIdentifier>{dcbd3473-4aa8-4c12-b39c-8e2e295ecad0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -195,6 +204,21 @@
     <ClCompile Include="SkyboxCameraComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="LookAtTest.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="VectorRenderComponent.cpp">
+      <Filter>Source Files\Components\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderComponent.cpp">
+      <Filter>Source Files\Components\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereColliderComponent.cpp">
+      <Filter>Source Files\Components\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\GameSpecific</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogManager.h">
@@ -322,6 +346,27 @@
     </ClInclude>
     <ClInclude Include="SkyboxCameraComponent.h">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LookAtTest.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorRenderComponent.h">
+      <Filter>Header Files\Components\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderComponent.h">
+      <Filter>Header Files\Components\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereColliderComponent.h">
+      <Filter>Header Files\Components\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\GameSpecific\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

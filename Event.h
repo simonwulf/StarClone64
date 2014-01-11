@@ -3,6 +3,8 @@
 
 #include <vector>
 
+class GameObject;
+
 class Event {
 
   public:
@@ -65,6 +67,13 @@ class Event {
 		float axisValue;
 	};
 
+	struct CollisionEvent {
+	
+		GameObject* other;
+		struct { float x; float y; float z; } position;
+		struct { float x; float y; float z; } push;
+	};
+
 #pragma endregion event_type_structs
 
 	Event(Type type);
@@ -75,6 +84,7 @@ class Event {
 		KeyboardEvent keyboard;
 		MouseEvent mouse;
 		JoypadEvent joypad;
+		CollisionEvent collision;
 	};
 
 	Type type;

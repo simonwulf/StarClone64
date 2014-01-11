@@ -16,6 +16,8 @@ Game::Game() {
 
 	s_xInstance = this;
 
+	m_fElapsedTime = 0.0f;
+
 	m_iState = (State)-1;
 }
 
@@ -61,7 +63,11 @@ int Game::init() {
 
 	glfwWindowHint(GLFW_RESIZABLE, 0);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	//m_xWindow = glfwCreateWindow(1920, 1080, "OpenGL Window", glfwGetPrimaryMonitor(), nullptr);
+	/* *
+	int monitor_count;
+	GLFWmonitor** monitors = glfwGetMonitors(&monitor_count);
+	m_xWindow = glfwCreateWindow(1920, 1080, "OpenGL Window", monitor_count > 1 ? monitors[1] : monitors[0], nullptr);
+	/* */
 	m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", nullptr, nullptr);
 	glfwMakeContextCurrent(m_xWindow);
 
@@ -84,8 +90,8 @@ int Game::init() {
 
 	m_xRenderer = new Renderer(m_xWindow);
 	
-	m_xSkyScene = new SkyScene();
 	m_xPlayScene = new PlayScene();
+	m_xSkyScene = new SkyScene();
 	((SkyScene*) m_xSkyScene)->init(m_xPlayScene->getCamera()->getGameObject());
 	m_xHUDScene = new HUDScene();
 
@@ -129,6 +135,14 @@ void Game::quit() {
 	glfwSetWindowShouldClose(m_xWindow, true);
 }
 
+void Game::pause() {
+
+	if (m_iState != PAUSE_STATE)
+		setState(PAUSE_STATE);
+	else
+		setState(PLAY_STATE);
+}
+
 //Using a very decentralised, event based approach to game states.
 //Gameobjects are free to react to state changes any way they like.
 void Game::setState(State state) {
@@ -139,6 +153,11 @@ void Game::setState(State state) {
 	m_iState = state;
 
 	dispatchEvent(makeGameEvent(Event::GAME_ENTER_STATE));
+}
+
+Game::State Game::getState() const {
+
+	return m_iState;
 }
 
 void Game::update(float delta, float elapsedTime) {
@@ -158,7 +177,7 @@ void Game::render() {
 	glfwSwapBuffers(m_xWindow);
 }
 
-Event& Game::makeGameEvent(Event::Type type) {
+Event Game::makeGameEvent(Event::Type type) {
 
 	Event e(type);
 	e.game.delta = 0.0f;

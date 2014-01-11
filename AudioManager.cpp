@@ -88,13 +88,13 @@ void AudioManager::playAudio( unsigned int index, glm::vec3 position) {
 	channel->set3DAttributes(&fv_position, &fv_velocity);
 	channel->setPaused(false);
 
-	std::stringstream ss;
+	/*std::stringstream ss;
 	ss << "Listener: " << fv_listener_position.x << "\t, " <<
 		fv_listener_position.y << "\t, " << fv_listener_position.z
 		<< "\tSource: " << fv_position.x << "\t, " << fv_position.y <<
 		"\t, " << fv_position.z;
 
-	Log::Writeln(ss.str(), Log::COLOR_LIGHT_AQUA);
+	Log::Writeln(ss.str(), Log::COLOR_LIGHT_AQUA);*/
 }
 
 void AudioManager::playAudio( unsigned int index, GameObject* source ) {

@@ -12,18 +12,7 @@ class PlayerController : public ControllerComponent {
 	~PlayerController();
 
 	void init(GameObject* spaceship);
-	void update(const Event& e);
 
-	void keyDownHandler(const Event& e);
-	void keyUpHandler(const Event& e);
-
-	void axisChangeHandler(const Event& e);
-	void buttonDownHandler(const Event& e);
-	void buttonUpHandler(const Event& e);
-
-	void joyConnectedHandler(const Event& e);
-	void joyDisconnectedHandler(const Event& e);
-	
   private:
 
 	static const struct Bounds {
@@ -37,6 +26,18 @@ class PlayerController : public ControllerComponent {
 
 	} BOUNDS;
 
+	enum Key {
+	
+		UP,
+		RIGHT,
+		DOWN,
+		LEFT,
+		FIRE,
+		SLOW,
+
+		KEY_N
+	};
+
 	float m_fMovementSpeed;
 	float m_fYawVelocity;
 	float m_fPitchVelocity;
@@ -45,7 +46,29 @@ class PlayerController : public ControllerComponent {
 	float m_fYaw; //radians
 	float m_fRoll; //radians
 
+	bool m_bJoypad;
+	bool m_bKeys[KEY_N];
+
+	unsigned int m_iLaserAudioID;
+
 	GameObject* m_xSpaceship;
+
+	void fire();
+
+	void update(const Event& e);
+
+	void enterStateHandler(const Event& e);
+	void leaveStateHandler(const Event& e);
+
+	void keyDownHandler(const Event& e);
+	void keyUpHandler(const Event& e);
+
+	void axisChangeHandler(const Event& e);
+	void buttonDownHandler(const Event& e);
+	void buttonUpHandler(const Event& e);
+
+	void joyConnectedHandler(const Event& e);
+	void joyDisconnectedHandler(const Event& e);
 };
 
 #endif

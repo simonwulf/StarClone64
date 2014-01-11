@@ -240,6 +240,34 @@ void GameObject::appendRotation(glm::quat rotation) {
 	invalidateMatrix();
 }
 
+void GameObject::lookAt(glm::vec3 target, glm::vec3 up) {
+
+	glm::vec3 forward;
+	glm::vec3 right;
+
+	if (m_xParent != nullptr)
+		forward = glm::vec3(m_xParent->getInverseMatrix() * glm::vec4(target, 1.0f)) - m_vPosition;
+	else
+		forward = target - m_vPosition;
+	forward = glm::normalize(forward);
+
+	if (m_xParent != nullptr)
+		up = glm::normalize(glm::vec3(m_xParent->getInverseMatrix() * glm::vec4(up, 1.0f)));
+	else
+		up = glm::normalize(up);
+
+	float dot = glm::dot(up, forward);
+
+	if (dot == 1.0f || dot == -1.0f)
+		right = glm::vec3(dot, 0.0f, 0.0f);
+	else
+		right = glm::normalize(glm::cross(forward, up));
+
+	up = glm::cross(right, forward);
+
+	setRotation(glm::quat(glm::mat3(right, up, -forward)));
+}
+
 void GameObject::setScene(Scene* scene) {
 
 	m_xScene = scene;

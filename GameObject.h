@@ -8,11 +8,12 @@
 #include <vector>
 
 #include "ComponentFactory.h"
+#include "EventDispatcher.h"
 
 class Scene;
 
-class GameObject {
-	friend class Scene;
+class GameObject : public EventDispatcher {
+	
   public:
 
 	GameObject();
@@ -64,6 +65,8 @@ class GameObject {
 	void appendPosition(glm::vec3 position);
 	void appendScale(glm::vec3 scale);
 	void appendRotation(glm::quat rotation);
+
+	void lookAt(glm::vec3 globalTarget, glm::vec3 up);
 
   private:
 

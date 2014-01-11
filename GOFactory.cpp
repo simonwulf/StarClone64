@@ -38,8 +38,6 @@ GameObject* GOFactory::createEmpty() {
 GameObject* GOFactory::createTeapot() {
 
 	GameObject* teapot = createEmpty();
-	//teapot->setRotation(glm::angleAxis(-90.0f, 1.0f, 0.0f, 0.0f));
-	//teapot->addComponent(ComponentFactory::instance()->create<RenderComponent>());
 	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/boss1/tris.md2");
 	//teapot->addComponent<TeapotSpin>();
 
@@ -54,7 +52,7 @@ GameObject* GOFactory::createLaser() {
 
 	laser->addComponent<ModelRenderComponent>()->init("data/models/laser/Laser.obj");
 	laser->addComponent<LaserController>();
-	laser->addComponent<PointLightComponent>()->init(3.0f, glm::vec3(0.5f, 0.75f, 1.0f), 1.0f);
+	laser->addComponent<PointLightComponent>()->init(6.0f, glm::vec3(0.5f, 0.75f, 1.0f), 1.0f);
 
 	return laser;
 }
