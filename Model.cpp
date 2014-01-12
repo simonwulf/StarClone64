@@ -3,7 +3,7 @@
 
 #include <assimp/postprocess.h>
 #include "Model.h"
-
+#include "ShaderManager.h"
 #include "LogManager.h"
 
 std::allocator<Mesh> Model::m_sMeshAllocator;
@@ -11,14 +11,15 @@ std::allocator<Material> Model::m_sMaterialAllocator;
 
 Model::Model(std::string filepath, unsigned int loadFlags) {
 
-	Log::Write("loading model " + filepath + "\n");
+	Log::Write("\n--- loading model " + filepath + "\n");
 	Assimp::Importer importer;
 
 	const aiScene* scene = importer.ReadFile(filepath, loadFlags | aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
 
 	if (scene == nullptr) {
-	
-		Log::Err(importer.GetErrorString());
+
+		Log::Write("--- ");
+		Log::Err("failed " + std::string(importer.GetErrorString()) + "\n");
 		m_xMeshes = nullptr;
 		m_xMaterials = nullptr;
 	
@@ -46,6 +47,7 @@ Model::Model(std::string filepath, unsigned int loadFlags) {
 		for (unsigned int i = 0; i < m_iNumMaterials; ++i) {
 		
 			new (m_xMaterials + i) Material();
+			m_xMaterials[i].setShaderProgram(ShaderManager::instance()->getProgram(SHADER_DEFAULT));
 
 			const aiMaterial* material = scene->mMaterials[i];
 
@@ -131,16 +133,14 @@ Model::Model(std::string filepath, unsigned int loadFlags) {
 			delete [] indices;
 		}
 
-		Log::Success("mesh " + filepath + " loaded!");
+		Log::Write("--- ");
+		Log::Success("success\n");
 	}
 }
 
 Model::~Model() {
 
 	if (m_xMeshes != nullptr) {
-	
-		//delete [] m_xMesh->getVertexArray();
-		//delete [] m_xMesh->getIndexArray();
 
 		for (unsigned int i = 0; i < m_iNumMeshes; ++i) {
 
@@ -161,7 +161,7 @@ Model::~Model() {
 	}
 }
 
-const Mesh* Model::getMeshes() const {
+Mesh* Model::getMeshes() {
 
 	return m_xMeshes;
 }

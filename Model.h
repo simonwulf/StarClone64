@@ -16,7 +16,7 @@ class Model {
 	Model(std::string filepath, unsigned int loadFlags = 0); //Load a model from an .obj file
 	~Model();
 
-	const Mesh* getMeshes() const;
+	Mesh* getMeshes();
 	//const Material* getMaterials() const;
 
 	unsigned int numMeshes() const;

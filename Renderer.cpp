@@ -3,13 +3,12 @@
 #include "DirectionalLightComponent.h"
 #include "ComponentFactory.h"
 
+#include "ShaderManager.h"
 #include <sstream>
 
 Renderer::Renderer(GLFWwindow* window) {
 
 	m_xWindow = window;
-
-	m_xDefaultShaderProgram = new ShaderProgram("default.vert", "default.frag");
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -20,14 +19,12 @@ Renderer::Renderer(GLFWwindow* window) {
 	glGenBuffers(2, &m_iDirLightsBuffer);
 
 	//Bind directional lights buffer to default shader program
-	m_iDirLightsIndex = glGetUniformBlockIndex(m_xDefaultShaderProgram->glID(), "DirectionalLights");
-	glUniformBlockBinding(m_xDefaultShaderProgram->glID(), m_iDirLightsIndex, BP_DIRECTIONAL_LIGHTS);
 	glBindBufferBase(GL_UNIFORM_BUFFER, BP_DIRECTIONAL_LIGHTS, m_iDirLightsBuffer);
 
 	//Bind point lights buffer to default shader program
-	m_iPointLightsIndex = glGetUniformBlockIndex(m_xDefaultShaderProgram->glID(), "PointLights");
-	glUniformBlockBinding(m_xDefaultShaderProgram->glID(), m_iPointLightsIndex, BP_POINT_LIGHTS);
 	glBindBufferBase(GL_UNIFORM_BUFFER, BP_POINT_LIGHTS, m_iPointLightsBuffer);
+
+	m_xLightCounts.resize(LT_LEN);
 }
 
 Renderer::~Renderer() {
@@ -42,29 +39,6 @@ GLFWwindow* Renderer::getWindow() const {
 void Renderer::render(Scene* scene) {
 
 	glClear(scene->getClearFlags());
-
-	glUseProgram(m_xDefaultShaderProgram->glID());
-
-	m_xDefaultShaderProgram->uniformMatrix4fv("projection", 1, GL_FALSE, (GLfloat*)&scene->getCamera()->getProjectionMatrix());
-	m_xDefaultShaderProgram->uniformMatrix4fv("view", 1, GL_FALSE, (GLfloat*)&scene->getCamera()->getViewMatrix());
-	m_xDefaultShaderProgram->uniform3fv("ambient_light", 1, (GLfloat*)&scene->getAmbientLight());
-	m_xDefaultShaderProgram->uniform1i("diffuse", 0);
-	m_xDefaultShaderProgram->uniform1i("normalmap", 1);
-
-	updateLights(LT_DIRECTIONAL, scene);
-	updateLights(LT_POINT, scene);
-
-	/*const ComponentFactory::ComponentList* rc_list = ComponentFactory::instance()->getList(Component::RENDER);
-	for (unsigned int i = 0; i < rc_list->size(); ++i) {
-	
-		RenderComponent* rc = (RenderComponent*)rc_list->at(i);
-		m_xDefaultShaderProgram->uniformMatrix4fv("model", 1, GL_FALSE, (GLfloat*)&rc->getGameObject()->getMatrix());
-		m_xDefaultShaderProgram->uniform1i("diffuse", 0);
-
-		if (rc != nullptr)
-			rc->render();
-	}*/
-
 	renderNode(scene->getRoot());
 }
 
@@ -75,8 +49,6 @@ void Renderer::renderNode(GameObject* node) {
 
 	if (rc != nullptr) {
 
-		m_xDefaultShaderProgram->uniformMatrix4fv("model", 1, GL_FALSE, (GLfloat*)&rc->getGameObject()->getMatrix());
-
 		rc->render();
 	}
 
@@ -86,7 +58,7 @@ void Renderer::renderNode(GameObject* node) {
 	}
 }
 
-void Renderer::updateLights(Renderer::LightType type, Scene* scene) {
+void Renderer::updateLights(LightType type, Scene* scene) {
 
 	float* data;
 	unsigned int data_size;
@@ -94,7 +66,7 @@ void Renderer::updateLights(Renderer::LightType type, Scene* scene) {
 	Component::Type component_type;
 	unsigned int block_size;
 	GLuint uniform_buffer;
-	const char* count_uniform;
+	//const char* count_uniform;
 
 	switch (type) {
 	
@@ -103,7 +75,7 @@ void Renderer::updateLights(Renderer::LightType type, Scene* scene) {
 			component_type = Component::DIRECTIONAL_LIGHT;
 			block_size = DIR_LIGHT_BLOCK_SIZE;
 			uniform_buffer = m_iDirLightsBuffer;
-			count_uniform = "dir_light_count";
+			//count_uniform = "dir_light_count";
 			break;
 
 		case LT_POINT:
@@ -111,7 +83,7 @@ void Renderer::updateLights(Renderer::LightType type, Scene* scene) {
 			component_type = Component::POINT_LIGHT;
 			block_size = POINT_LIGHT_BLOCK_SIZE;
 			uniform_buffer = m_iPointLightsBuffer;
-			count_uniform = "point_light_count";
+			//count_uniform = "point_light_count";
 			break;
 
 		default:
@@ -144,7 +116,12 @@ void Renderer::updateLights(Renderer::LightType type, Scene* scene) {
 	glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer);
 	glBufferData(GL_UNIFORM_BUFFER, data_size * sizeof(float), data, GL_DYNAMIC_DRAW);
 
-	m_xDefaultShaderProgram->uniform1ui(count_uniform, count);
+	m_xLightCounts[type] = count;
 	
 	delete [] data;
+}
+
+GLuint Renderer::getLightCount( LightType type ) {
+
+	return m_xLightCounts[type];
 }

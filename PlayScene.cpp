@@ -17,9 +17,14 @@ PlayScene::PlayScene() {
 	setClearFlags(GL_DEPTH_BUFFER_BIT);
 
 	GameObject* obj = GOFactory::instance()->createTeapot();
- 	obj->setPosition(glm::vec3(0.0f));
- 	obj->setScale(glm::vec3(0.03f, 0.03f, 0.03f));
+ 	obj->setPosition(glm::vec3(0.0f, 5.0f, 0.0f ));
+	obj->setScale(glm::vec3(10));
+	add(obj);
 
+	obj = GOFactory::instance()->createEmpty();
+	obj->addComponent<ModelRenderComponent>()->init("../../test/mesh_test/boss1/tris.md2");
+	obj->setPosition(glm::vec3(15.0f, 0.0f, 0.0f ));
+	obj->setScale(glm::vec3(0.06f));
 	add(obj);
 
 	GameObject* player = GOFactory::instance()->createPlayer();
@@ -42,9 +47,9 @@ PlayScene::PlayScene() {
 	GameObject* sun = GOFactory::instance()->createSun(
 		glm::vec3(-0.5f, -1.0f, -0.5f),
 		glm::vec3(1.0f, 1.0f, 1.0f),
-		0.5f
+		0.2f
 	);
-	//add(sun);
+	add(sun);
 
 	sun = GOFactory::instance()->createSun(
 		glm::vec3(0.0f, 1.0f, 0.5f),
@@ -58,7 +63,8 @@ PlayScene::PlayScene() {
 	float hue = 0.0f;
 	float r, g, b;
 	unsigned int numLights = 64;
-
+	GameObject* lightBaseOffset = GOFactory::instance()->createEmpty();
+	lightBaseOffset->setPosition(glm::vec3(-20, 0, 0));
 	for (unsigned int i = 0; i < numLights; ++i) {
 
 		if (hue < 60.0f) {
@@ -107,7 +113,11 @@ PlayScene::PlayScene() {
 		);
 
 		pl->addComponent<RandomMover>();
-		add(pl);
+		lightBaseOffset->addChild(pl);
 	}
 	/* */
+	add(lightBaseOffset);  
+	GameObject* pl = GOFactory::instance()->createPointLight(glm::vec3(0, 0, 1), 15, 15);
+	pl->setPosition(glm::vec3(0, 1, 5));
+	add(pl);
 }

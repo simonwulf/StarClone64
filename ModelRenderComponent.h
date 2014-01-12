@@ -3,21 +3,22 @@
 
 #include "RenderComponent.h"
 #include "Model.h"
+#include "ShaderProgram.h"
 
 class ModelRenderComponent : public RenderComponent {
 
   public:
 
-	void init(const char* filepath);
-	void init(const Model* model);
+	void init(const char* filepath, ShaderProgram* defaultProgram = nullptr);
+	void init(Model* model);
 
 	void render();
 
-	const Model* getModel() const { return m_xModel; }
+	Model* getModel() { return m_xModel; }
 
   private:
 
-	const Model* m_xModel;
+	Model* m_xModel;
 };
 
 #endif

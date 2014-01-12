@@ -1,9 +1,10 @@
 #include "stdafx.h"
 
 #include "GUITextureRenderComponent.h"
-
+#include "Game.h"
 #include "Material.h"
 #include "TextureManager.h"
+#include "ShaderManager.h"
 
 GLuint GUITextureRenderComponent::s_iVertexBufferID = 0;
 Material* GUITextureRenderComponent::s_xMaterial = nullptr;
@@ -20,6 +21,8 @@ GUITextureRenderComponent::GUITextureRenderComponent() {
 	if (s_xMaterial == nullptr) {
 	
 		//TODO: make GUI material... or not
+		s_xMaterial = new Material();
+		s_xMaterial->setShaderProgram(ShaderManager::instance()->getProgram(SHADER_GUI));
 	}
 
 	m_xTexture = nullptr;
@@ -49,6 +52,21 @@ void GUITextureRenderComponent::render() {
 
 	if (m_xTexture == nullptr)
 		return;
+
+	ShaderProgram* shader = s_xMaterial->getShaderProgram();
+	glUseProgram(shader->glID());
+	/*	Setting of uniforms is highly un-optimized. 
+		Renderings should be sorted per program and use on glUseProgram per program.
+		Uniforms marked with 'c' are constant and should only be set once per glUseProgram.
+	*/
+	/* c */shader->uniformMatrix4fv("projection", 1, GL_FALSE, (GLfloat*) &getGameObject()->getScene()->getCamera()->getProjectionMatrix() );
+	/* c */shader->uniformMatrix4fv("view", 1, GL_FALSE, (GLfloat*) &getGameObject()->getScene()->getCamera()->getViewMatrix() );
+	/* c */shader->uniform3fv("ambient_light", 1, (GLfloat*) &getGameObject()->getScene()->getAmbientLight() );
+	/* c */shader->uniform1ui("point_light_count", Game::instance()->getRenderer()->getLightCount(LT_POINT));
+	/* c */shader->uniform1ui("dir_light_count", Game::instance()->getRenderer()->getLightCount(LT_DIRECTIONAL));
+	/* c */shader->uniform1i("diffuse", MATERIAL_DIFFUSE);
+	/* c */shader->uniform1i("normalmap", MATERIAL_NORMALMAP);
+	shader->uniformMatrix4fv("model", 1, GL_FALSE, (GLfloat*) &getGameObject()->getMatrix());
 
 	glBindBuffer(GL_ARRAY_BUFFER, s_iVertexBufferID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertex)*4, &m_xVertices);

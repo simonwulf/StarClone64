@@ -36,3 +36,13 @@ unsigned int Material::numTextures( MatType type ) const {
 
 	return m_xTexLookup[type].size();
 }
+
+void Material::setShaderProgram( ShaderProgram* prog ) {
+
+	m_xShaderProgram = prog;
+}
+
+ShaderProgram* Material::getShaderProgram() {
+
+	return m_xShaderProgram;
+}

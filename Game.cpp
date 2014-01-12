@@ -7,6 +7,7 @@
 #include "HUDScene.h"
 #include "SkyScene.h"
 
+
 Game* Game::s_xInstance = nullptr;
 
 Game::Game() {

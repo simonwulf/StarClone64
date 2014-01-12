@@ -5,10 +5,24 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <vector>
 #include "Scene.h"
-#include "Shader.h"
+#include "ShaderProgram.h"
 #include "Camera.h"
+
+enum LightType {
+
+	LT_DIRECTIONAL,
+	LT_POINT,
+
+	LT_LEN
+};
+
+enum BindingPoints {
+
+	BP_DIRECTIONAL_LIGHTS,
+	BP_POINT_LIGHTS
+};
 
 class Renderer {
 
@@ -21,32 +35,15 @@ class Renderer {
 
 	void render(Scene* scene);
 
-	ShaderProgram* getDefaultShader() { return m_xDefaultShaderProgram; };
+	GLuint getLightCount(LightType type);
+	void updateLights(LightType type, Scene* scene);
 
   private:
 
 	static const unsigned int DIR_LIGHT_BLOCK_SIZE = 32;
 	static const unsigned int POINT_LIGHT_BLOCK_SIZE = 32;
 
-	enum LightType {
-	
-		LT_DIRECTIONAL,
-		LT_POINT
-	};
-
-	enum BindingPoints {
-	
-		BP_DIRECTIONAL_LIGHTS,
-		BP_POINT_LIGHTS
-	};
-
 	GLFWwindow* m_xWindow;
-
-	//glm::mat4 m_mWorld;
-	//glm::mat4 m_mPerspective;
-	//glm::mat4 m_mView;
-
-	ShaderProgram* m_xDefaultShaderProgram;
 
 	GLuint m_iDirLightsIndex;
 	GLuint m_iPointLightsIndex;
@@ -54,9 +51,9 @@ class Renderer {
 	GLuint m_iDirLightsBuffer;
 	GLuint m_iPointLightsBuffer;
 
-	void renderNode(GameObject* node);
+	std::vector<GLuint> m_xLightCounts;
 
-	void updateLights(LightType type, Scene* scene);
+	void renderNode(GameObject* node);
 };
 
 #endif

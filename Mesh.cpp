@@ -52,7 +52,7 @@ unsigned int Mesh::getTriCount() const {
 	return m_iIndexCount / 3;
 }
 
-const Material* Mesh::getMaterial() const {
+Material* Mesh::getMaterial() {
 
 	return m_xMaterial;
 }

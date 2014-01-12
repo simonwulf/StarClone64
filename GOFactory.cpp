@@ -15,6 +15,7 @@
 #include "OrthographicCameraComponent.h"
 #include "GUITextureRenderComponent.h"
 #include "SkyboxCameraComponent.h"
+#include "ShaderManager.h"
 
 GOFactory GOFactory::s_xInstance;
 
@@ -38,7 +39,7 @@ GameObject* GOFactory::createEmpty() {
 GameObject* GOFactory::createTeapot() {
 
 	GameObject* teapot = createEmpty();
-	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/boss1/tris.md2");
+	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/boss1/tris.md2", ShaderManager::instance()->getProgram(SHADER_LIGHTING_UNLIT));
 	//teapot->addComponent<TeapotSpin>();
 
 	//teapot->addComponent(ComponentFactory::instance()->create<RandomMover>());
@@ -50,9 +51,9 @@ GameObject* GOFactory::createLaser() {
 
 	GameObject* laser = createEmpty();
 
-	laser->addComponent<ModelRenderComponent>()->init("data/models/laser/Laser.obj");
+	laser->addComponent<ModelRenderComponent>()->init("laser/Laser.obj", ShaderManager::instance()->getProgram(SHADER_LIGHTING_UNLIT));
 	laser->addComponent<LaserController>();
-	laser->addComponent<PointLightComponent>()->init(6.0f, glm::vec3(0.5f, 0.75f, 1.0f), 1.0f);
+	laser->addComponent<PointLightComponent>()->init(3.0f, glm::vec3(0.5f, 0.75f, 1.0f), 1.0f);
 
 	return laser;
 }
@@ -63,7 +64,7 @@ GameObject* GOFactory::createPlayer() {
 	GameObject* ship = createEmpty();
 	player->addChild(ship);
 
-	ship->addComponent<ModelRenderComponent>()->init("data/models/spaceship2/Spaceship2.obj");
+	ship->addComponent<ModelRenderComponent>()->init("spaceship2/Spaceship2.obj", ShaderManager::instance()->getProgram(SHADER_LIGHTING_DIFFUSE | SHADER_NORMAL_MAP));
 	player->addComponent<PlayerController>()->init(ship);
 
 	return player;
@@ -73,10 +74,10 @@ GameObject* GOFactory::createSkybox() {
 
 	GameObject* skybox = createEmpty();
 	ModelRenderComponent* mrc = skybox->addComponent<ModelRenderComponent>();
-	mrc->init("data/models/skybox/skybox.obj");
+	mrc->init("skybox/skybox.obj", ShaderManager::instance()->getProgram(SHADER_LIGHTING_UNLIT));
 	for(unsigned int i = 0; i < mrc->getModel()->numMeshes(); ++i) {
 
-		const Mesh* meshes = mrc->getModel()->getMeshes();
+		Mesh* meshes = mrc->getModel()->getMeshes();
 		GLuint texId = meshes[i].getMaterial()->getTexture(meshes[i].getMaterial()->getIdsOfType(MATERIAL_DIFFUSE)[0])->getTexID();
 		glBindTexture(GL_TEXTURE_2D, texId);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -122,7 +123,7 @@ GameObject* GOFactory::createGroundPlane() {
 
 	GameObject* plane = createEmpty();
 
-	plane->addComponent<ModelRenderComponent>()->init("test/mesh_test/terrain_test.obj");
+	plane->addComponent<ModelRenderComponent>()->init("../../test/mesh_test/terrain_test.obj", ShaderManager::instance()->getProgram(SHADER_LIGHTING_DIFFUSE));
 
 	return plane;
 }
@@ -152,8 +153,6 @@ GameObject* GOFactory::createPointLight(glm::vec3 color, float radius, float str
 GameObject* GOFactory::createGUITest() {
 
 	GameObject* guiTest = createEmpty();
-	
-	//guiTest->addComponent<ModelRenderComponent>()->init("test/mesh_test/teapot.obj");
 	guiTest->addComponent<GUITextureRenderComponent>()->init("test/GUItest.png");
 
 	return guiTest;

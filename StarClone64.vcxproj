@@ -118,7 +118,8 @@
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SkyboxCameraComponent.cpp" />
     <ClCompile Include="SkyScene.cpp" />
     <ClCompile Include="SphereColliderComponent.cpp" />
@@ -167,7 +168,8 @@
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="SkyboxCameraComponent.h" />
     <ClInclude Include="SkyScene.h" />
     <ClInclude Include="SphereColliderComponent.h" />
@@ -180,8 +182,13 @@
     <ClInclude Include="VectorRenderComponent.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.vert" />
-    <None Include="default.frag" />
+    <None Include="data\shaders\Base.frag" />
+    <None Include="data\shaders\Base.vert" />
+    <None Include="data\shaders\normal_map.frag" />
+    <None Include="data\shaders\old.frag" />
+    <None Include="data\shaders\old.vert" />
+    <None Include="data\shaders\lighting_diffuse.frag" />
+    <None Include="data\shaders\test.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

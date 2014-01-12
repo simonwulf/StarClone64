@@ -33,7 +33,7 @@ class Mesh {
 	unsigned int getIndexCount() const;
 	unsigned int getTriCount() const;
 
-	const Material* getMaterial() const;
+	Material* getMaterial();
 
 	//vertex* getVertexArray() const;
 	//GLuint* getIndexArray() const;

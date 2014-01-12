@@ -178,6 +178,14 @@ void PlayerController::keyUpHandler(const Event& e) {
 		case GLFW_KEY_LEFT_SHIFT:
 			m_bKeys[SLOW] = false;
 			break;
+		
+		case GLFW_KEY_SPACE:
+			m_fMovementSpeed = 20.0f;
+			break;
+			
+		case GLFW_KEY_SPACE:
+			m_fMovementSpeed = 0.1f;
+			break;
 	}
 }
 

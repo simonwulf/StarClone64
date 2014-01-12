@@ -1,11 +1,19 @@
+#include "stdafx.h"
+#include <Shlwapi.h>
+
 #include "Texture.h"
 
 #include "FreeImage.h"
 #include "LogManager.h"
 
+
 Texture::Texture(const std::string& filepath) {
 
-	Log::Write("loading texture " + filepath + "\t");
+	char fName[MAX_PATH];
+	char fExt[MAX_PATH];
+	_splitpath_s(filepath.c_str(), nullptr, 0, nullptr, 0, fName, MAX_PATH, fExt, MAX_PATH);
+
+	Log::Write("loading texture " + std::string(fName) + std::string(fExt) + " ");
 	FREE_IMAGE_FORMAT fileFormat;
 	FIBITMAP* data = nullptr;
 
@@ -14,7 +22,7 @@ Texture::Texture(const std::string& filepath) {
 		fileFormat = FreeImage_GetFIFFromFilename(filepath.c_str());
 	if(fileFormat == FIF_UNKNOWN)
 	{
-		Log::Err("error: couldn't read image format!");
+		Log::Err("invalid image format");
 		m_iGLTextureID = 0;
 		return;
 	}
@@ -24,7 +32,7 @@ Texture::Texture(const std::string& filepath) {
 
 	if(data == nullptr)
 	{
-		Log::Err("error: couldn't load image!");
+		Log::Err("couldn't load");
 		m_iGLTextureID = 0;
 		return;
 	}
@@ -55,7 +63,7 @@ Texture::Texture(const std::string& filepath) {
 
 	FreeImage_Unload(data);
 
-	Log::Success("success!");
+	Log::Success("success");
 }
 
 Texture::~Texture() {

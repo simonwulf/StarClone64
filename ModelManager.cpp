@@ -1,13 +1,13 @@
 #include "stdafx.h"
-
 #include "ModelManager.h"
-
 #include "LogManager.h"
+#include <Shlwapi.h>
 
 ModelManager ModelManager::m_sInstance;
 
 ModelManager::ModelManager() {
 
+	m_xModelBase = "data/models";
 }
 
 ModelManager* ModelManager::instance() {
@@ -22,7 +22,9 @@ Model* ModelManager::getModel(std::string filepath, unsigned int loadFlags) {
 
 	if (found == m_xModelCache.end()) {
 	
-		ret = new Model(filepath, loadFlags);
+		char modelPath[MAX_PATH];
+		PathCombineA(modelPath, m_xModelBase.c_str(), filepath.c_str());
+		ret = new Model(std::string(modelPath), loadFlags);
 		m_xModelCache[filepath] = ret;
 	
 	} else {

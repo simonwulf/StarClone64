@@ -4,12 +4,13 @@
 #include <vector>
 
 #include "Texture.h"
-#include "Shader.h"
+#include "ShaderProgram.h"
 
 enum MatType {
 
 	MATERIAL_DIFFUSE,
 	MATERIAL_NORMALMAP,
+
 	MATTYPE_LEN
 };
 
@@ -34,11 +35,14 @@ class Material {
 	const Texture* getTexture(unsigned int index) const;
 	const std::vector<int>& getIdsOfType(MatType type) const;
 
+	void setShaderProgram(ShaderProgram* prog);
+	ShaderProgram* getShaderProgram();
+
   private:
 
 	std::vector<Texture*> m_xTextures;
 	std::vector<std::vector<int>> m_xTexLookup;
-	//ShaderProgram* m_xShaderProgram; //Is this optimal? Or should we associate a material with only a fragment shader if we won't be using different vertex shaders?
+	ShaderProgram* m_xShaderProgram; //Is this optimal? Or should we associate a material with only a fragment shader if we won't be using different vertex shaders?
 };
 
 #endif

@@ -2,20 +2,39 @@
 #include "ModelManager.h"
 #include "Game.h"
 
-void ModelRenderComponent::init(const char* filepath) {
+void ModelRenderComponent::init(const char* filepath, ShaderProgram* defaultProgram) {
 
 	init(ModelManager::instance()->getModel(filepath));
+	if(defaultProgram != nullptr && getModel()->getMeshes() != nullptr) {
+
+		getModel()->getMeshes()[0].getMaterial()->setShaderProgram(defaultProgram);
+	}
 }
 
-void ModelRenderComponent::init(const Model* model) {
+void ModelRenderComponent::init(Model* model) {
 
 	m_xModel = model;
 }
 
 void ModelRenderComponent::render() {
 
-	const Mesh* meshes;
-	ShaderProgram* shader = Game::instance()->getRenderer()->getDefaultShader();
+	Mesh* meshes;
+	ShaderProgram* shader = getModel()->getMeshes()[0].getMaterial()->getShaderProgram();
+	glUseProgram(shader->glID());
+
+	/*	Setting of the uniforms is highly un-optimized. 
+		Renderings should be sorted per program and use on glUseProgram per program.
+		Operations marked with 'c' are constant and should only be set once per glUseProgram.
+	*/
+	/* c */shader->uniformMatrix4fv("projection", 1, GL_FALSE, (GLfloat*) &getGameObject()->getScene()->getCamera()->getProjectionMatrix() );
+	/* c */shader->uniformMatrix4fv("view", 1, GL_FALSE, (GLfloat*) &getGameObject()->getScene()->getCamera()->getViewMatrix() );
+	/* c */shader->uniform3fv("ambient_light", 1, (GLfloat*) &getGameObject()->getScene()->getAmbientLight() );
+	/* c */Game::instance()->getRenderer()->updateLights(LT_POINT, getGameObject()->getScene());
+	/* c */Game::instance()->getRenderer()->updateLights(LT_DIRECTIONAL, getGameObject()->getScene());
+	/* c */shader->uniform1ui("point_light_count", Game::instance()->getRenderer()->getLightCount(LT_POINT));
+	/* c */shader->uniform1ui("dir_light_count", Game::instance()->getRenderer()->getLightCount(LT_DIRECTIONAL));
+
+	shader->uniformMatrix4fv("model", 1, GL_FALSE, (GLfloat*) &getGameObject()->getMatrix());
 
 	if (m_xModel == nullptr || (meshes = m_xModel->getMeshes()) == nullptr)
 		return;
@@ -25,20 +44,16 @@ void ModelRenderComponent::render() {
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[i].getVertexBufferID());
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[i].getIndexBufferID());
 
-		const Material* material = meshes[i].getMaterial();
-		if (meshes[i].getMaterial()->numTextures(MATERIAL_DIFFUSE) > 0) {
+		Material* material = meshes[i].getMaterial();
+		if (material->numTextures(MATERIAL_DIFFUSE) > 0) {
 
 			glActiveTexture(TEXSLOT_DIFFUSE);
 			glBindTexture(GL_TEXTURE_2D, material->getTexture(material->getIdsOfType(MATERIAL_DIFFUSE)[0])->getTexID());
 		}
-		if (meshes[i].getMaterial()->numTextures(MATERIAL_NORMALMAP) > 0) {
+		if (material->numTextures(MATERIAL_NORMALMAP) > 0) {
 
 			glActiveTexture(TEXSLOT_NORMAL);
 			glBindTexture(GL_TEXTURE_2D, material->getTexture(material->getIdsOfType(MATERIAL_NORMALMAP)[0])->getTexID());
-			shader->uniform1ui("use_normal", 1);
-		}else {
-
-			shader->uniform1ui("use_normal", 0);
 		}
 
 		glEnableVertexAttribArray(0);
