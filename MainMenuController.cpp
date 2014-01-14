@@ -6,6 +6,7 @@
 
 MainMenuController::MainMenuController() {
 
+	index = 0;
 }
 
 MainMenuController::~MainMenuController() {

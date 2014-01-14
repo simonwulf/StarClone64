@@ -4,11 +4,13 @@
 #include <sstream>
 #include <ctime>
 #include <direct.h>
+#include <Shlwapi.h>
 
 LogManager LogManager::m_instance;
 
 LogManager::LogManager()
 {
+	m_xFile = nullptr;
 	bDisableFile = false;
 	m_hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	m_logFilePath = "logs\\";
@@ -21,8 +23,7 @@ LogManager::LogManager()
 
 LogManager::~LogManager()
 {
-	if(!bDisableFile)
-		CloseFile();
+	CloseFile();
 }
 
 bool LogManager::Write( std::string text, int color )
@@ -42,6 +43,11 @@ void LogManager::WriteCmd( std::string text, int color )
 
 bool LogManager::WriteFile( std::string text )
 {
+	if(FileOpen()) {
+		(*m_xFile) << text;
+		m_xFile->flush();
+		return true;
+	}
 	return false;
 }
 
@@ -51,28 +57,15 @@ std::string LogManager::GenerateFileName()
 	struct tm* now = new struct tm();
 	localtime_s(now, &t);
 
+	int mon = now->tm_mon+1;
 	std::stringstream str;
-	str << (now->tm_year+1900) << "-"
-		<< (now->tm_mon+1) << "-"
-		<< now->tm_mday << " "
-		<< now->tm_hour << "-"
-		<< now->tm_min << "-"
-		<< now->tm_sec << ".log";
-
-	delete now;
-	return str.str();
-}
-
-std::string LogManager::GetTimestamp()
-{
-	time_t t = time(0);
-	struct tm* now = new struct tm();
-	localtime_s(now, &t);
-
-	std::stringstream str;
-	str << "[" << now->tm_hour << ":"
-		<< now->tm_min << ":"
-		<< now->tm_sec << "]";
+	str << m_logFilePath
+		<<(now->tm_year+1900) << "-"
+		<< ((mon < 10) ? "0" : "") << mon << "-"
+		<< ((now->tm_mday < 10) ? "0" : "") << now->tm_mday << " "
+		<< ((now->tm_hour < 10) ? "0" : "") << now->tm_hour << "-"
+		<< ((now->tm_min < 10) ? "0" : "") << now->tm_min << "-"
+		<<((now->tm_sec < 10) ? "0" : "") << now->tm_sec << ".log";
 
 	delete now;
 	return str.str();
@@ -82,29 +75,56 @@ void LogManager::VerifyLogPath()
 {
 	char* pathbuf = _getcwd(NULL, 0);
 	std::string logPath(pathbuf);
-	logPath += m_logFilePath;
+	logPath += "\\" + m_logFilePath;
 
-	DWORD fileAttrib = GetFileAttributesA(logPath.c_str());
-	if(fileAttrib & FILE_ATTRIBUTE_DIRECTORY)
-		return;
-	else if(fileAttrib == INVALID_FILE_ATTRIBUTES)
-	{
-		_mkdir(logPath.c_str());
-	}
-	else
-	{
-		bDisableFile = true;
-		WriteCmd("Couldn't verify/create log path; disabling logging to file.", Log::COLOR_WARNING);
+	if(!PathIsDirectoryA(logPath.c_str())) {
+
+		if(_mkdir(logPath.c_str()) == -1) {
+
+			bDisableFile = true;
+			Log::Warn("Couldn't verify/create log path; disabling logging to file." + logPath);
+		}
 	}
 }
 
 bool LogManager::OpenFile()
 {
-	return false;
+	if(m_xFile != nullptr) {
+		
+		CloseFile();
+	}
+
+	std::string fileName = GenerateFileName();
+	m_xFile = new std::ofstream(fileName);
+
+	if(!m_xFile->is_open()) {
+
+		Log::Warn("Couldn't create log file " + fileName);
+		CloseFile();
+		return false;
+	}
+
+	Log::Success("LogFile: " + fileName);
+	return true;
 }
 
 void LogManager::CloseFile()
 {
+	if(m_xFile != nullptr) {
+
+		if(m_xFile->is_open()) {
+
+			m_xFile->close();
+		}
+
+		delete m_xFile;
+		m_xFile = nullptr;
+	}
+}
+
+bool LogManager::FileOpen() {
+
+	return ( (m_xFile != nullptr && m_xFile->is_open()) );
 }
 
 

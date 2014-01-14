@@ -5,6 +5,7 @@
 #include <fstream>
 #include <Windows.h>
 #include <sstream>
+#include <iostream>
 
 namespace Log {
 
@@ -61,13 +62,14 @@ class LogManager {
 		bool bDisableFile;
 
 		static LogManager m_instance;
+		std::ofstream* m_xFile;
 
 		void WriteCmd(std::string text, int color);
 		bool WriteFile(std::string text);
 
 		std::string GenerateFileName();
-		std::string GetTimestamp();
 		bool OpenFile();
+		bool FileOpen();
 		void CloseFile();
 		void VerifyLogPath();
 };
