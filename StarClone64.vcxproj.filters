@@ -87,9 +87,6 @@
     <ClCompile Include="LogManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files\Visual</Filter>
-    </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Source Files\Visual</Filter>
     </ClCompile>
@@ -207,27 +204,27 @@
     <ClCompile Include="SkyboxCameraComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="LookAtTest.cpp">
-      <Filter>Source Files\GameSpecific\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="VectorRenderComponent.cpp">
-      <Filter>Source Files\Components\Render</Filter>
-    </ClCompile>
     <ClCompile Include="ColliderComponent.cpp">
       <Filter>Source Files\Components\Collision</Filter>
     </ClCompile>
     <ClCompile Include="SphereColliderComponent.cpp">
       <Filter>Source Files\Components\Collision</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files\GameSpecific</Filter>
-    </ClCompile>
     <ClCompile Include="ShaderManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ShaderProgram.cpp">
       <Filter>Source Files\Visual</Filter>
-    </CLCompile>
+    </ClCompile>
+    <ClCompile Include="MenuScene.cpp">
+      <Filter>Source Files\GameSpecific\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu3DScene.cpp">
+      <Filter>Source Files\GameSpecific\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenuController.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LogManager.h">
@@ -237,9 +234,6 @@
       <Filter>Header Files\Visual</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Header Files\Visual</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
       <Filter>Header Files\Visual</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
@@ -356,12 +350,6 @@
     <ClInclude Include="SkyboxCameraComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="LookAtTest.h">
-      <Filter>Header Files\GameSpecific\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="VectorRenderComponent.h">
-      <Filter>Header Files\Components\Render</Filter>
-    </ClInclude>
     <ClInclude Include="ColliderComponent.h">
       <Filter>Header Files\Components\Collision</Filter>
     </ClInclude>
@@ -371,9 +359,6 @@
     <ClInclude Include="Factory.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files\GameSpecific\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjectManager.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -382,6 +367,15 @@
     </ClInclude>
     <ClInclude Include="ShaderProgram.h">
       <Filter>Header Files\Visual</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuGUIScene.h">
+      <Filter>Header Files\GameSpecific\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu3DScene.h">
+      <Filter>Header Files\GameSpecific\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenuController.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

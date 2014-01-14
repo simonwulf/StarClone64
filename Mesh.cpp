@@ -77,6 +77,11 @@ GLuint Mesh::getIndexBufferID() const {
 	return m_xGLBuffers.index;
 }
 
+void Mesh::setMaterial( Material* material ){
+
+	m_xMaterial = material;
+}
+
 /*void Mesh::setVertexArray( unsigned int vertCount, vertex* vertexArray ) {
 
 	if(m_xVertices != nullptr)

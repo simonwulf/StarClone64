@@ -34,6 +34,7 @@ class Mesh {
 	unsigned int getTriCount() const;
 
 	Material* getMaterial();
+	void setMaterial(Material* material);
 
 	//vertex* getVertexArray() const;
 	//GLuint* getIndexArray() const;

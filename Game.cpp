@@ -6,6 +6,8 @@
 #include "PlayScene.h"
 #include "HUDScene.h"
 #include "SkyScene.h"
+#include "MenuGUIScene.h"
+#include "Menu3DScene.h"
 
 
 Game* Game::s_xInstance = nullptr;
@@ -32,6 +34,8 @@ Game::~Game() {
 	delete m_xPlayScene;
 	delete m_xHUDScene;
 	delete m_xSkyScene;
+	delete m_xMenu3DScene;
+	delete m_xMenuGUIScene;
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
@@ -92,9 +96,10 @@ int Game::init() {
 	m_xRenderer = new Renderer(m_xWindow);
 	
 	m_xPlayScene = new PlayScene();
-	m_xSkyScene = new SkyScene();
-	((SkyScene*) m_xSkyScene)->init(m_xPlayScene->getCamera()->getGameObject());
+	m_xSkyScene = new SkyScene(); ((SkyScene*) m_xSkyScene)->init(m_xPlayScene->getCamera()->getGameObject());
 	m_xHUDScene = new HUDScene();
+	m_xMenuGUIScene = new MenuGUIScene();
+	m_xMenu3DScene = new Menu3DScene();
 
 	Input::instance()->init(m_xWindow);
 
@@ -171,9 +176,11 @@ void Game::update(float delta, float elapsedTime) {
 
 void Game::render() {
 
-	m_xRenderer->render(m_xSkyScene);
-	m_xRenderer->render(m_xPlayScene);
-	m_xRenderer->render(m_xHUDScene);
+ 	m_xRenderer->render(m_xSkyScene);
+// 	m_xRenderer->render(m_xPlayScene);
+// 	m_xRenderer->render(m_xHUDScene);
+	m_xRenderer->render(m_xMenu3DScene);
+	m_xRenderer->render(m_xMenuGUIScene);
 
 	glfwSwapBuffers(m_xWindow);
 }

@@ -101,16 +101,17 @@
     <ClCompile Include="LaserController.cpp" />
     <ClCompile Include="LightComponent.cpp" />
     <ClCompile Include="LogManager.cpp" />
-    <ClCompile Include="LookAtTest.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenuController.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Menu3DScene.cpp" />
+    <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelManager.cpp" />
     <ClCompile Include="ModelRenderComponent.cpp" />
     <ClCompile Include="OrthographicCameraComponent.cpp" />
     <ClCompile Include="PerspectiveCameraComponent.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
@@ -127,7 +128,6 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="utils.cpp" />
-    <ClCompile Include="VectorRenderComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioManager.h" />
@@ -152,15 +152,16 @@
     <ClInclude Include="LaserController.h" />
     <ClInclude Include="LightComponent.h" />
     <ClInclude Include="LogManager.h" />
-    <ClInclude Include="LookAtTest.h" />
+    <ClInclude Include="MainMenuController.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Menu3DScene.h" />
+    <ClInclude Include="MenuGUIScene.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelManager.h" />
     <ClInclude Include="ModelRenderComponent.h" />
     <ClInclude Include="OrthographicCameraComponent.h" />
     <ClInclude Include="PerspectiveCameraComponent.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PointLightComponent.h" />
@@ -179,7 +180,6 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="utils.h" />
-    <ClInclude Include="VectorRenderComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shaders\Base.frag" />

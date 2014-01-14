@@ -26,6 +26,7 @@ class GOFactory {
 	GameObject* createSun(glm::vec3 direction, glm::vec3 color, float strength);
 	GameObject* createPointLight(glm::vec3 color, float radius, float strength);
 	GameObject* createGUITest();
+	GameObject* createMainMenu();
 
 	void destroy(GameObject* gameObject);
 

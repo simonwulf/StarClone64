@@ -16,6 +16,7 @@
 #include "GUITextureRenderComponent.h"
 #include "SkyboxCameraComponent.h"
 #include "ShaderManager.h"
+#include "MainMenuController.h"
 
 GOFactory GOFactory::s_xInstance;
 
@@ -39,7 +40,7 @@ GameObject* GOFactory::createEmpty() {
 GameObject* GOFactory::createTeapot() {
 
 	GameObject* teapot = createEmpty();
-	teapot->addComponent<ModelRenderComponent>()->init("test/mesh_test/boss1/tris.md2", ShaderManager::instance()->getProgram(SHADER_LIGHTING_UNLIT));
+	teapot->addComponent<ModelRenderComponent>()->init("../../test/mesh_test/boss1/tris.md2", ShaderManager::instance()->getProgram(SHADER_LIGHTING_UNLIT));
 	//teapot->addComponent<TeapotSpin>();
 
 	//teapot->addComponent(ComponentFactory::instance()->create<RandomMover>());
@@ -156,6 +157,39 @@ GameObject* GOFactory::createGUITest() {
 	guiTest->addComponent<GUITextureRenderComponent>()->init("test/GUItest.png");
 
 	return guiTest;
+}
+
+GameObject* GOFactory::createMainMenu() {
+
+	GameObject* mainMenu = createEmpty();
+	GameObject* menuItemStart = createEmpty();
+	GameObject* menuItemQuit = createEmpty();
+
+	ModelRenderComponent* mrc_start = menuItemStart->addComponent<ModelRenderComponent>();
+	mrc_start->init("text/start/start.obj");
+	Material* matSelected = mrc_start->getModel()->getMeshes()[0].getMaterial();
+
+	ModelRenderComponent* mrc_quit = menuItemQuit->addComponent<ModelRenderComponent>();
+	mrc_quit->init("text/quit/quit.obj");
+	Material* matDeselected = mrc_quit->getModel()->getMeshes()[0].getMaterial();
+
+	matSelected->setShaderProgram(ShaderManager::instance()->getProgram(SHADER_LIGHTING_DIFFUSE));
+	matDeselected->setShaderProgram(ShaderManager::instance()->getProgram(SHADER_LIGHTING_DIFFUSE));
+
+	menuItemStart->setPosition(glm::vec3(0.0f, 1.0f, 0.0f));
+	menuItemQuit->setPosition(glm::vec3(0.0f, -1.0f, 0.0f));
+	menuItemStart->setRotation(glm::quat(glm::vec3(0.0f, 0.4f, 0.0f)));
+	menuItemQuit->setRotation(glm::quat(glm::vec3(0.0f, 0.4f, 0.0f)));
+
+	GameObject* light = createPointLight(glm::vec3(1.0f, 1.0f, 1.0f), 3.0f, 10.0f);
+	light->setPosition(glm::vec3(0.0f, 0.0f, 1.0f));
+
+	mainMenu->addChild(menuItemStart);
+	mainMenu->addChild(menuItemQuit);
+	mainMenu->addChild(light);
+	mainMenu->addComponent<MainMenuController>()->setData(mrc_start,mrc_quit,matSelected,matDeselected);
+
+	return mainMenu;
 }
 
 void GOFactory::destroy(GameObject* gameObject) {
