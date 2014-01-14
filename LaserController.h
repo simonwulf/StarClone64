@@ -3,6 +3,7 @@
 
 #include "ControllerComponent.h"
 #include "Event.h"
+#include "RayCast.h"
 
 class LaserController : public ControllerComponent {
 
@@ -11,14 +12,21 @@ class LaserController : public ControllerComponent {
 	LaserController();
 	~LaserController();
 
+	void init();
+
   private:
 
 	float m_fLifeTime;
+	Ray m_xRay;
+
+	static unsigned int s_iHitAudioID;
 
 	void update(const Event& e);
 
-	void enterStateHandler(const Event& e);
-	void leaveStateHandler(const Event& e);
+	void rayTest();
+
+	//void enterStateHandler(const Event& e);
+	//void leaveStateHandler(const Event& e);
 };
 
 #endif

@@ -6,7 +6,7 @@ Component::Component(Component::Type type) {
 
 	m_iType = type;
 
-	m_xGameObject = nullptr;
+	//m_xGameObject = nullptr;
 }
 
 Component::~Component() {
@@ -19,6 +19,11 @@ void* Component::operator new(size_t size) {
 	s_iAllocatedMemorySize += _msize(ptr);
 
 	return ptr;
+}
+
+void* Component::operator new(size_t size, void* p) {
+
+	return ::operator new(size, p);
 }
 
 void Component::operator delete(void* ptr) {

@@ -1,9 +1,12 @@
 #include "PlayerController.h"
 
 #include "Game.h"
+#include "Scene.h"
 #include "GOFactory.h"
 #include "Input.h"
 #include "AudioManager.h"
+#include "GameObjects.h"
+#include "ModelRenderComponent.h"
 
 const PlayerController::Bounds PlayerController::BOUNDS = {
 	500.0f, -500.0f, //x
@@ -11,15 +14,9 @@ const PlayerController::Bounds PlayerController::BOUNDS = {
 	500.0f, -500.0f  //z
 };
 
+const float PlayerController::LASER_INTERVAL = 0.1f;
+
 PlayerController::PlayerController() {
-
-	Input::instance()->registerEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	Input::instance()->registerEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
-
-	Input::instance()->registerEventHandler(Event::JOY_PLUGGED_IN, this, &PlayerController::joyConnectedHandler);
-
-	Game::instance()->registerEventHandler(Event::GAME_ENTER_STATE, this, &PlayerController::enterStateHandler);
-	Game::instance()->registerEventHandler(Event::GAME_LEAVE_STATE, this, &PlayerController::leaveStateHandler);
 
 	m_fMovementSpeed = 20.0f;
 	m_fYawVelocity = 0.0f;
@@ -28,9 +25,13 @@ PlayerController::PlayerController() {
 	m_fPitch = 0.0f;
 	m_fYaw = 0.0f;
 	m_fRoll = 0.0f;
+	m_fRollLimit = glm::pi<float>() * 0.5f;
 
 	m_bJoypad = false;
 	memset(m_bKeys, false, sizeof(m_bKeys));
+
+	m_iShotsToFire = 0;
+	m_fLaserTime = 0.0f;
 
 	m_iLaserAudioID = AudioManager::instance()->loadAudio("laser.wav");
 }
@@ -44,12 +45,20 @@ PlayerController::~PlayerController() {
 	Input::instance()->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
 	Input::instance()->removeEventHandler(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
 
-	Game::instance()->removeEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
+	//Game::instance()->removeEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
 }
 
 void PlayerController::init(GameObject* spaceship) {
 
 	m_xSpaceship = spaceship;
+
+	Input::instance()->registerEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	Input::instance()->registerEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+
+	Input::instance()->registerEventHandler(Event::JOY_PLUGGED_IN, this, &PlayerController::joyConnectedHandler);
+
+	m_xGameObject->registerEventHandler(Event::COLLISION, this, &PlayerController::collisionHandler);
+	m_xGameObject->getScene()->registerEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
 }
 
 void PlayerController::update(const Event& e) {
@@ -107,13 +116,46 @@ void PlayerController::update(const Event& e) {
 	
 	m_fYaw += m_fYawVelocity * delta;
 	m_fPitch = m_fPitch + m_fPitchVelocity * 1.5f * delta - m_fPitch * 2.0f * delta;
-	m_fRoll = m_fRoll + m_fYawVelocity * 1.3f * delta - m_fRoll * 2.0f * delta;
+	//m_fRoll = m_fRoll + m_fYawVelocity * 1.3f * delta - m_fRoll * 2.0f * delta;
+	m_fRoll = m_fRoll + m_fYawVelocity * 0.8f * delta - m_fRoll * 2.0f * delta;
+
+	float dist = 3.0f;
+	if (position.y < BOUNDS.y_min + dist)
+		m_fRollLimit = glm::pi<float>() * 0.5f * ((position.y - (BOUNDS.y_min)) / dist);
+	else
+		m_fRollLimit = glm::pi<float>() * 0.5f;
 
 	getGameObject()->setRotation(glm::quat(glm::vec3(m_fPitch, m_fYaw, 0.0f))); //euler angles constructor takes radians
-	m_xSpaceship->setRotation(glm::quat(glm::vec3(0.0f, 0.0f, m_fRoll)));
+	m_xSpaceship->setRotation(glm::quat(glm::vec3(0.0f, 0.0f, m_fRoll * m_fRollLimit)));
+
+	//Laser
+	if (m_iShotsToFire > 0) {
+	
+		if (m_fLaserTime <= 0.0f) {
+			
+			fire();
+			--m_iShotsToFire;
+			m_fLaserTime = LASER_INTERVAL;
+		}
+
+		m_fLaserTime -= delta;
+	}
+
+	if (m_fCooldown > 0.0f)
+		m_fCooldown -= delta;
 }
 
-void PlayerController::enterStateHandler(const Event& e) {
+void PlayerController::collisionHandler(const Event& e) {
+
+	if (e.collision.other->getTag() != "enemy")
+		return;
+
+	glm::vec3 push(e.collision.push.x, e.collision.push.y, e.collision.push.z);
+
+	m_xGameObject->appendPosition(push);
+}
+
+/*void PlayerController::enterStateHandler(const Event& e) {
 
 	if (e.game.state == Game::PLAY_STATE)
 		Game::instance()->registerEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
@@ -123,7 +165,7 @@ void PlayerController::leaveStateHandler(const Event& e) {
 
 	if (e.game.state == Game::PLAY_STATE)
 		Game::instance()->removeEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
-}
+}*/
 
 void PlayerController::keyDownHandler(const Event& e) {
 
@@ -150,7 +192,9 @@ void PlayerController::keyDownHandler(const Event& e) {
 			break;
 
 		case GLFW_KEY_X:
-			fire();
+			m_bKeys[FIRE] = true;
+			//fire();
+			activateLaser();
 			break;
 	}
 }
@@ -173,6 +217,10 @@ void PlayerController::keyUpHandler(const Event& e) {
 
 		case GLFW_KEY_DOWN:
 			m_bKeys[DOWN] = false;
+			break;
+
+		case GLFW_KEY_X:
+			m_bKeys[FIRE] = false;
 			break;
 
 		case GLFW_KEY_LEFT_SHIFT:
@@ -251,7 +299,8 @@ void PlayerController::buttonDownHandler(const Event& e) {
 	switch (e.joypad.button) {
 	
 		case 0: //Cross
-			fire();
+			//fire();
+			activateLaser();
 			break;
 
 		case 1: //Circle
@@ -273,20 +322,27 @@ void PlayerController::buttonUpHandler(const Event& e) {
 
 }
 
+void PlayerController::activateLaser() {
+
+	if (m_fCooldown <= 0.0f) {
+		
+		m_iShotsToFire = SHOTS_PER_PRESS;
+		m_fLaserTime = 0.0f;
+		m_fCooldown = LASER_INTERVAL * (float)SHOTS_PER_PRESS - 0.05f;
+	}
+}
+
 void PlayerController::fire() {
-
-	if (Game::instance()->getState() != Game::PLAY_STATE)
-		return;
 	
-	GameObject* laser = GOFactory::instance()->createLaser();
-	laser->setPosition(m_xGameObject->getWorldPosition() + m_xGameObject->forward() * 8.0f + m_xSpaceship->right());
+	Laser* laser = m_xGameObject->getScene()->make<Laser>("laser");
+	laser->setPosition(m_xGameObject->getWorldPosition() + m_xGameObject->forward() * 10.0f + m_xSpaceship->right());
 	laser->setRotation(m_xGameObject->getRotation());
-	m_xGameObject->getScene()->add(laser);
+	laser->init();
 
-	laser = GOFactory::instance()->createLaser();
-	laser->setPosition(m_xGameObject->getWorldPosition() + m_xGameObject->forward() * 8.0f - m_xSpaceship->right());
+	laser = m_xGameObject->getScene()->make<Laser>("laser");
+	laser->setPosition(m_xGameObject->getWorldPosition() + m_xGameObject->forward() * 10.0f - m_xSpaceship->right());
 	laser->setRotation(m_xGameObject->getRotation());
-	m_xGameObject->getScene()->add(laser);
+	laser->init();
 
 	AudioManager::instance()->playAudio(m_iLaserAudioID, m_xGameObject);
 }

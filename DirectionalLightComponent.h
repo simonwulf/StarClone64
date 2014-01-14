@@ -11,8 +11,10 @@ class DirectionalLightComponent : public LightComponent {
 	DirectionalLightComponent();
 	virtual ~DirectionalLightComponent();
 
-	void setDirection(const glm::vec3& direction);
-	void setColor(const glm::vec3& color);
+	void init(glm::vec3 direction, glm::vec3 color, float strength);
+
+	void setDirection(glm::vec3 direction);
+	void setColor(glm::vec3 color);
 	void setStrength(float strength);
 
 	glm::vec3 getDirection() const;

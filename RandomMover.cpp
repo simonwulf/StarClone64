@@ -10,11 +10,12 @@ RandomMover::RandomMover() {
 
 	m_fSpeed = 10.0f;
 
-	Game::instance()->registerEventHandler<RandomMover>(Event::GAME_UPDATE, this, &RandomMover::update);
+	Game::instance()->registerEventHandler(Event::GAME_UPDATE, this, &RandomMover::update);
 }
 
 RandomMover::~RandomMover() {
 
+	Game::instance()->removeEventHandler(Event::GAME_UPDATE, this, &RandomMover::update);
 }
 
 void RandomMover::update(const Event& e) {

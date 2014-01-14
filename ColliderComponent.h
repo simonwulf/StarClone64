@@ -3,28 +3,25 @@
 
 #include "Component.h"
 
-class SphereColliderComponent;
+#include "Raycast.h"
 
-class ColliderComponent : Component {
+class ColliderComponent : public Component {
 
   public:
 
 	enum Type {
 	
 		SPHERE,
+		LINE,
 		PLANE,
 		BOX,
 	};
 
 	ColliderComponent(Type type);
 
-	virtual void checkCollision(ColliderComponent* other) = 0;
+	virtual RaycastResult raycast(Ray ray) = 0;
 
 	Type getType();
-
-  protected:
-
-	static void sphereVsSphere(SphereColliderComponent* a, SphereColliderComponent* b);
 
   private:
 

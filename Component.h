@@ -9,6 +9,8 @@ class Component {
 
 	enum Type {
 	
+		UNSPECIFIED,
+
 		CAMERA,
 		RENDER,
 		
@@ -23,10 +25,11 @@ class Component {
 		TYPE_N
 	};
 
-	Component(Type type);
+	Component(Type type = UNSPECIFIED);
 	virtual ~Component();
 
 	static void* operator new(size_t size);
+	static void* operator new(size_t size, void* p);
 	static void operator delete(void* ptr);
 	static unsigned int getAllocatedMemorySize();
 

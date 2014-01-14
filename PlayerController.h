@@ -38,27 +38,36 @@ class PlayerController : public ControllerComponent {
 		KEY_N
 	};
 
+	static const float LASER_INTERVAL;
+	static const int SHOTS_PER_PRESS = 2;
+
 	float m_fMovementSpeed;
 	float m_fYawVelocity;
 	float m_fPitchVelocity;
 
 	float m_fPitch; //radians
 	float m_fYaw; //radians
-	float m_fRoll; //radians
+	float m_fRoll; //factor
+	float m_fRollLimit; //radians
 
 	bool m_bJoypad;
 	bool m_bKeys[KEY_N];
 
 	unsigned int m_iLaserAudioID;
+	unsigned int m_iShotsToFire;
+	float m_fLaserTime;
+	float m_fCooldown;
 
 	GameObject* m_xSpaceship;
 
+	void activateLaser();
 	void fire();
 
 	void update(const Event& e);
+	void collisionHandler(const Event& e);
 
-	void enterStateHandler(const Event& e);
-	void leaveStateHandler(const Event& e);
+	//void enterStateHandler(const Event& e);
+	//void leaveStateHandler(const Event& e);
 
 	void keyDownHandler(const Event& e);
 	void keyUpHandler(const Event& e);
@@ -69,6 +78,8 @@ class PlayerController : public ControllerComponent {
 
 	void joyConnectedHandler(const Event& e);
 	void joyDisconnectedHandler(const Event& e);
+
+	GameObject* m_xTestObj;
 };
 
 #endif

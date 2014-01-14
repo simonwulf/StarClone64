@@ -11,7 +11,7 @@ class SphereColliderComponent : public ColliderComponent {
 
 	void init(float radius);
 
-	void checkCollision(ColliderComponent* other);
+	RaycastResult raycast(Ray ray);
 
 	float getRadius();
 

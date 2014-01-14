@@ -62,6 +62,7 @@ class Game : public EventDispatcher {
 	clock_t m_iLastTime;
 	clock_t m_iStartTime;
 	float m_fElapsedTime;
+	float m_fTimeScale;
 
 	void update(float delta, float elapsedTime);
 	void render();

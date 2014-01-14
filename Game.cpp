@@ -1,7 +1,7 @@
 #include "Game.h"
 
 #include "Input.h"
-#include "GOFactory.h"
+#include "CollisionManager.h"
 
 #include "PlayScene.h"
 #include "HUDScene.h"
@@ -20,6 +20,7 @@ Game::Game() {
 	s_xInstance = this;
 
 	m_fElapsedTime = 0.0f;
+	m_fTimeScale = 1.0f;
 
 	m_iState = (State)-1;
 }
@@ -27,8 +28,6 @@ Game::Game() {
 Game::~Game() {
 
 	glfwTerminate();
-
-	GOFactory::instance()->cleanUp();
 
 	delete m_xRenderer;
 	delete m_xPlayScene;
@@ -124,13 +123,10 @@ void Game::loop() {
 		glfwPollEvents();
 
 		update(delta, m_fElapsedTime);
-		dispatchEvent(makeGameEvent(Event::GAME_UPDATE_LATE));
 		render();
 
 		clock_t now = clock();
-		delta = (float)(now - m_iLastTime) / (float)CLOCKS_PER_SEC;
-		if (delta > 0.1f)
-			delta = 0.1f;
+		delta = ((float)(now - m_iLastTime) / (float)CLOCKS_PER_SEC) * m_fTimeScale;
 		m_fElapsedTime += delta;
 		m_iLastTime = now;
 	}
@@ -168,10 +164,39 @@ Game::State Game::getState() const {
 
 void Game::update(float delta, float elapsedTime) {
 
-	Event e = makeGameEvent(Event::GAME_UPDATE);
+	/*Event e = makeGameEvent(Event::GAME_UPDATE);
 	e.game.delta = delta;
 
-	dispatchEvent(e);
+	dispatchEvent(e);*/
+
+	Input::instance()->update();
+
+	switch (m_iState) {
+	
+		case Game::PAUSE_STATE:
+		case Game::MENU_STATE:
+			m_xHUDScene->update(delta, elapsedTime);
+			break;
+
+		case Game::PLAY_STATE:
+			m_xSkyScene->update(delta, elapsedTime);
+			m_xPlayScene->update(delta, elapsedTime);
+			m_xHUDScene->update(delta, elapsedTime);
+
+			CollisionManager::checkCollisions(m_xPlayScene);
+
+			m_xSkyScene->lateUpdate(delta, elapsedTime);
+			m_xPlayScene->lateUpdate(delta, elapsedTime);
+			m_xHUDScene->lateUpdate(delta, elapsedTime);
+			break;
+	}
+
+	/*e.type = Event::GAME_UPDATE_LATE;
+	dispatchEvent(e);*/
+
+	//m_xSkyScene->removeDead();
+	m_xPlayScene->removeDead();
+	//m_xHUDScene->removeDead();
 }
 
 void Game::render() {

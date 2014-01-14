@@ -7,19 +7,21 @@
 #include <glm/gtx/quaternion.hpp>
 #include <vector>
 
-#include "ComponentFactory.h"
+//#include "ComponentFactory.h"
 #include "EventDispatcher.h"
 
 class Scene;
+class Component;
 
 class GameObject : public EventDispatcher {
 	
   public:
 
 	GameObject();
-	~GameObject();
+	virtual ~GameObject();
 
 	static void* operator new(size_t size);
+	static void* operator new(size_t size, void* p);
 	static void operator delete(void* ptr);
 	static unsigned int getAllocatedMemorySize();
 
@@ -41,10 +43,14 @@ class GameObject : public EventDispatcher {
 	template <class T>
 	T* addComponent() {
 		
-		T* component = ComponentFactory::instance()->create<T>();
+		//T* component = ComponentFactory::instance()->create<T>();
+		T* component = new T();
 
 		component->m_xGameObject = this;
 		m_xComponents.push_back(component);
+
+		if (m_xScene != nullptr)
+			registerWithScene(component);
 
 		return component;
 	}
@@ -67,6 +73,13 @@ class GameObject : public EventDispatcher {
 	void appendRotation(glm::quat rotation);
 
 	void lookAt(glm::vec3 globalTarget, glm::vec3 up);
+	glm::vec3 localToGlobal(glm::vec3 position);
+	glm::vec3 globalToLocal(glm::vec3 position);
+
+	void setTag(std::string tag);
+	std::string getTag() const;
+
+	void destroy();
 
   private:
 
@@ -81,6 +94,9 @@ class GameObject : public EventDispatcher {
 	bool m_bUpdateMatrix;
 	bool m_bUpdateInverseMatrix;
 
+	std::string m_sTag;
+	bool m_bDead;
+
 	GameObject* m_xParent;
 	Scene* m_xScene;
 
@@ -88,6 +104,7 @@ class GameObject : public EventDispatcher {
 	std::vector<Component*> m_xComponents;
 
 	void setScene(Scene* scene);
+	void registerWithScene(Component* component);
 
 	void invalidateMatrix();
 

@@ -18,6 +18,6 @@ void SkyboxCameraComponent::lateUpdate(const Event& e) {
 
 void SkyboxCameraComponent::init( GameObject* refObj ) {
 
-	Game::instance()->registerEventHandler(Event::GAME_UPDATE, this, &SkyboxCameraComponent::lateUpdate);
+	m_xGameObject->getScene()->registerEventHandler(Event::GAME_UPDATE_LATE, this, &SkyboxCameraComponent::lateUpdate);
 	refObject = refObj;
 }

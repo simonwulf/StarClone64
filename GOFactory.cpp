@@ -65,7 +65,7 @@ GameObject* GOFactory::createPlayer() {
 	GameObject* ship = createEmpty();
 	player->addChild(ship);
 
-	ship->addComponent<ModelRenderComponent>()->init("spaceship2/Spaceship2.obj", ShaderManager::instance()->getProgram(SHADER_LIGHTING_DIFFUSE | SHADER_NORMAL_MAP));
+	ship->addComponent<ModelRenderComponent>()->init("data/models/spaceship/Spaceship.obj");
 	player->addComponent<PlayerController>()->init(ship);
 
 	return player;

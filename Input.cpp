@@ -65,11 +65,9 @@ void Input::init(GLFWwindow* window) {
 
 	if (m_bJoyPresent = glfwJoystickPresent(0))
 		joyPluggedIn();
-
-	Game::instance()->registerEventHandler<Input>(Event::GAME_UPDATE, this, &Input::update);
 }
 
-void Input::update(const Event& e) {
+void Input::update() {
 	
 	if (m_bJoyPresent && !glfwJoystickPresent(0)) {
 		

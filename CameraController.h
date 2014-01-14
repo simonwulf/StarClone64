@@ -22,8 +22,8 @@ class CameraController : public ControllerComponent {
 
 	void update(const Event& e);
 
-	void enterStateHandler(const Event& e);
-	void leaveStateHandler(const Event& e);
+	//void enterStateHandler(const Event& e);
+	//void leaveStateHandler(const Event& e);
 };
 
 #endif

@@ -73,18 +73,12 @@
     <Filter Include="Source Files\Components\Collision">
       <UniqueIdentifier>{a7f27d53-d8e4-49ee-8696-2b302fe022c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\GameSpecific\GameObjects">
-      <UniqueIdentifier>{dcbd3473-4aa8-4c12-b39c-8e2e295ecad0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{b455f068-9cd5-4cc7-83f2-06f2d97a8353}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LogManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
@@ -110,9 +104,6 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureManager.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Visual</Filter>
@@ -143,9 +134,6 @@
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Visual</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelManager.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Source Files\Visual</Filter>
@@ -189,9 +177,6 @@
     <ClCompile Include="Input.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="AudioManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FMODTest.cpp">
       <Filter>Source Files\GameSpecific\Components</Filter>
     </ClCompile>
@@ -204,14 +189,40 @@
     <ClCompile Include="SkyboxCameraComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ColliderComponent.cpp">
-      <Filter>Source Files\Components\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="SphereColliderComponent.cpp">
       <Filter>Source Files\Components\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="LogManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects.cpp">
+      <Filter>Source Files\GameSpecific</Filter>
     <ClCompile Include="ShaderManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyHit.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectionTest.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderComponent.cpp">
+      <Filter>Source Files\Components\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="SmallEnemyMovement.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
     </ClCompile>
     <ClCompile Include="ShaderProgram.cpp">
       <Filter>Source Files\Visual</Filter>
@@ -227,9 +238,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LogManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Header Files\Visual</Filter>
     </ClInclude>
@@ -260,9 +268,6 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="TextureManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GOFactory.h">
       <Filter>Header Files\GameSpecific</Filter>
     </ClInclude>
@@ -292,9 +297,6 @@
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Header Files\Visual</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelManager.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EventDispatcher.h">
       <Filter>Header Files\Core</Filter>
@@ -335,9 +337,6 @@
     <ClInclude Include="Input.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="AudioManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FMODTest.h">
       <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
@@ -359,8 +358,35 @@
     <ClInclude Include="Factory.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
+    <ClInclude Include="AudioManager.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="LogManager.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManager.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects.h">
+      <Filter>Header Files\GameSpecific</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyHit.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Raycast.h">
+      <Filter>Header Files\Components\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectionTest.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SmallEnemyMovement.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
       <Filter>Header Files</Filter>

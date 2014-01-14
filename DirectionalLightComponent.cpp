@@ -9,12 +9,19 @@ DirectionalLightComponent::~DirectionalLightComponent() {
 
 }
 
-void DirectionalLightComponent::setDirection(const glm::vec3& direction) {
+void DirectionalLightComponent::init(glm::vec3 direction, glm::vec3 color, float strength) {
+
+	m_vDirection = direction;
+	m_vColor = color;
+	m_fStrength = strength;
+}
+
+void DirectionalLightComponent::setDirection(glm::vec3 direction) {
 
 	m_vDirection = direction;
 }
 
-void DirectionalLightComponent::setColor(const glm::vec3& color) {
+void DirectionalLightComponent::setColor(glm::vec3 color) {
 
 	m_vColor = color;
 }

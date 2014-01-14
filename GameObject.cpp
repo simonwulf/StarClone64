@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "ComponentFactory.h"
 #include "Component.h"
+#include "Scene.h"
 
 unsigned int GameObject::s_iAllocatedMemorySize = 0;
 
@@ -13,6 +14,9 @@ GameObject::GameObject() {
 	m_bUpdateMatrix = true;
 	m_bUpdateInverseMatrix = true;
 
+	m_sTag = "";
+	m_bDead = false;
+
 	m_xParent = nullptr;
 	m_xScene = nullptr;
 }
@@ -21,7 +25,9 @@ GameObject::~GameObject() {
 	
 	for (unsigned int i = 0; i < m_xComponents.size(); ++i) {
 	
-		ComponentFactory::instance()->destroy(m_xComponents[i]);
+		//ComponentFactory::instance()->destroy(m_xComponents[i]);
+		m_xScene->removeComponent(m_xComponents[i]);
+		delete m_xComponents[i];
 	}
 }
 
@@ -119,11 +125,15 @@ void GameObject::addChild(GameObject* child) {
 		current = current->m_xParent;
 	}
 
+	if (child->m_xScene == nullptr)
+		child->setScene(m_xScene);
+	else if (child->m_xScene != m_xScene)
+		throw std::invalid_argument("A GameObject cannot be moved between scenes");
+
 	if (child->m_xParent != nullptr)
 		m_xParent->removeChild(m_xParent);
 
 	child->m_xParent = this;
-	child->setScene(m_xScene);
 	child->invalidateMatrix();
 
 	m_xChildren.push_back(child);
@@ -268,14 +278,34 @@ void GameObject::lookAt(glm::vec3 target, glm::vec3 up) {
 	setRotation(glm::quat(glm::mat3(right, up, -forward)));
 }
 
+glm::vec3 GameObject::localToGlobal(glm::vec3 position) {
+
+	return glm::vec3(getInverseMatrix() * glm::vec4(position, 1.0f));
+}
+
+glm::vec3 GameObject::globalToLocal(glm::vec3 position) {
+
+	return glm::vec3(getMatrix() * glm::vec4(position, 1.0f));
+}
+
 void GameObject::setScene(Scene* scene) {
 
 	m_xScene = scene;
+	
+	for (unsigned int i = 0; i < m_xComponents.size(); ++i) {
+	
+		m_xScene->registerComponent(m_xComponents[i]);
+	}
 
 	for (unsigned int i = 0; i < m_xChildren.size(); ++i) {
 	
 		m_xChildren[i]->setScene(scene);
 	}
+}
+
+void GameObject::registerWithScene(Component* component) {
+
+	m_xScene->registerComponent(component);
 }
 
 void GameObject::invalidateMatrix() {
@@ -287,4 +317,19 @@ void GameObject::invalidateMatrix() {
 	
 		m_xChildren[i]->invalidateMatrix();
 	}
+}
+
+void GameObject::setTag(std::string tag) {
+
+	m_sTag = tag;
+}
+
+std::string GameObject::getTag() const {
+
+	return m_sTag;
+}
+
+void GameObject::destroy() {
+
+	m_bDead = true;
 }

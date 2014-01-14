@@ -9,6 +9,7 @@ class Input : public EventDispatcher {
   public:
 
 	void init(GLFWwindow* window);
+	void update();
 
 	static Input* instance();
 
@@ -25,8 +26,6 @@ class Input : public EventDispatcher {
 	bool* m_bJoyButtons;
 	int m_iNumJoyAxes;
 	float* m_fJoyAxes;
-
-	void update(const Event& e);
 
 	void joyPluggedIn();
 	void joyPluggedOut();
