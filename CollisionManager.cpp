@@ -6,7 +6,7 @@ void CollisionManager::checkCollisions(Scene* scene) {
 	//TODO: Spatial partitioning
 	Scene::ComponentList* list = scene->getComponents(Component::COLLIDER);
 
-	for (unsigned int i = 0; i < list->size() - 1; ++i) {
+	for (unsigned int i = 0; (int)i < (int)(list->size() - 1); ++i) {
 		for (unsigned int j = i+1; j < list->size(); ++j) {
 		
 			ColliderComponent* a = static_cast<ColliderComponent*>(list->at(i));

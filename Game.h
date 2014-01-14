@@ -55,7 +55,9 @@ class Game : public EventDispatcher {
 	Scene* m_xHUDScene;
 	Scene* m_xSkyScene;
 	Scene* m_xMenuGUIScene;
-	Scene* m_xMenu3DScene;
+	//Scene* m_xMenu3DScene;
+
+	std::vector<Scene*> m_xScenes;
 
 	glm::ivec2 m_vWindowSize;
 
@@ -63,6 +65,9 @@ class Game : public EventDispatcher {
 	clock_t m_iStartTime;
 	float m_fElapsedTime;
 	float m_fTimeScale;
+
+	void enterState(State state);
+	void leaveState(State state);
 
 	void update(float delta, float elapsedTime);
 	void render();

@@ -6,6 +6,7 @@
 
 #include "CameraComponent.h"
 #include "CollisionManager.h"
+#include "Input.h"
 
 #define FUNC_MESSAGE(msg) std::string(__FUNCTION__) + ": " + msg
 
@@ -18,6 +19,15 @@ Scene::Scene() {
 	m_xCamera = nullptr;
 
 	m_iClearFlags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+
+	Input::instance()->registerEventHandler(Event::KEY_DOWN, this, &Scene::inputHandler);
+	Input::instance()->registerEventHandler(Event::KEY_UP, this, &Scene::inputHandler);
+	Input::instance()->registerEventHandler(Event::JOY_AXIS_CHANGE, this, &Scene::inputHandler);
+	Input::instance()->registerEventHandler(Event::JOY_BUTTON_DOWN, this, &Scene::inputHandler);
+	Input::instance()->registerEventHandler(Event::JOY_BUTTON_UP, this, &Scene::inputHandler);
+
+	m_bActive = false;
+	m_bVisible = false;
 }
 
 Scene::~Scene() {
@@ -30,6 +40,12 @@ Scene::~Scene() {
 	m_xGameObjects.clear();
 
 	delete m_xRoot;
+
+	Input::instance()->removeEventHandler(Event::KEY_DOWN, this, &Scene::inputHandler);
+	Input::instance()->removeEventHandler(Event::KEY_UP, this, &Scene::inputHandler);
+	Input::instance()->removeEventHandler(Event::JOY_AXIS_CHANGE, this, &Scene::inputHandler);
+	Input::instance()->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &Scene::inputHandler);
+	Input::instance()->removeEventHandler(Event::JOY_BUTTON_UP, this, &Scene::inputHandler);
 }
 
 /*GameObject* Scene::getRoot() {
@@ -173,4 +189,30 @@ Scene::ComponentList* Scene::getComponents(Component::Type type) {
 RaycastResult Scene::raycast(Ray ray) {
 
 	return CollisionManager::raycast(ray, this);
+}
+
+void Scene::setActive(bool active) {
+
+	m_bActive = active;
+}
+
+bool Scene::isActive() const {
+
+	return m_bActive;
+}
+
+void Scene::setVisible(bool visible) {
+
+	m_bVisible = visible;
+}
+
+bool Scene::isVisible() const {
+
+	return m_bVisible;
+}
+
+void Scene::inputHandler(const Event& e) {
+
+	if (m_bActive)
+		dispatchEvent(e);
 }

@@ -108,7 +108,7 @@
     <ClCompile Include="MainMenuController.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Menu3DScene.cpp" />
-    <ClCompile Include="MenuScene.cpp" />
+    <ClCompile Include="MenuGUIScene.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelManager.cpp" />

@@ -198,9 +198,6 @@
     <ClCompile Include="ShaderProgram.cpp">
       <Filter>Source Files\Visual</Filter>
     </ClCompile>
-    <ClCompile Include="MenuScene.cpp">
-      <Filter>Source Files\GameSpecific\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Menu3DScene.cpp">
       <Filter>Source Files\GameSpecific\Scenes</Filter>
     </ClCompile>
@@ -236,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuGUIScene.cpp">
+      <Filter>Source Files\GameSpecific\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

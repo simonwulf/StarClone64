@@ -38,27 +38,32 @@ PlayerController::PlayerController() {
 
 PlayerController::~PlayerController() {
 
-	Input::instance()->removeEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	Input::instance()->removeEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
-	
-	Input::instance()->removeEventHandler(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
-	Input::instance()->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
-	Input::instance()->removeEventHandler(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
+	Scene* scene = m_xGameObject->getScene();
 
-	//Game::instance()->removeEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
+	scene->removeEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	scene->removeEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	
+	scene->removeEventHandler(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
+	scene->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
+	scene->removeEventHandler(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
+
+	Input::instance()->removeEventHandler(Event::JOY_PLUGGED_IN, this, &PlayerController::joyConnectedHandler);
+	Input::instance()->removeEventHandler(Event::JOY_PLUGGED_OUT, this, &PlayerController::joyConnectedHandler);
 }
 
 void PlayerController::init(GameObject* spaceship) {
 
 	m_xSpaceship = spaceship;
 
-	Input::instance()->registerEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	Input::instance()->registerEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	Scene* scene = m_xGameObject->getScene();
+
+	scene->registerEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	scene->registerEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
 
 	Input::instance()->registerEventHandler(Event::JOY_PLUGGED_IN, this, &PlayerController::joyConnectedHandler);
 
 	m_xGameObject->registerEventHandler(Event::COLLISION, this, &PlayerController::collisionHandler);
-	m_xGameObject->getScene()->registerEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
+	scene->registerEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
 }
 
 void PlayerController::update(const Event& e) {
@@ -235,14 +240,16 @@ void PlayerController::keyUpHandler(const Event& e) {
 
 void PlayerController::joyConnectedHandler(const Event& e) {
 
+	Scene* scene = m_xGameObject->getScene();
+
 	Input::instance()->registerEventHandler(Event::JOY_PLUGGED_OUT, this, &PlayerController::joyDisconnectedHandler);
 
-	Input::instance()->registerEventHandler(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
-	Input::instance()->registerEventHandler(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
-	Input::instance()->registerEventHandler(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
+	scene->registerEventHandler(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
+	scene->registerEventHandler(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
+	scene->registerEventHandler(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
 
-	Input::instance()->removeEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	Input::instance()->removeEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	scene->removeEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	scene->removeEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
 
 	memset(m_bKeys, false, sizeof(m_bKeys));
 
@@ -251,14 +258,16 @@ void PlayerController::joyConnectedHandler(const Event& e) {
 
 void PlayerController::joyDisconnectedHandler(const Event& e) {
 
+	Scene* scene = m_xGameObject->getScene();
+
 	Input::instance()->removeEventHandler(Event::JOY_PLUGGED_OUT, this, &PlayerController::joyDisconnectedHandler);
 
-	Input::instance()->removeEventHandler(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
-	Input::instance()->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
-	Input::instance()->removeEventHandler(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
+	scene->removeEventHandler(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
+	scene->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
+	scene->removeEventHandler(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
 
-	Input::instance()->registerEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	Input::instance()->registerEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	scene->registerEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+	scene->registerEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
 
 	m_fYawVelocity = 0.0f;
 	m_fPitchVelocity = 0.0f;

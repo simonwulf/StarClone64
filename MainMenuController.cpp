@@ -6,20 +6,21 @@
 
 MainMenuController::MainMenuController() {
 
-	Input::instance()->registerEventHandler(Event::KEY_DOWN, this, &MainMenuController::keyDownhandler);
 }
 
 MainMenuController::~MainMenuController() {
 
-
+	m_xGameObject->getScene()->removeEventHandler(Event::KEY_DOWN, this, &MainMenuController::keyDownhandler);
 }
 
-void MainMenuController::setData( ModelRenderComponent* startItem, ModelRenderComponent* quitItem, Material* selected, Material* deselected ) {
+void MainMenuController::init( ModelRenderComponent* startItem, ModelRenderComponent* quitItem, Material* selected, Material* deselected ) {
 
 	m_xStart = startItem;
 	m_xQuit = quitItem;
 	m_xMatSelected = selected;
 	m_xMatDeselected = deselected;
+
+	m_xGameObject->getScene()->registerEventHandler(Event::KEY_DOWN, this, &MainMenuController::keyDownhandler);
 }
 
 void MainMenuController::keyDownhandler( const Event& e ) {

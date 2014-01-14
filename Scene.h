@@ -62,6 +62,12 @@ class Scene : public EventDispatcher {
 
 	RaycastResult raycast(Ray ray);
 
+	void setActive(bool active);
+	bool isActive() const;
+
+	void setVisible(bool visible);
+	bool isVisible() const;
+
   protected:
 
 	Factory<GameObject, std::string> m_xGameObjectFactory;
@@ -77,8 +83,12 @@ class Scene : public EventDispatcher {
 
 	GLuint m_iClearFlags;
 	glm::vec3 m_vAmbientLight;
+	bool m_bActive;
+	bool m_bVisible;
 
 	void removeDead_r(GameObject* node);
+
+	void inputHandler(const Event& e);
 
 	friend class Renderer;
 };

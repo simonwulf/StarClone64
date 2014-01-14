@@ -13,7 +13,7 @@ class MainMenuController : public ControllerComponent {
 		MainMenuController();
 		~MainMenuController();
 
-		void setData(ModelRenderComponent* startItem, ModelRenderComponent* quitItem, Material* selected, Material* deselected);
+		void init(ModelRenderComponent* startItem, ModelRenderComponent* quitItem, Material* selected, Material* deselected);
 		void keyDownhandler(const Event& e);
 
 	private:

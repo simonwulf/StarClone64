@@ -30,11 +30,11 @@ Game::~Game() {
 	glfwTerminate();
 
 	delete m_xRenderer;
-	delete m_xPlayScene;
-	delete m_xHUDScene;
-	delete m_xSkyScene;
-	delete m_xMenu3DScene;
-	delete m_xMenuGUIScene;
+
+	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
+	
+		delete m_xScenes[i];
+	}
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
@@ -95,17 +95,25 @@ int Game::init() {
 	m_xRenderer = new Renderer(m_xWindow);
 	
 	m_xPlayScene = new PlayScene();
-	m_xSkyScene = new SkyScene(); ((SkyScene*) m_xSkyScene)->init(m_xPlayScene->getCamera()->getGameObject());
+	m_xSkyScene = new SkyScene();
+	static_cast<SkyScene*>(m_xSkyScene)->init(m_xPlayScene->getCamera()->getGameObject());
+	m_xSkyScene->setVisible(true);
 	m_xHUDScene = new HUDScene();
 	m_xMenuGUIScene = new MenuGUIScene();
-	m_xMenu3DScene = new Menu3DScene();
+	//m_xMenu3DScene = new Menu3DScene();
+
+	m_xScenes.push_back(m_xSkyScene);
+	m_xScenes.push_back(m_xPlayScene);
+	m_xScenes.push_back(m_xHUDScene);
+	m_xScenes.push_back(m_xMenuGUIScene);
+	//m_xScenes.push_back(m_xMenu3DScene);
 
 	Input::instance()->init(m_xWindow);
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
 
-	setState(PLAY_STATE);
+	setState(MENU_STATE);
 
 	return 0;
 }
@@ -150,16 +158,72 @@ void Game::pause() {
 void Game::setState(State state) {
 
 	if ((int)m_iState != -1)
-		dispatchEvent(makeGameEvent(Event::GAME_LEAVE_STATE));
+		leaveState(m_iState);
+		//dispatchEvent(makeGameEvent(Event::GAME_LEAVE_STATE));
 
 	m_iState = state;
 
-	dispatchEvent(makeGameEvent(Event::GAME_ENTER_STATE));
+	enterState(m_iState);
+	//dispatchEvent(makeGameEvent(Event::GAME_ENTER_STATE));
 }
 
 Game::State Game::getState() const {
 
 	return m_iState;
+}
+
+void Game::enterState(State state) {
+
+	std::cout << __FUNCTION__ << ": " << state << std::endl;
+
+	switch (state) {
+	
+		case MENU_STATE:
+			m_xMenuGUIScene->setActive(true);
+			m_xMenuGUIScene->setVisible(true);
+			break;
+
+		case PLAY_STATE:
+			m_xSkyScene->setActive(true);
+			m_xPlayScene->setActive(true);
+			m_xPlayScene->setVisible(true);
+			m_xHUDScene->setActive(true);
+			m_xHUDScene->setVisible(true);
+			break;
+
+		case PAUSE_STATE:
+			m_xPlayScene->setActive(false);
+			m_xPlayScene->setVisible(true);
+			m_xMenuGUIScene->setActive(true);
+			m_xMenuGUIScene->setVisible(true);
+			break;
+	}
+}
+
+void Game::leaveState(State state) {
+
+	switch (state) {
+	
+		case MENU_STATE:
+			m_xMenuGUIScene->setActive(false);
+			m_xMenuGUIScene->setVisible(false);
+			break;
+
+		case PLAY_STATE:
+			m_xSkyScene->setActive(false);
+			m_xPlayScene->setActive(false);
+			m_xPlayScene->setVisible(false);
+			m_xHUDScene->setActive(false);
+			m_xHUDScene->setVisible(false);
+			break;
+
+		case PAUSE_STATE:
+			m_xPlayScene->setActive(true);
+			m_xPlayScene->setVisible(false);
+			m_xMenuGUIScene->setActive(false);
+			m_xMenuGUIScene->setVisible(false);
+			break;
+	}
 }
 
 void Game::update(float delta, float elapsedTime) {
@@ -171,7 +235,7 @@ void Game::update(float delta, float elapsedTime) {
 
 	Input::instance()->update();
 
-	switch (m_iState) {
+	/*switch (m_iState) {
 	
 		case Game::PAUSE_STATE:
 		case Game::MENU_STATE:
@@ -189,23 +253,53 @@ void Game::update(float delta, float elapsedTime) {
 			m_xPlayScene->lateUpdate(delta, elapsedTime);
 			m_xHUDScene->lateUpdate(delta, elapsedTime);
 			break;
+	}*/
+
+	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
+	
+		if (m_xScenes[i]->isActive())
+			m_xScenes[i]->update(delta, elapsedTime);
+	}
+
+	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
+	
+		if (m_xScenes[i]->isActive())
+			CollisionManager::checkCollisions(m_xScenes[i]);
+	}
+
+	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
+	
+		if (m_xScenes[i]->isActive())
+			m_xScenes[i]->lateUpdate(delta, elapsedTime);
 	}
 
 	/*e.type = Event::GAME_UPDATE_LATE;
 	dispatchEvent(e);*/
 
+	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
+	
+		if (m_xScenes[i]->isActive())
+			m_xScenes[i]->removeDead();
+	}
+
 	//m_xSkyScene->removeDead();
-	m_xPlayScene->removeDead();
+	//m_xPlayScene->removeDead();
 	//m_xHUDScene->removeDead();
 }
 
 void Game::render() {
 
- 	m_xRenderer->render(m_xSkyScene);
+ 	/*m_xRenderer->render(m_xSkyScene);
 // 	m_xRenderer->render(m_xPlayScene);
 // 	m_xRenderer->render(m_xHUDScene);
 	m_xRenderer->render(m_xMenu3DScene);
-	m_xRenderer->render(m_xMenuGUIScene);
+	m_xRenderer->render(m_xMenuGUIScene);*/
+
+	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
+	
+		if (m_xScenes[i]->isVisible())
+			m_xRenderer->render(m_xScenes[i]);
+	}
 
 	glfwSwapBuffers(m_xWindow);
 }
