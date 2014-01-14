@@ -39,17 +39,7 @@ GLFWwindow* Renderer::getWindow() const {
 void Renderer::render(Scene* scene) {
 
 	glClear(scene->getClearFlags());
-
-	glUseProgram(m_xDefaultShaderProgram->glID());
-
-	m_xDefaultShaderProgram->uniformMatrix4fv("projection", 1, GL_FALSE, (GLfloat*)&scene->getCamera()->getProjectionMatrix());
-	m_xDefaultShaderProgram->uniformMatrix4fv("view", 1, GL_FALSE, (GLfloat*)&scene->getCamera()->getViewMatrix());
-	m_xDefaultShaderProgram->uniform3fv("ambient_light", 1, (GLfloat*)&scene->getAmbientLight());
-	m_xDefaultShaderProgram->uniform1i("diffuse", 0);
-	m_xDefaultShaderProgram->uniform1i("normalmap", 1);
-
-	updateLights(LT_DIRECTIONAL, scene);
-	updateLights(LT_POINT, scene);
+	//renderNode(scene->getRoot());
 
 	const Scene::ComponentList* rc_list = scene->getComponents(Component::RENDER);
 	for (unsigned int i = 0; i < rc_list->size(); ++i) {
@@ -58,16 +48,13 @@ void Renderer::render(Scene* scene) {
 
 		if (rc != nullptr) {
 
-			m_xDefaultShaderProgram->uniformMatrix4fv("model", 1, GL_FALSE, (GLfloat*)&rc->getGameObject()->getMatrix());
 			rc->render();
 		}
 	}
-
-	//renderNode(scene->m_xRoot);
 }
 
 //Went back to recursive approach in order to support multiple scenes
-void Renderer::renderNode(GameObject* node) {
+/*void Renderer::renderNode(GameObject* node) {
 
 	RenderComponent* rc = (RenderComponent*)node->getComponent(Component::RENDER);
 
@@ -80,7 +67,7 @@ void Renderer::renderNode(GameObject* node) {
 	
 		renderNode(node->childAt(i));
 	}
-}
+}*/
 
 void Renderer::updateLights(LightType type, Scene* scene) {
 
@@ -128,8 +115,8 @@ void Renderer::updateLights(LightType type, Scene* scene) {
 	for (unsigned int i = 0; i < light_list->size(); ++i) {
 	
 		LightComponent* light = (LightComponent*)light_list->at(i);
-		//if (light->getGameObject()->getScene() != scene)
-		//	continue;
+		if (light->getGameObject()->getScene() != scene)
+			continue;
 
 		light->glData(dst);
 		++count;

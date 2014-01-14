@@ -11,60 +11,85 @@
 #include "FMODTest.h"
 #include "AudioManager.h"
 
+#include "GameObjects.h"
+
 PlayScene::PlayScene() {
 
-	setAmbientLight(glm::vec3(0.1f, 0.1f, 0.1f));
+	setAmbientLight(glm::vec3(0.5f, 0.5f, 0.5f));
 	setClearFlags(GL_DEPTH_BUFFER_BIT);
+	
+	m_xGameObjectFactory.registerCreator<GameObject>("empty");
+	m_xGameObjectFactory.registerCreator<Player>("player");
+	m_xGameObjectFactory.registerCreator<PlayerCamera>("camera");
+	m_xGameObjectFactory.registerCreator<Laser>("laser");
+	m_xGameObjectFactory.registerCreator<SimpleModel>("model");
+	m_xGameObjectFactory.registerCreator<Sun>("sun");
+	m_xGameObjectFactory.registerCreator<PointLight>("pointlight");
+	m_xGameObjectFactory.registerCreator<SmallEnemy>("small_enemy");
 
-	GameObject* obj = GOFactory::instance()->createTeapot();
- 	obj->setPosition(glm::vec3(0.0f, 5.0f, 0.0f ));
-	obj->setScale(glm::vec3(10));
-	add(obj);
-
-	obj = GOFactory::instance()->createEmpty();
-	obj->addComponent<ModelRenderComponent>()->init("../../test/mesh_test/boss1/tris.md2");
-	obj->setPosition(glm::vec3(15.0f, 0.0f, 0.0f ));
-	obj->setScale(glm::vec3(0.06f));
-	add(obj);
-
-	GameObject* player = GOFactory::instance()->createPlayer();
-	player->setPosition(glm::vec3(0.0f, 5.0f, -5.0f));
-	add(player);
+	Player* player = make<Player>("player");
+	player->setPosition(glm::vec3(0.0f, 6.0f, 0.0f));
+	player->init();
 
 	glm::ivec2 window_size = Game::instance()->getWindowSize();
+	PlayerCamera* camera = make<PlayerCamera>("camera");
+	camera->init(player, 60.0f, 0.1f, 1000.0f, (float)window_size.x/(float)window_size.y);
+
+	useCamera((CameraComponent*)camera->getComponent(Component::CAMERA));
+
+	AudioManager::instance()->setGlobalListener(camera);
+
+	SimpleModel* teapot = make<SimpleModel>("model");
+	teapot->init("../../test/mesh_test/boss1/tris.md2");
+ 	teapot->setPosition(glm::vec3(0.0f));
+ 	teapot->setScale(glm::vec3(0.03f, 0.03f, 0.03f));
+
+	for (unsigned int i = 0; i < 1; ++i) {
+		
+		SmallEnemy* enemy = make<SmallEnemy>("small_enemy");
+		enemy->setPosition(glm::vec3(
+			((float)rand() / (float)RAND_MAX) * 500.0f - 250.0f,
+			((float)rand() / (float)RAND_MAX) * 6.0f + 3.0f,
+			((float)rand() / (float)RAND_MAX) * 500.0f - 250.0f
+		));
+		enemy->init();
+	}
+
+	/*GameObject* player = GOFactory::instance()->createPlayer();
+	player->setPosition(glm::vec3(0.0f, 5.0f, -5.0f));
+	add(player);*/
+
+	/*glm::ivec2 window_size = Game::instance()->getWindowSize();
 	GameObject* camera = GOFactory::instance()->createPlayerCamera(player, 60.0f, 0.1f, 1000.0f, (float)window_size.x/(float)window_size.y);
 	add(camera);
 
 	AudioManager::instance()->setGlobalListener(camera);
 
-	useCamera((CameraComponent*)camera->getComponent(Component::CAMERA));
+	useCamera((CameraComponent*)camera->getComponent(Component::CAMERA));*/
 
-	GameObject* ground = GOFactory::instance()->createGroundPlane();
+	SimpleModel* ground = make<SimpleModel>("model");
+	ground->init("../../test/mesh_test/terrain_test.obj");
 	ground->setScale(glm::vec3(1000.0f, 1000.0f, 1000.0f));
-	add(ground);
 
 	/* */
-	GameObject* sun = GOFactory::instance()->createSun(
+	make<Sun>("sun")->init(
 		glm::vec3(-0.5f, -1.0f, -0.5f),
 		glm::vec3(1.0f, 1.0f, 1.0f),
-		0.2f
+		0.5f
 	);
-	add(sun);
 
-	sun = GOFactory::instance()->createSun(
+	make<Sun>("sun")->init(
 		glm::vec3(0.0f, 1.0f, 0.5f),
 		glm::vec3(0.0f, 0.5f, 1.0f),
 		1.0f
 	);
-	//add(sun);
 	/* */
 
-	/* */
+	/* *
 	float hue = 0.0f;
 	float r, g, b;
 	unsigned int numLights = 64;
-	GameObject* lightBaseOffset = GOFactory::instance()->createEmpty();
-	lightBaseOffset->setPosition(glm::vec3(-20, 0, 0));
+
 	for (unsigned int i = 0; i < numLights; ++i) {
 
 		if (hue < 60.0f) {
@@ -106,18 +131,14 @@ PlayScene::PlayScene() {
 
 		hue += 360.0f / (float)numLights;
 
-		GameObject* pl = GOFactory::instance()->createPointLight(
+		PointLight* pl = make<PointLight>("pointlight");
+		pl->init(
 			glm::vec3(r, g, b),
 			8.0f,
 			1.0f
 		);
 
 		pl->addComponent<RandomMover>();
-		lightBaseOffset->addChild(pl);
 	}
 	/* */
-	add(lightBaseOffset);  
-	GameObject* pl = GOFactory::instance()->createPointLight(glm::vec3(0, 0, 1), 15, 15);
-	pl->setPosition(glm::vec3(0, 1, 5));
-	add(pl);
 }

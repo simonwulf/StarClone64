@@ -118,7 +118,6 @@
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
-    <ClCompile Include="ProjectionTest.cpp" />
     <ClCompile Include="RandomMover.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -173,7 +172,6 @@
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PointLightComponent.h" />
-    <ClInclude Include="ProjectionTest.h" />
     <ClInclude Include="RandomMover.h" />
     <ClInclude Include="Raycast.h" />
     <ClInclude Include="RenderComponent.h" />

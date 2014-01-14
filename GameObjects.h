@@ -50,4 +50,8 @@ class PointLight : public GameObject {
 public: void init(glm::vec3 color, float radius, float strength);
 };
 
+class MainMenu : public GameObject {
+public: void init();
+};
+
 #endif

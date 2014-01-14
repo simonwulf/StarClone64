@@ -53,7 +53,7 @@ class Renderer {
 
 	std::vector<GLuint> m_xLightCounts;
 
-	void renderNode(GameObject* node);
+	//void renderNode(GameObject* node);
 };
 
 #endif
