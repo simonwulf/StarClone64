@@ -116,6 +116,7 @@
     <ClCompile Include="OrthographicCameraComponent.cpp" />
     <ClCompile Include="PerspectiveCameraComponent.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="PlayerHit.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
     <ClCompile Include="RandomMover.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="EnemyHit.h" />
+    <ClInclude Include="PlayerHit.h" />
     <ClInclude Include="SmallEnemyMovement.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventDispatcher.h" />

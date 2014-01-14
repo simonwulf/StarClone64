@@ -147,7 +147,6 @@ void Input::joyPluggedIn() {
 	dispatchEvent(e);
 
 	Log::Writeln(std::string("Joypad plugged in: ") + glfwGetJoystickName(0), Log::COLOR_LIGHT_AQUA);
-	//Log::Writeln(std::string("Number of axes: " + m_iNumJoyAxes));
 	std::cout << "Number of axes: " << m_iNumJoyAxes << std::endl;
 	std::cout << "Number of buttons: " << m_iNumJoyButtons << std::endl;
 }

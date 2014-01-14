@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 #include "ShaderManager.h"
+#include "CollisionManager.h"
 #include "ModelRenderComponent.h"
 #include "GUITextureRenderComponent.h"
 #include "PlayerController.h"
@@ -27,7 +28,10 @@ void Player::init() {
 	addChild(ship);
 
 	addComponent<PlayerController>()->init(ship);
-	addComponent<SphereColliderComponent>()->init(1.5f);
+	SphereColliderComponent* ssc = addComponent<SphereColliderComponent>();
+	ssc->init(1.5f);
+	ssc->setLayers(CollisionManager::PLAYER);
+	ssc->setMask(CollisionManager::ENEMY);
 
 	setTag("player");
 }
@@ -43,12 +47,16 @@ void Laser::init() {
 
 void SmallEnemy::init() {
 
-	setTag("enemy");
+	setTag("small_enemy");
 
 	addComponent<ModelRenderComponent>()->init("spaceship2/Spaceship2.obj");
 	addComponent<EnemyHit>()->init(5);
 	addComponent<SmallEnemyMovement>()->init();
-	addComponent<SphereColliderComponent>()->init(2.0f);
+	
+	SphereColliderComponent* scc = addComponent<SphereColliderComponent>();
+	scc->init(2.0f);
+	scc->setLayers(CollisionManager::ENEMY);
+	scc->setMask(CollisionManager::PLAYER);
 
 	setScale(glm::vec3(0.6f, 0.6f, 0.6f));
 }

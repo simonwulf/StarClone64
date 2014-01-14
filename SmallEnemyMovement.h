@@ -15,6 +15,7 @@ private:
 
 	glm::vec3 m_vTarget;
 	float m_fMovementSpeed;
+	float m_fTargetTime;
 
 	void update(const Event& e);
 

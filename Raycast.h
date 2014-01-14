@@ -3,11 +3,22 @@
 
 #include <glm/glm.hpp>
 
-struct Ray {
+class Ray {
+
+  public:
+
+	Ray(glm::vec3 start, glm::vec3 direction, bool infinite = false, unsigned int mask = 0xffffffff) {
+	
+		this->start = start;
+		this->direction = direction;
+		this->infinite = infinite;
+		this->mask = mask;
+	}
 
 	glm::vec3 start;
 	glm::vec3 direction;
 	bool infinite;
+	unsigned int mask;
 };
 
 struct RaycastResult {
