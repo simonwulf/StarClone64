@@ -7,6 +7,7 @@ AudioManager AudioManager::m_sInstance;
 AudioManager::AudioManager() {
 
 	m_xGlobalListener = nullptr;
+	m_xCurrentMusic = nullptr;
 	m_sBasePath = "data/audio"; //TODO: read from config
 	if(m_sBasePath[m_sBasePath.size()-1] != '\\')
 		m_sBasePath += '\\';
@@ -38,7 +39,13 @@ void AudioManager::clearCache() {
 		m_xAudioTable[i].sound->release();
 	}
 
+	auto it = m_xMusicTable.begin();
+	for(; it != m_xMusicTable.end(); ++it) {
+		it->second->release();
+	}
+
 	m_xAudioTable.clear();
+	m_xMusicTable.clear();
 	Log::Writeln("AudioManager cache cleared");
 }
 
@@ -47,7 +54,7 @@ unsigned int AudioManager::loadAudio( std::string path ) {
 	Log::Writeln("Loading audio " + path);
 
 	FMOD::Sound* sound;
-	checkError( m_xAudioEngine->createSound(std::string(m_sBasePath + path).c_str(), FMOD_3D, 0, &sound) );
+	checkError( m_xAudioEngine->createSound(std::string(m_sBasePath + path).c_str(), FMOD_3D | FMOD_HARDWARE | FMOD_LOOP_OFF, 0, &sound) );
 	
 	soundData sd;
 	sd.sound = sound;
@@ -56,6 +63,19 @@ unsigned int AudioManager::loadAudio( std::string path ) {
 
 	return m_xAudioTable.size();
 }
+
+FMOD::Sound* AudioManager::loadMusic( std::string name ) {
+
+	Log::Writeln("Loading music " + name);
+
+	FMOD::Sound* music;
+	checkError( m_xAudioEngine->createStream(std::string(m_sBasePath + name).c_str(), FMOD_HARDWARE | FMOD_2D | FMOD_LOOP_NORMAL, 0, &music) );
+
+	m_xMusicTable.insert( std::make_pair<std::string, FMOD::Sound*>(name, music) );
+
+	return music;
+}
+
 
 unsigned int AudioManager::getIndexByName( std::string name ) {
 
@@ -87,14 +107,6 @@ void AudioManager::playAudio( unsigned int index, glm::vec3 position) {
 	m_xAudioEngine->playSound(FMOD_CHANNEL_FREE, m_xAudioTable[index-1].sound, true, &channel);
 	channel->set3DAttributes(&fv_position, &fv_velocity);
 	channel->setPaused(false);
-
-	/*std::stringstream ss;
-	ss << "Listener: " << fv_listener_position.x << "\t, " <<
-		fv_listener_position.y << "\t, " << fv_listener_position.z
-		<< "\tSource: " << fv_position.x << "\t, " << fv_position.y <<
-		"\t, " << fv_position.z;
-
-	Log::Writeln(ss.str(), Log::COLOR_LIGHT_AQUA);*/
 }
 
 void AudioManager::playAudio( unsigned int index, GameObject* source ) {
@@ -126,4 +138,26 @@ AudioManager* AudioManager::instance() {
 void AudioManager::setGlobalListener( GameObject* listener ) {
 
 	m_xGlobalListener = listener;
+}
+
+void AudioManager::playMusic( std::string name ) {
+
+	auto it = m_xMusicTable.find(name);
+	FMOD::Sound* music;
+
+	if (it == m_xMusicTable.end()) {
+
+		music = loadMusic(name);
+	} else {
+
+		music = it->second;
+	}
+
+	if(m_xCurrentMusic != nullptr) {
+
+		m_xCurrentMusic->release();
+	}
+
+	m_xCurrentMusic = music;
+	m_xAudioEngine->playSound(FMOD_CHANNEL_FREE, music, false, 0);
 }

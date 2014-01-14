@@ -3,6 +3,7 @@
 #include "MainMenuController.h"
 #include "PerspectiveCameraComponent.h"
 #include "GameObjects.h"
+#include "AudioManager.h"
 
 MenuGUIScene::MenuGUIScene() {
 
@@ -35,4 +36,5 @@ MenuGUIScene::MenuGUIScene() {
 
 	setAmbientLight(glm::vec3(1.0f, 1.0f, 1.0f));
 	setClearFlags(GL_DEPTH_BUFFER_BIT);
+	AudioManager::instance()->playMusic("music01.mp3");
 }

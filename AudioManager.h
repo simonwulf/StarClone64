@@ -6,6 +6,7 @@
 #include <vector>
 #include <FMOD/fmod.hpp>
 #include "GameObject.h"
+#include <unordered_map>
 
 class AudioManager {
 
@@ -18,6 +19,7 @@ class AudioManager {
 
 		void playAudio(unsigned int index, glm::vec3 position);
 		void playAudio(unsigned int index, GameObject* source);
+		void playMusic(std::string name);
 		FMOD::Sound* getAudio(unsigned int index);
 		unsigned int getIndexByName(std::string name);
 		unsigned int loadAudio(std::string path);
@@ -39,11 +41,14 @@ class AudioManager {
 		};
 
 		std::vector<soundData> m_xAudioTable;
+		std::unordered_map<std::string, FMOD::Sound*> m_xMusicTable;
 
 		std::string m_sBasePath;
 		FMOD::System* m_xAudioEngine;
 		GameObject* m_xGlobalListener;
+		FMOD::Sound* m_xCurrentMusic;
 
+		FMOD::Sound* loadMusic(std::string name);
 		void checkError(FMOD_RESULT result);
 
 		const FMOD_VECTOR glmToFmod(glm::vec3 v) const {
