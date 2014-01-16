@@ -190,6 +190,7 @@
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="alpha_mask.frag" />
     <None Include="data\shaders\Base.frag" />
     <None Include="data\shaders\Base.vert" />
     <None Include="data\shaders\normal_map.frag" />

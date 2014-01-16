@@ -36,5 +36,6 @@ void main() {
 	#endif
 
 	#ifdef SHADER_ALPHA_MASK
+		alphaMask();
 	#endif
 }

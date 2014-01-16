@@ -424,5 +424,8 @@
     <None Include="data\shaders\normal_map.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="alpha_mask.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

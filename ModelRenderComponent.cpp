@@ -1,6 +1,7 @@
 #include "ModelRenderComponent.h"
 #include "ModelManager.h"
 #include "Game.h"
+#include "ShaderManager.h"
 
 void ModelRenderComponent::init(const char* filepath, ShaderProgram* defaultProgram) {
 
@@ -22,9 +23,14 @@ void ModelRenderComponent::render() {
 	ShaderProgram* shader = getModel()->getMeshes()[0].getMaterial()->getShaderProgram();
 	glUseProgram(shader->glID());
 
+	if (m_xModel == nullptr || (meshes = m_xModel->getMeshes()) == nullptr)
+		return;
+
 	/*	Setting of the uniforms is highly un-optimized. 
 		Renderings should be sorted per program and use on glUseProgram per program.
 		Operations marked with 'c' are constant and should only be set once per glUseProgram.
+
+		Edit: changing rendering order to sort by shader would mess with drawing transparent materials.
 	*/
 	/* c */shader->uniformMatrix4fv("projection", 1, GL_FALSE, (GLfloat*) &getGameObject()->getScene()->getCamera()->getProjectionMatrix() );
 	/* c */shader->uniformMatrix4fv("view", 1, GL_FALSE, (GLfloat*) &getGameObject()->getScene()->getCamera()->getViewMatrix() );
@@ -33,11 +39,17 @@ void ModelRenderComponent::render() {
 	/* c */Game::instance()->getRenderer()->updateLights(LT_DIRECTIONAL, getGameObject()->getScene());
 	/* c */shader->uniform1ui("point_light_count", Game::instance()->getRenderer()->getLightCount(LT_POINT));
 	/* c */shader->uniform1ui("dir_light_count", Game::instance()->getRenderer()->getLightCount(LT_DIRECTIONAL));
-
 	shader->uniformMatrix4fv("model", 1, GL_FALSE, (GLfloat*) &getGameObject()->getMatrix());
 
-	if (m_xModel == nullptr || (meshes = m_xModel->getMeshes()) == nullptr)
-		return;
+	if((shader->shaderFlags() & SHADER_ALPHA_BLENDING_ADDITIVE)) {
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+		glBlendEquation(GL_MAX);
+	} else {
+
+		glDisable(GL_BLEND);
+	}
 
 	for (unsigned int i = 0; i < m_xModel->numMeshes(); ++i) {
 

@@ -367,3 +367,8 @@ void ShaderProgram::uniformMatrix4x3fv(const char* name, GLsizei count, GLboolea
 
 	glProgramUniformMatrix4x3fv(m_iGLShaderProgramID, location, count, transpose, value);
 }
+
+int ShaderProgram::shaderFlags() const {
+
+	return m_iShaderFlags;
+}
