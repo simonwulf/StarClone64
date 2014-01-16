@@ -1,4 +1,5 @@
 #include "LaserController.h"
+#include "CollisionManager.h"
 
 #include "Game.h"
 #include "Scene.h"
@@ -6,7 +7,7 @@
 
 unsigned int LaserController::s_iHitAudioID = 0;
 
-LaserController::LaserController() {
+LaserController::LaserController() : m_xRay(glm::vec3(), glm::vec3(), false, CollisionManager::ENEMY) {
 
 	m_fLifeTime = 1.0f;
 
@@ -68,7 +69,7 @@ void LaserController::rayTest() {
 
 	RaycastResult result = m_xGameObject->getScene()->raycast(m_xRay);
 
-	if (result.hit && result.gameObject->getTag() == "enemy") {
+	if (result.hit) {
 	
 		AudioManager::instance()->playAudio(s_iHitAudioID, result.position);
 

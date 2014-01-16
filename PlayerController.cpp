@@ -152,9 +152,6 @@ void PlayerController::update(const Event& e) {
 
 void PlayerController::collisionHandler(const Event& e) {
 
-	if (e.collision.other->getTag() != "enemy")
-		return;
-
 	glm::vec3 push(e.collision.push.x, e.collision.push.y, e.collision.push.z);
 
 	m_xGameObject->appendPosition(push);

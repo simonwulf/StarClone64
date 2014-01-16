@@ -12,6 +12,10 @@ void CollisionManager::checkCollisions(Scene* scene) {
 			ColliderComponent* a = static_cast<ColliderComponent*>(list->at(i));
 			ColliderComponent* b = static_cast<ColliderComponent*>(list->at(j));
 			
+			if (!(a->getLayers() & b->getMask()) &&
+				!(b->getLayers() & a->getMask()))
+				return;
+
 			switch (a->getType()) {
 			
 				case ColliderComponent::SPHERE:
@@ -43,7 +47,12 @@ RaycastResult CollisionManager::raycast(Ray ray, Scene* scene) {
 
 	for (unsigned int i = 0; i < list->size(); ++i) {
 	
-		RaycastResult current = static_cast<ColliderComponent*>(list->at(i))->raycast(ray);
+		ColliderComponent* collider = static_cast<ColliderComponent*>(list->at(i));
+
+		if (!(collider->getLayers() & ray.mask))
+			continue;
+
+		RaycastResult current = collider->raycast(ray);
 
 		if (current.hit && (!best.hit || glm::length(current.position - ray.start) < best_length))
 			best = current;
@@ -70,21 +79,28 @@ void CollisionManager::sphereVsSphere(SphereColliderComponent* a, SphereCollider
 		glm::vec3 position = bgo->getWorldPosition() + glm::normalize(diff) * b->getRadius() - push;
 
 		Event e(Event::COLLISION);
-		e.collision.other = bgo;
 		e.collision.position.x = position.x;
 		e.collision.position.y = position.y;
 		e.collision.position.z = position.z;
-		e.collision.push.x = push.x;
-		e.collision.push.y = push.y;
-		e.collision.push.z = push.z;
 
-		ago->dispatchEvent(e);
+		if (a->getMask() & b->getLayers()) {
+			
+			e.collision.other = bgo;
+			e.collision.push.x = push.x;
+			e.collision.push.y = push.y;
+			e.collision.push.z = push.z;
 
-		e.collision.other = a->getGameObject();
-		e.collision.push.x = -push.x;
-		e.collision.push.y = -push.y;
-		e.collision.push.z = -push.z;
+			ago->dispatchEvent(e);
+		}
 
-		bgo->dispatchEvent(e);
+		if (b->getMask() & a->getLayers()) {
+			
+			e.collision.other = a->getGameObject();
+			e.collision.push.x = -push.x;
+			e.collision.push.y = -push.y;
+			e.collision.push.z = -push.z;
+
+			bgo->dispatchEvent(e);
+		}
 	}
 }

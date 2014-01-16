@@ -1,6 +1,7 @@
 #include "EnemyHit.h"
 #include "LogManager.h"
 #include "AudioManager.h"
+#include <iostream>
 
 unsigned int EnemyHit::s_iSplosionAudioID = 0;
 
@@ -20,6 +21,8 @@ void EnemyHit::init(unsigned int hp) {
 }
 
 void EnemyHit::collisionHandler(const Event& e) {
+
+	std::cout << "Collision: " << e.collision.other->getTag() << std::endl;
 
 	if (e.collision.other->getTag() == "laser") {
 	

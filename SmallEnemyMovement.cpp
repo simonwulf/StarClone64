@@ -21,33 +21,34 @@ void SmallEnemyMovement::update(const Event& e) {
 
 	glm::vec3 diff = m_vTarget - m_xGameObject->getWorldPosition();
 
-	/*if (glm::length(diff) < 1.0f) {
+	m_fTargetTime -= e.game.delta;
+
+	if (glm::length(diff) < 1.0f || m_fTargetTime <= 0.0f) {
 	
 		changeTarget();
-	}*/
+	}
 
 	glm::vec3 direction = glm::normalize(diff);
 	glm::vec3 axis;
 
 	float dot = glm::dot(direction, m_xGameObject->forward());
 	float angle = glm::degrees(acosf(dot));
-	if (angle > 90.0f * e.game.delta);
-		angle == 90.0f * e.game.delta;
+	if (angle > 90.0f * e.game.delta)
+		angle = 90.0f * e.game.delta;
 
-	//std::cout << "dot: " << dot << ", angle: " << angle << std::endl;
+	if (dot < 1.0f && dot > -1.0f) {
 
-	if (dot != 1.0f) {
-
-		if (dot == -1.0f)
-			axis = glm::vec3(0.0f, 1.0f, 0.0f);
-		else
-			axis = glm::normalize(glm::cross(direction, m_xGameObject->forward()));
+		axis = glm::normalize(glm::cross(m_xGameObject->forward(), direction));
 
 		glm::vec3 look_target = m_xGameObject->getWorldPosition() + glm::angleAxis(angle, axis) * m_xGameObject->forward();
 		m_xGameObject->lookAt(look_target, glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
-	m_xGameObject->appendPosition(m_xGameObject->forward() * m_fMovementSpeed * e.game.delta);
+	glm::vec3 position = m_xGameObject->getPosition() + m_xGameObject->forward() * m_fMovementSpeed * e.game.delta;
+	if (position.y < 1.0f)
+		position.y = 1.0f;
+
+	m_xGameObject->setPosition(position);
 }
 
 void SmallEnemyMovement::changeTarget() {
@@ -56,12 +57,11 @@ void SmallEnemyMovement::changeTarget() {
 	float t = 2.0f * glm::pi<float>() * (float)rand() / (float)RAND_MAX;
 	float r = u > 1.0f ? 2.0f - u : u;
 	
-	//sf::Vector2f(r*cos(t), r*sin(t)) * m_fRadius;
 	m_vTarget = glm::vec3(
 		r*cosf(t) * 250.0f,
-		((float)rand() / (float)RAND_MAX) * 29.0f + 1.0f,
+		((float)rand() / (float)RAND_MAX) * 24.0f + 6.0f,
 		r*sinf(t) * 250.0f
 	);
 
-	//m_xGameObject->lookAt(m_vTarget, glm::vec3(0.0f, 1.0f, 0.0f));
+	m_fTargetTime = 4.0f + ((float)rand() / (float)RAND_MAX) * 2.0f;
 }

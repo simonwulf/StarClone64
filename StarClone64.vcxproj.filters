@@ -237,6 +237,9 @@
     <ClCompile Include="MenuGUIScene.cpp">
       <Filter>Source Files\GameSpecific\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerHit.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Material.h">
@@ -400,6 +403,9 @@
     </ClInclude>
     <ClInclude Include="Raycast.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerHit.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

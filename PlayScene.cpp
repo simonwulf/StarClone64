@@ -44,7 +44,7 @@ PlayScene::PlayScene() {
  	teapot->setPosition(glm::vec3(0.0f));
  	teapot->setScale(glm::vec3(0.03f, 0.03f, 0.03f));
 
-	for (unsigned int i = 0; i < 1; ++i) {
+	for (unsigned int i = 0; i < 100; ++i) {
 		
 		SmallEnemy* enemy = make<SmallEnemy>("small_enemy");
 		enemy->setPosition(glm::vec3(
