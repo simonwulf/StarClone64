@@ -184,9 +184,9 @@ CompleteShader* ShaderManager::buildCompleteShader( SubShaders type ) {
 	std::string geomFile = std::string(filePath) + ".geom";
 	std::string fragFile = std::string(filePath) + ".frag";
 
-	bool vertExists = (bool)(std::ifstream(vertFile));
-	bool geomExists = (bool)(std::ifstream(geomFile));
-	bool fragExists = (bool)(std::ifstream(fragFile));
+	bool vertExists = (bool)(std::ifstream(vertFile).is_open());
+	bool geomExists = (bool)(std::ifstream(geomFile).is_open());
+	bool fragExists = (bool)(std::ifstream(fragFile).is_open());
 
 	std::stringstream ss;
 	ss << "Building shader type " << type << " ";
@@ -306,9 +306,9 @@ CompleteShader* ShaderManager::buildBaseShader( int options ) {
 	std::string geomFile = std::string(filePath) + ".geom";
 	std::string fragFile = std::string(filePath) + ".frag";
 
-	bool vertExists = (bool)(std::ifstream(vertFile));
-	bool geomExists = (bool)(std::ifstream(geomFile));
-	bool fragExists = (bool)(std::ifstream(fragFile));
+	bool vertExists = (bool)(std::ifstream(vertFile).is_open());
+	bool geomExists = (bool)(std::ifstream(geomFile).is_open());
+	bool fragExists = (bool)(std::ifstream(fragFile).is_open());
 
 	std::stringstream ss;
 	ss << "Building base shader (0x" << std::hex << options << std::dec << ") ";

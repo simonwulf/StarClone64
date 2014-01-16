@@ -20,6 +20,7 @@ out vec4 color_out;
 void calculateLightingDiffuse(vec3 _world_normal);
 void testFunc();
 vec3 calculateNormalMap();
+void alphaMask(vec4 invec);
 
 void main() {
 	
@@ -36,6 +37,6 @@ void main() {
 	#endif
 
 	#ifdef SHADER_ALPHA_MASK
-		alphaMask();
+		alphaMask(color_out);
 	#endif
 }

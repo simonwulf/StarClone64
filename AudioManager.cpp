@@ -16,7 +16,7 @@ AudioManager::AudioManager() {
 	checkError( m_xAudioEngine->getDriverCaps(0, 0, 0, &speakermode) );
 	checkError( m_xAudioEngine->setSpeakerMode(speakermode) );
 	checkError( m_xAudioEngine->init(32, FMOD_INIT_NORMAL, 0) );
-	checkError( m_xAudioEngine->set3DSettings(0.0f, 1.0f, 1.0f) );
+	checkError( m_xAudioEngine->set3DSettings(0.0f, 1.0f, 0.25f) );
 }
 
 AudioManager::~AudioManager() {
@@ -71,7 +71,7 @@ FMOD::Sound* AudioManager::loadMusic( std::string name ) {
 	FMOD::Sound* music;
 	checkError( m_xAudioEngine->createStream(std::string(m_sBasePath + name).c_str(), FMOD_HARDWARE | FMOD_2D | FMOD_LOOP_NORMAL, 0, &music) );
 
-	m_xMusicTable.insert( std::make_pair<std::string, FMOD::Sound*>(name, music) );
+	m_xMusicTable.insert( std::make_pair(name, music) );
 
 	return music;
 }
