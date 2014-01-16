@@ -3,11 +3,14 @@
 #include "Input.h"
 #include "CollisionManager.h"
 
-#include "PlayScene.h"
+/*#include "PlayScene.h"
 #include "HUDScene.h"
 #include "SkyScene.h"
 #include "MenuGUIScene.h"
-#include "Menu3DScene.h"
+#include "Menu3DScene.h"*/
+
+#include "MenuState.h"
+#include "PlayState.h"
 
 
 Game* Game::s_xInstance = nullptr;
@@ -23,6 +26,7 @@ Game::Game() {
 	m_fTimeScale = 1.0f;
 
 	m_iState = (State)-1;
+	m_xCurrentState = nullptr;
 }
 
 Game::~Game() {
@@ -31,10 +35,13 @@ Game::~Game() {
 
 	delete m_xRenderer;
 
-	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
+	/*for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
 	
 		delete m_xScenes[i];
-	}
+	}*/
+
+	if (m_xCurrentState != nullptr)
+		delete m_xCurrentState;
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
@@ -67,12 +74,12 @@ int Game::init() {
 
 	glfwWindowHint(GLFW_RESIZABLE, 0);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	/* */
+	/* *
 	int monitor_count;
 	GLFWmonitor** monitors = glfwGetMonitors(&monitor_count);
 	m_xWindow = glfwCreateWindow(1920, 1080, "OpenGL Window", monitor_count > 1 ? monitors[1] : monitors[0], nullptr);
 	/* */
-	//m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", nullptr, nullptr);
+	m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", nullptr, nullptr);
 	glfwMakeContextCurrent(m_xWindow);
 
 	glfwGetWindowSize(m_xWindow, &m_vWindowSize.x, &m_vWindowSize.y);
@@ -94,25 +101,25 @@ int Game::init() {
 
 	m_xRenderer = new Renderer(m_xWindow);
 	
-	m_xPlayScene = new PlayScene();
+	/*m_xPlayScene = new PlayScene();
 	m_xSkyScene = new SkyScene();
 	m_xSkyScene->setVisible(true);
 	m_xHUDScene = new HUDScene();
 	m_xMenuGUIScene = new MenuGUIScene();
-	//m_xMenu3DScene = new Menu3DScene();
+	//m_xMenu3DScene = new Menu3DScene();*/
 
-	m_xScenes.push_back(m_xSkyScene);
+	/*m_xScenes.push_back(m_xSkyScene);
 	m_xScenes.push_back(m_xPlayScene);
 	m_xScenes.push_back(m_xHUDScene);
 	m_xScenes.push_back(m_xMenuGUIScene);
-	//m_xScenes.push_back(m_xMenu3DScene);
+	//m_xScenes.push_back(m_xMenu3DScene);*/
 
 	Input::instance()->init(m_xWindow);
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
 
-	setState(MENU_STATE);
+	_setState(MENU_STATE);
 
 	return 0;
 }
@@ -132,6 +139,9 @@ void Game::loop() {
 		update(delta, m_fElapsedTime);
 		render();
 
+		if (m_iNextState != m_iState)
+			_setState(m_iNextState);
+
 		clock_t now = clock();
 		delta = ((float)(now - m_iLastTime) / (float)CLOCKS_PER_SEC) * m_fTimeScale;
 		m_fElapsedTime += delta;
@@ -144,28 +154,37 @@ void Game::quit() {
 	glfwSetWindowShouldClose(m_xWindow, true);
 }
 
-void Game::pause() {
+/*void Game::pause() {
 
 	if (m_iState != PAUSE_STATE)
 		setState(PAUSE_STATE);
 	else
 		setState(PLAY_STATE);
-}
+}*/
 
-//Using a very decentralised, event based approach to game states.
-//Gameobjects are free to react to state changes any way they like.
 void Game::setState(State state) {
 
-	if ((int)m_iState != -1) {
-		
-		leaveState(m_iState);
-		dispatchEvent(makeGameEvent(Event::GAME_LEAVE_STATE));
-	}
+	m_iNextState = state;
+}
+
+void Game::_setState(State state) {
 
 	m_iState = state;
+	m_iNextState = state;
 
-	enterState(m_iState);
-	dispatchEvent(makeGameEvent(Event::GAME_ENTER_STATE));
+	if (m_xCurrentState != nullptr)
+		delete m_xCurrentState;
+
+	switch (state) {
+	
+		case MENU_STATE:
+			m_xCurrentState = new MenuState();
+			break;
+
+		case PLAY_STATE:
+			m_xCurrentState = new PlayState();
+			break;
+	}
 }
 
 Game::State Game::getState() const {
@@ -173,134 +192,18 @@ Game::State Game::getState() const {
 	return m_iState;
 }
 
-void Game::enterState(State state) {
-
-	switch (state) {
-	
-		case MENU_STATE:
-			m_xMenuGUIScene->setActive(true);
-			m_xMenuGUIScene->setVisible(true);
-			break;
-
-		case PLAY_STATE:
-			static_cast<PlayScene*>(m_xPlayScene)->resetIfNeeded();
-			static_cast<SkyScene*>(m_xSkyScene)->setReference(m_xPlayScene->getCamera()->getGameObject());
-			m_xSkyScene->setActive(true);
-			m_xPlayScene->setActive(true);
-			m_xPlayScene->setVisible(true);
-			m_xHUDScene->setActive(true);
-			m_xHUDScene->setVisible(true);
-			break;
-
-		case PAUSE_STATE:
-			m_xPlayScene->setActive(false);
-			m_xPlayScene->setVisible(true);
-			m_xMenuGUIScene->setActive(true);
-			m_xMenuGUIScene->setVisible(true);
-			break;
-	}
-}
-
-void Game::leaveState(State state) {
-
-	switch (state) {
-	
-		case MENU_STATE:
-			m_xMenuGUIScene->setActive(false);
-			m_xMenuGUIScene->setVisible(false);
-			break;
-
-		case PLAY_STATE:
-			m_xSkyScene->setActive(false);
-			m_xPlayScene->setActive(false);
-			m_xPlayScene->setVisible(false);
-			m_xHUDScene->setActive(false);
-			m_xHUDScene->setVisible(false);
-			break;
-
-		case PAUSE_STATE:
-			m_xPlayScene->setActive(true);
-			m_xPlayScene->setVisible(false);
-			m_xMenuGUIScene->setActive(false);
-			m_xMenuGUIScene->setVisible(false);
-			break;
-	}
-}
-
 void Game::update(float delta, float elapsedTime) {
-
-	/*Event e = makeGameEvent(Event::GAME_UPDATE);
-	e.game.delta = delta;
-
-	dispatchEvent(e);*/
 
 	Input::instance()->update();
 
-	/*switch (m_iState) {
+	m_xCurrentState->update(delta, elapsedTime);
+
 	
-		case Game::PAUSE_STATE:
-		case Game::MENU_STATE:
-			m_xHUDScene->update(delta, elapsedTime);
-			break;
-
-		case Game::PLAY_STATE:
-			m_xSkyScene->update(delta, elapsedTime);
-			m_xPlayScene->update(delta, elapsedTime);
-			m_xHUDScene->update(delta, elapsedTime);
-
-			CollisionManager::checkCollisions(m_xPlayScene);
-
-			m_xSkyScene->lateUpdate(delta, elapsedTime);
-			m_xPlayScene->lateUpdate(delta, elapsedTime);
-			m_xHUDScene->lateUpdate(delta, elapsedTime);
-			break;
-	}*/
-
-	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
-	
-		if (m_xScenes[i]->isActive())
-			m_xScenes[i]->update(delta, elapsedTime);
-	}
-
-	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
-	
-		if (m_xScenes[i]->isActive())
-			CollisionManager::checkCollisions(m_xScenes[i]);
-	}
-
-	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
-	
-		if (m_xScenes[i]->isActive())
-			m_xScenes[i]->lateUpdate(delta, elapsedTime);
-	}
-
-	/*e.type = Event::GAME_UPDATE_LATE;
-	dispatchEvent(e);*/
-
-	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
-	
-		if (m_xScenes[i]->isActive())
-			m_xScenes[i]->removeDead();
-	}
-
-	//m_xSkyScene->removeDead();
-	//m_xPlayScene->removeDead();
-	//m_xHUDScene->removeDead();
 }
 
 void Game::render() {
 
- 	/*m_xRenderer->render(m_xSkyScene);
-// 	m_xRenderer->render(m_xPlayScene);
-// 	m_xRenderer->render(m_xHUDScene);
-	m_xRenderer->render(m_xMenu3DScene);
-	m_xRenderer->render(m_xMenuGUIScene);*/
-
-	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
-	
-		if (m_xScenes[i]->isVisible())
-			m_xRenderer->render(m_xScenes[i]);
-	}
+	m_xCurrentState->render(m_xRenderer);
 
 	glfwSwapBuffers(m_xWindow);
 }

@@ -9,12 +9,9 @@ class PlayScene : public Scene {
 
 	PlayScene();
 
-	void resetIfNeeded();
-
   private:
 
 	float m_fEndTime;
-	float m_bReset;
 
 	void update(const Event& e);
 	void playerKilled(const Event& e);

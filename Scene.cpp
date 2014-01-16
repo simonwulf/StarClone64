@@ -26,8 +26,7 @@ Scene::Scene() {
 	Input::instance()->registerEventHandler(Event::JOY_BUTTON_DOWN, this, &Scene::inputHandler);
 	Input::instance()->registerEventHandler(Event::JOY_BUTTON_UP, this, &Scene::inputHandler);
 
-	m_bActive = false;
-	m_bVisible = false;
+	m_bActive = true;
 }
 
 Scene::~Scene() {
@@ -56,16 +55,6 @@ void Scene::clear() {
 
 	m_xCamera = nullptr;
 }
-
-/*GameObject* Scene::getRoot() {
-
-	return m_xRoot;
-}
-
-void Scene::add(GameObject* gameObject) {
-
-	m_xRoot->addChild(gameObject);
-}*/
 
 void Scene::update(float delta, float elapsedTime) {
 
@@ -208,16 +197,6 @@ void Scene::setActive(bool active) {
 bool Scene::isActive() const {
 
 	return m_bActive;
-}
-
-void Scene::setVisible(bool visible) {
-
-	m_bVisible = visible;
-}
-
-bool Scene::isVisible() const {
-
-	return m_bVisible;
 }
 
 void Scene::inputHandler(const Event& e) {

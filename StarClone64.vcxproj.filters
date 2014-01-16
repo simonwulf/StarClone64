@@ -76,6 +76,12 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{b455f068-9cd5-4cc7-83f2-06f2d97a8353}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameSpecific\States">
+      <UniqueIdentifier>{884d1930-608f-409d-9fa3-a88371bfd1c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameSpecific\States">
+      <UniqueIdentifier>{c629dc8b-03be-45ef-b5c0-5be472c54b15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -242,6 +248,15 @@
     </ClCompile>
     <ClCompile Include="HUDController.cpp">
       <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuState.cpp">
+      <Filter>Source Files\GameSpecific\States</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayState.cpp">
+      <Filter>Source Files\GameSpecific\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -415,6 +430,15 @@
     </ClInclude>
     <ClInclude Include="HUDController.h">
       <Filter>Header Files\GameSpecific\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayState.h">
+      <Filter>Header Files\GameSpecific\States</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuState.h">
+      <Filter>Header Files\GameSpecific\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

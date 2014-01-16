@@ -16,7 +16,7 @@
 
 PlayScene::PlayScene() {
 
-	setAmbientLight(glm::vec3(0.1f, 0.1f, 0.1f));
+	setAmbientLight(glm::vec3(0.5f, 0.5f, 0.5f));
 	setClearFlags(GL_DEPTH_BUFFER_BIT);
 	
 	m_xGameObjectFactory.registerCreator<GameObject>("empty");
@@ -27,20 +27,6 @@ PlayScene::PlayScene() {
 	m_xGameObjectFactory.registerCreator<Sun>("sun");
 	m_xGameObjectFactory.registerCreator<PointLight>("pointlight");
 	m_xGameObjectFactory.registerCreator<SmallEnemy>("small_enemy");
-
-	m_bReset = true;
-
-	registerEventHandler(Event::GAME_UPDATE, this, &PlayScene::update);
-}
-
-void PlayScene::resetIfNeeded() {
-
-	if (!m_bReset)
-		return;
-
-	clear();
-
-	//TODO: read serialized scene?
 
 	HUDModel::instance()->reset();
 
@@ -151,7 +137,7 @@ void PlayScene::resetIfNeeded() {
 	}
 	/* */
 
-	m_bReset = false;
+	registerEventHandler(Event::GAME_UPDATE, this, &PlayScene::update);
 }
 
 void PlayScene::update(const Event& e) {
@@ -162,7 +148,6 @@ void PlayScene::update(const Event& e) {
 
 		if (m_fEndTime <= 0.0f) {
 			
-			m_bReset = true;
 			Game::instance()->setState(Game::MENU_STATE);
 		}
 	}

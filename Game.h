@@ -7,6 +7,7 @@
 #include <ctime>
 
 #include "EventDispatcher.h"
+#include "GameState.h"
 #include "LogManager.h"
 #include "Renderer.h"
 
@@ -32,7 +33,7 @@ class Game : public EventDispatcher {
 
 	void loop();
 	void quit();
-	void pause();
+	//void pause();
 
 	State getState() const;
 	void setState(State state);
@@ -46,18 +47,12 @@ class Game : public EventDispatcher {
 
 	static Game* s_xInstance;
 
-	State m_iState;
-
 	GLFWwindow* m_xWindow;
 	Renderer* m_xRenderer;
-	
-	Scene* m_xPlayScene;
-	Scene* m_xHUDScene;
-	Scene* m_xSkyScene;
-	Scene* m_xMenuGUIScene;
-	//Scene* m_xMenu3DScene;
 
-	std::vector<Scene*> m_xScenes;
+	GameState* m_xCurrentState;
+	State m_iState;
+	State m_iNextState;
 
 	glm::ivec2 m_vWindowSize;
 
@@ -66,11 +61,10 @@ class Game : public EventDispatcher {
 	float m_fElapsedTime;
 	float m_fTimeScale;
 
-	void enterState(State state);
-	void leaveState(State state);
-
 	void update(float delta, float elapsedTime);
 	void render();
+
+	void _setState(State state);
 
 	Event makeGameEvent(Event::Type type);
 };

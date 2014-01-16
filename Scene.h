@@ -20,10 +20,6 @@ class Scene : public EventDispatcher {
 	Scene();
 	virtual ~Scene();
 
-	//GameObject* getRoot();
-
-	//void add(GameObject* gameObject);
-
 	void update(float delta, float elapsedTime);
 	void lateUpdate(float delta, float elapsedTime);
 
@@ -64,9 +60,6 @@ class Scene : public EventDispatcher {
 
 	void setActive(bool active);
 	bool isActive() const;
-
-	void setVisible(bool visible);
-	bool isVisible() const;
 
   protected:
 

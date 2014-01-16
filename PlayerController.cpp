@@ -216,7 +216,7 @@ void PlayerController::keyDownHandler(const Event& e) {
 			break;
 
 		case GLFW_KEY_ESCAPE:
-			Game::instance()->pause();
+			//Game::instance()->pause();
 			break;
 	}
 }
@@ -339,7 +339,7 @@ void PlayerController::buttonDownHandler(const Event& e) {
 			break;
 
 		case 7: //Start
-			Game::instance()->pause();
+			//Game::instance()->pause();
 			break;
 	}
 }
