@@ -30,13 +30,14 @@ LaserController::~LaserController() {
 	m_xGameObject->getScene()->removeEventHandler(Event::GAME_UPDATE, this, &LaserController::update);
 }
 
-void LaserController::init() {
+void LaserController::init(bool enemy) {
 
 	m_xGameObject->getScene()->registerEventHandler(Event::GAME_UPDATE, this, &LaserController::update);
 
 	m_xRay.direction = m_xGameObject->forward() * 10.0f;
 	m_xRay.start = m_xGameObject->getWorldPosition() - m_xRay.direction;
 	m_xRay.infinite = false;
+	m_xRay.mask = enemy ? CollisionManager::PLAYER : CollisionManager::ENEMY;
 
 	rayTest();
 }

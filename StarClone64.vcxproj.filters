@@ -73,9 +73,6 @@
     <Filter Include="Source Files\Components\Collision">
       <UniqueIdentifier>{a7f27d53-d8e4-49ee-8696-2b302fe022c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\GameSpecific\GameObjects">
-      <UniqueIdentifier>{dcbd3473-4aa8-4c12-b39c-8e2e295ecad0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{b455f068-9cd5-4cc7-83f2-06f2d97a8353}</UniqueIdentifier>
     </Filter>
@@ -228,9 +225,6 @@
     <ClCompile Include="EnemyHit.cpp">
       <Filter>Source Files\GameSpecific\Components</Filter>
     </ClCompile>
-    <ClCompile Include="SmallEnemyMovement.cpp">
-      <Filter>Source Files\GameSpecific\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -238,6 +232,15 @@
       <Filter>Source Files\GameSpecific\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="PlayerHit.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SmallEnemyController.cpp">
+      <Filter>Source Files\GameSpecific\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="HUDModel.cpp">
+      <Filter>Source Files\GameSpecific</Filter>
+    </ClCompile>
+    <ClCompile Include="HUDController.cpp">
       <Filter>Source Files\GameSpecific\Components</Filter>
     </ClCompile>
   </ItemGroup>
@@ -377,9 +380,6 @@
     <ClInclude Include="GameObjects.h">
       <Filter>Header Files\GameSpecific</Filter>
     </ClInclude>
-    <ClInclude Include="SmallEnemyMovement.h">
-      <Filter>Header Files\GameSpecific\Components</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyHit.h">
       <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
@@ -405,6 +405,15 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="PlayerHit.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SmallEnemyController.h">
+      <Filter>Header Files\GameSpecific\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="HUDModel.h">
+      <Filter>Header Files\GameSpecific</Filter>
+    </ClInclude>
+    <ClInclude Include="HUDController.h">
       <Filter>Header Files\GameSpecific\Components</Filter>
     </ClInclude>
   </ItemGroup>

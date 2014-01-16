@@ -111,14 +111,14 @@ GameObject* GOFactory::createGUICamera(float width, float height) {
 	return camera;
 }
 
-GameObject* GOFactory::createSkyCamera( GameObject* refObj, float fov, float near, float far, float ratio ) {
+/*GameObject* GOFactory::createSkyCamera( GameObject* refObj, float fov, float near, float far, float ratio ) {
 
 	GameObject* camera = createEmpty();
 	camera->addComponent<PerspectiveCameraComponent>()->init(fov, near, far, ratio);
 	camera->addComponent<SkyboxCameraComponent>()->init(refObj);
 
 	return camera;
-}
+}*/
 
 GameObject* GOFactory::createGroundPlane() {
 

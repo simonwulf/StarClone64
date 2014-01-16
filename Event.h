@@ -32,6 +32,10 @@ class Event {
 
 		COLLISION,
 
+		GAMEOBJECT_DESTROYED,
+
+		HUD_UPDATE,
+
 		EVENT_N
 	};
 
@@ -42,6 +46,11 @@ class Event {
 		float delta;
 		float elapsedTime;
 		unsigned int state;
+	};
+
+	struct GameObjectEvent {
+		
+		GameObject* object;
 	};
 
 	struct KeyboardEvent {
@@ -81,6 +90,7 @@ class Event {
 	union {
 	
 		GameEvent game;
+		GameObjectEvent gameObject;
 		KeyboardEvent keyboard;
 		MouseEvent mouse;
 		JoypadEvent joypad;

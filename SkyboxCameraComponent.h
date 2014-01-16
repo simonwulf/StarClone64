@@ -8,8 +8,10 @@ class SkyboxCameraComponent : public Component {
 
 	public:
 		SkyboxCameraComponent();
+		~SkyboxCameraComponent();
 
-		void init(GameObject* refObj);
+		void init();
+		void setReference(GameObject* refObj);
 		void lateUpdate(const Event& e);
 
 	private:

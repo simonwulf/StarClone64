@@ -7,11 +7,14 @@
 MainMenuController::MainMenuController() {
 
 	index = 0;
+	m_iJoyDirection = 0;
 }
 
 MainMenuController::~MainMenuController() {
 
-	m_xGameObject->getScene()->removeEventHandler(Event::KEY_DOWN, this, &MainMenuController::keyDownhandler);
+	m_xGameObject->getScene()->removeEventHandler(Event::KEY_DOWN, this, &MainMenuController::keyDownHandler);
+	m_xGameObject->getScene()->removeEventHandler(Event::JOY_AXIS_CHANGE, this, &MainMenuController::axisChangeHandler);
+	m_xGameObject->getScene()->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &MainMenuController::buttonDownHandler);
 }
 
 void MainMenuController::init( ModelRenderComponent* startItem, ModelRenderComponent* quitItem, Material* selected, Material* deselected ) {
@@ -21,30 +24,9 @@ void MainMenuController::init( ModelRenderComponent* startItem, ModelRenderCompo
 	m_xMatSelected = selected;
 	m_xMatDeselected = deselected;
 
-	m_xGameObject->getScene()->registerEventHandler(Event::KEY_DOWN, this, &MainMenuController::keyDownhandler);
-}
-
-void MainMenuController::keyDownhandler( const Event& e ) {
-
-	switch(e.keyboard.charCode) {
-
-		case GLFW_KEY_DOWN:
-			index = (index + 1) % 2;
-			break;
-
-		case GLFW_KEY_UP:
-			index = (index - 1) % 2;
-			break;
-
-		case GLFW_KEY_ENTER:
-			switch(index) {
-				case 0: Game::instance()->setState(Game::PLAY_STATE); break;
-				case 1: Game::instance()->quit(); break;
-			}
-			break;
-	}
-
-	updateMenu();
+	m_xGameObject->getScene()->registerEventHandler(Event::KEY_DOWN, this, &MainMenuController::keyDownHandler);
+	m_xGameObject->getScene()->registerEventHandler(Event::JOY_AXIS_CHANGE, this, &MainMenuController::axisChangeHandler);
+	m_xGameObject->getScene()->registerEventHandler(Event::JOY_BUTTON_DOWN, this, &MainMenuController::buttonDownHandler);
 }
 
 void MainMenuController::updateMenu() {
@@ -57,6 +39,75 @@ void MainMenuController::updateMenu() {
 		case 1:
 			m_xStart->getModel()->getMeshes()[0].setMaterial(m_xMatDeselected);
 			m_xQuit->getModel()->getMeshes()[0].setMaterial(m_xMatSelected);
+			break;
+	}
+}
+
+void MainMenuController::step(int steps) {
+
+	index = (index + steps) % 2;
+
+	updateMenu();
+}
+
+void MainMenuController::select() {
+
+	switch(index) {
+		case 0: Game::instance()->setState(Game::PLAY_STATE); break;
+		case 1: Game::instance()->quit(); break;
+	}
+}
+
+void MainMenuController::keyDownHandler( const Event& e ) {
+
+	switch(e.keyboard.charCode) {
+
+		case GLFW_KEY_DOWN:
+			step(1);
+			break;
+
+		case GLFW_KEY_UP:
+			step(-1);
+			break;
+
+		case GLFW_KEY_ENTER:
+			select();
+			break;
+	}
+}
+
+void MainMenuController::axisChangeHandler(const Event& e) {
+
+	if (e.joypad.axis != 1)
+		return;
+
+	char direction;
+
+	if (abs(e.joypad.axisValue) < 0.2f)
+		direction = 0;
+	else
+		direction = e.joypad.axisValue < 0 ? 1 : -1;
+	
+	if (direction != 0 && direction != m_iJoyDirection)
+		step(direction);
+
+	m_iJoyDirection = direction;
+}
+
+void MainMenuController::buttonDownHandler(const Event& e) {
+
+	switch (e.joypad.button) {
+	
+		case 0: //Cross
+			select();
+			break;
+
+		case 10:
+			step(-1);
+			break;
+
+		case 12:
+			step(1);
 			break;
 	}
 }

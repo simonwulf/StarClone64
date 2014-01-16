@@ -12,7 +12,7 @@ class LaserController : public ControllerComponent {
 	LaserController();
 	~LaserController();
 
-	void init();
+	void init(bool enemy);
 
   private:
 

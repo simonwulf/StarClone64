@@ -15,7 +15,8 @@
 #include "DirectionalLightComponent.h"
 #include "SphereColliderComponent.h"
 #include "EnemyHit.h"
-#include "SmallEnemyMovement.h"
+#include "PlayerHit.h"
+#include "SmallEnemyController.h"
 #include "MainMenuController.h"
 
 #undef near
@@ -28,6 +29,7 @@ void Player::init() {
 	addChild(ship);
 
 	addComponent<PlayerController>()->init(ship);
+	addComponent<PlayerHit>()->init(100);
 	SphereColliderComponent* ssc = addComponent<SphereColliderComponent>();
 	ssc->init(1.5f);
 	ssc->setLayers(CollisionManager::PLAYER);
@@ -36,13 +38,17 @@ void Player::init() {
 	setTag("player");
 }
 
-void Laser::init() {
+void Laser::init(bool enemy) {
 
 	setTag("laser");
 
-	addComponent<ModelRenderComponent>()->init("laser/Laser.obj");
-	addComponent<PointLightComponent>()->init(6.0f, glm::vec3(0.5f, 0.75f, 1.0f), 1.0f);
-	addComponent<LaserController>()->init();
+	addComponent<ModelRenderComponent>()->init(enemy ? "laser/Laser_enemy.obj" : "laser/Laser.obj");
+	addComponent<PointLightComponent>()->init(
+		6.0f,
+		enemy ? glm::vec3(1.0f, 0.5f, 0.5f) : glm::vec3(0.5f, 0.75f, 1.0f),
+		1.0f
+	);
+	addComponent<LaserController>()->init(enemy);
 }
 
 void SmallEnemy::init() {
@@ -51,7 +57,7 @@ void SmallEnemy::init() {
 
 	addComponent<ModelRenderComponent>()->init("spaceship2/Spaceship2.obj");
 	addComponent<EnemyHit>()->init(5);
-	addComponent<SmallEnemyMovement>()->init();
+	addComponent<SmallEnemyController>()->init();
 	
 	SphereColliderComponent* scc = addComponent<SphereColliderComponent>();
 	scc->init(2.0f);
@@ -90,10 +96,15 @@ void PlayerCamera::init(GameObject* player, float fov, float near, float far, fl
 	setPosition(player->getPosition() + glm::vec3(0.0f, 0.0f, 5.0f));
 }
 
-void SkyCamera::init(GameObject* refObj, float fov, float near, float far, float ratio) {
+void SkyCamera::init(float fov, float near, float far, float ratio) {
 
 	addComponent<PerspectiveCameraComponent>()->init(fov, near, far, ratio);
-	addComponent<SkyboxCameraComponent>()->init(refObj);
+	addComponent<SkyboxCameraComponent>()->init();
+}
+
+void SkyCamera::setReference(GameObject* refObj) {
+
+	static_cast<SkyboxCameraComponent*>(getComponent(Component::CONTROLLER))->setReference(refObj);
 }
 
 void GUICamera::init(float width, float height) {

@@ -72,6 +72,8 @@ class Scene : public EventDispatcher {
 
 	Factory<GameObject, std::string> m_xGameObjectFactory;
 
+	void clear();
+
   private:
 
 	std::vector<GameObject*> m_xGameObjects;

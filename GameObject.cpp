@@ -131,7 +131,7 @@ void GameObject::addChild(GameObject* child) {
 		throw std::invalid_argument("A GameObject cannot be moved between scenes");
 
 	if (child->m_xParent != nullptr)
-		m_xParent->removeChild(m_xParent);
+		m_xParent->removeChild(child);
 
 	child->m_xParent = this;
 	child->invalidateMatrix();
@@ -259,7 +259,11 @@ void GameObject::lookAt(glm::vec3 target, glm::vec3 up) {
 		forward = glm::vec3(m_xParent->getInverseMatrix() * glm::vec4(target, 1.0f)) - m_vPosition;
 	else
 		forward = target - m_vPosition;
-	forward = glm::normalize(forward);
+
+	if (forward.x + forward.y + forward.z == 0.0f)
+		forward = glm::vec3(0.0f, 0.0f, -1.0f);
+	else
+		forward = glm::normalize(forward);
 
 	if (m_xParent != nullptr)
 		up = glm::normalize(glm::vec3(m_xParent->getInverseMatrix() * glm::vec4(up, 1.0f)));
@@ -332,4 +336,14 @@ std::string GameObject::getTag() const {
 void GameObject::destroy() {
 
 	m_bDead = true;
+
+	for (unsigned int i = 0; i < m_xChildren.size(); ++i) {
+	
+		m_xChildren[i]->destroy();
+	}
+
+	Event e(Event::GAMEOBJECT_DESTROYED);
+	e.gameObject.object = this;
+
+	dispatchEvent(e);
 }

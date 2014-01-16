@@ -11,6 +11,8 @@ class Input : public EventDispatcher {
 	void init(GLFWwindow* window);
 	void update();
 
+	bool isJoyPluggedIn();
+
 	static Input* instance();
 
   private:

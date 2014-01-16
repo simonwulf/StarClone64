@@ -21,9 +21,7 @@ class CameraController : public ControllerComponent {
 	GameObject* m_xTarget;
 
 	void update(const Event& e);
-
-	//void enterStateHandler(const Event& e);
-	//void leaveStateHandler(const Event& e);
+	void targetDestroyed(const Event& e);
 };
 
 #endif

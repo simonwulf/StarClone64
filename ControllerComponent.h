@@ -12,7 +12,7 @@ class ControllerComponent : public Component {
 
   protected:
 
-	void move(const glm::vec3& distance);
+	//void move(const glm::vec3& distance);
 };
 
 #endif

@@ -16,6 +16,8 @@ class GUITextureRenderComponent : public RenderComponent {
 
 	void render();
 
+	Texture* getTexture() const;
+
   private:
 
 	struct vertex {

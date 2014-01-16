@@ -14,16 +14,23 @@ class MainMenuController : public ControllerComponent {
 		~MainMenuController();
 
 		void init(ModelRenderComponent* startItem, ModelRenderComponent* quitItem, Material* selected, Material* deselected);
-		void keyDownhandler(const Event& e);
 
 	private:
 		ModelRenderComponent* m_xStart;
 		ModelRenderComponent* m_xQuit;
 		Material* m_xMatSelected;
 		Material* m_xMatDeselected;
-		unsigned int index; //Hahaha Tommy, hur gillar du det här? Super quirk
+		unsigned int index; //Hahaha Tommi, hur gillar du det här? Super quirk
+
+		char m_iJoyDirection;
 
 		void updateMenu();
+		void step(int steps);
+		void select();
+
+		void keyDownHandler(const Event& e);
+		void axisChangeHandler(const Event& e);
+		void buttonDownHandler(const Event& e);
 };
 
 #endif // !MAINMENUCONTROLLER_H

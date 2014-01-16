@@ -91,3 +91,8 @@ void GUITextureRenderComponent::render() {
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 }
+
+Texture* GUITextureRenderComponent::getTexture() const {
+
+	return m_xTexture;
+}

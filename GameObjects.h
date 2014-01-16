@@ -11,7 +11,7 @@ public: void init();
 };
 
 class Laser : public GameObject {
-public: void init();
+public: void init(bool enemy);
 };
 
 class SmallEnemy : public GameObject {
@@ -31,7 +31,8 @@ public: void init(GameObject* player, float fov, float near, float far, float ra
 };
 
 class SkyCamera : public GameObject {
-public: void init(GameObject* refObj, float fov, float near, float far, float ratio);
+public: void init(float fov, float near, float far, float ratio);
+		void setReference(GameObject* refObj);
 };
 
 class GUICamera : public GameObject {

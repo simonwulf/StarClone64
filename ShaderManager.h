@@ -28,7 +28,7 @@ enum SubShaders {
 };
 
 static int SHADER_DEFAULT = SHADER_BASE | SHADER_LIGHTING_DIFFUSE;
-static int SHADER_GUI = SHADER_BASE | SHADER_LIGHTING_UNLIT;
+static int SHADER_GUI = SHADER_BASE | SHADER_LIGHTING_UNLIT | SHADER_ALPHA_MASK;
 
 struct CompleteShader {
 	GLuint vertexShader;

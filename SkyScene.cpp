@@ -12,12 +12,14 @@ SkyScene::SkyScene() {
 	m_xGameObjectFactory.registerCreator<SkyCamera>("camera");
 
 	make<Skybox>("skybox")->init();
-}
-
-void SkyScene::init( GameObject* camRef ) {
 
 	glm::ivec2 window_size = Game::instance()->getWindowSize();
-	SkyCamera* camera = make<SkyCamera>("camera");
-	camera->init(camRef, 60.0f, 0.1f, 1000.0f, (float)window_size.x/(float)window_size.y);
-	useCamera((CameraComponent*)camera->getComponent(Component::CAMERA));
+	m_xCamera = make<SkyCamera>("camera");
+	m_xCamera->init(60.0f, 0.1f, 1000.0f, (float)window_size.x/(float)window_size.y);
+	useCamera(static_cast<CameraComponent*>(m_xCamera->getComponent(Component::CAMERA)));
+}
+
+void SkyScene::setReference( GameObject* camRef ) {
+
+	m_xCamera->setReference(camRef);
 }

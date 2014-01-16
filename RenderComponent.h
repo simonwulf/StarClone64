@@ -12,6 +12,13 @@ class RenderComponent : public Component {
 	virtual ~RenderComponent();
 
 	virtual void render() = 0;
+
+	void setVisible(bool visible);
+	bool getVisible() const;
+
+private:
+
+	bool m_bVisible;
 };
 
 #endif

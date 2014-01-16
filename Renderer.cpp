@@ -46,7 +46,7 @@ void Renderer::render(Scene* scene) {
 	
 		RenderComponent* rc = (RenderComponent*)rc_list->at(i);
 
-		if (rc != nullptr) {
+		if (rc != nullptr && rc->getVisible()) {
 
 			rc->render();
 		}

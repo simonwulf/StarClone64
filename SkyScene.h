@@ -3,12 +3,16 @@
 
 #include "Scene.h"
 
+class SkyCamera;
+
 class SkyScene : public Scene {
 
 	public:
 		SkyScene();
 
-		void init(GameObject* camRef);
+		SkyCamera* m_xCamera;
+
+		void setReference(GameObject* camRef);
 };
 
 #endif

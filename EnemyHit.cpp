@@ -1,6 +1,7 @@
 #include "EnemyHit.h"
 #include "LogManager.h"
 #include "AudioManager.h"
+#include "HUDModel.h"
 #include <iostream>
 
 unsigned int EnemyHit::s_iSplosionAudioID = 0;
@@ -22,8 +23,6 @@ void EnemyHit::init(unsigned int hp) {
 
 void EnemyHit::collisionHandler(const Event& e) {
 
-	std::cout << "Collision: " << e.collision.other->getTag() << std::endl;
-
 	if (e.collision.other->getTag() == "laser") {
 	
 		--m_iHP;
@@ -31,6 +30,7 @@ void EnemyHit::collisionHandler(const Event& e) {
 		if (m_iHP == 0) {
 			
 			m_xGameObject->destroy();
+			HUDModel::instance()->incrementScore();
 			AudioManager::instance()->playAudio(s_iSplosionAudioID, m_xGameObject);
 		}
 	}

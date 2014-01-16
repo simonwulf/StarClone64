@@ -32,6 +32,7 @@ PlayerController::PlayerController() {
 
 	m_iShotsToFire = 0;
 	m_fLaserTime = 0.0f;
+	m_fCooldown = 0.0f;
 
 	m_iLaserAudioID = AudioManager::instance()->loadAudio("laser.wav");
 }
@@ -39,6 +40,8 @@ PlayerController::PlayerController() {
 PlayerController::~PlayerController() {
 
 	Scene* scene = m_xGameObject->getScene();
+
+	scene->removeEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
 
 	scene->removeEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
 	scene->removeEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
@@ -57,13 +60,26 @@ void PlayerController::init(GameObject* spaceship) {
 
 	Scene* scene = m_xGameObject->getScene();
 
-	scene->registerEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
-	scene->registerEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+	scene->registerEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
+	
+	m_bJoypad = Input::instance()->isJoyPluggedIn();
+	if (m_bJoypad) {
 
-	Input::instance()->registerEventHandler(Event::JOY_PLUGGED_IN, this, &PlayerController::joyConnectedHandler);
+		scene->registerEventHandler(Event::JOY_AXIS_CHANGE, this, &PlayerController::axisChangeHandler);
+		scene->registerEventHandler(Event::JOY_BUTTON_DOWN, this, &PlayerController::buttonDownHandler);
+		scene->registerEventHandler(Event::JOY_BUTTON_UP, this, &PlayerController::buttonUpHandler);
+	
+		Input::instance()->registerEventHandler(Event::JOY_PLUGGED_OUT, this, &PlayerController::joyDisconnectedHandler);
+
+	} else {
+	
+		scene->registerEventHandler(Event::KEY_DOWN, this, &PlayerController::keyDownHandler);
+		scene->registerEventHandler(Event::KEY_UP, this, &PlayerController::keyUpHandler);
+
+		Input::instance()->registerEventHandler(Event::JOY_PLUGGED_IN, this, &PlayerController::joyConnectedHandler);
+	}
 
 	m_xGameObject->registerEventHandler(Event::COLLISION, this, &PlayerController::collisionHandler);
-	scene->registerEventHandler(Event::GAME_UPDATE, this, &PlayerController::update);
 }
 
 void PlayerController::update(const Event& e) {
@@ -197,6 +213,10 @@ void PlayerController::keyDownHandler(const Event& e) {
 			m_bKeys[FIRE] = true;
 			//fire();
 			activateLaser();
+			break;
+
+		case GLFW_KEY_ESCAPE:
+			Game::instance()->pause();
 			break;
 	}
 }
@@ -343,12 +363,12 @@ void PlayerController::fire() {
 	Laser* laser = m_xGameObject->getScene()->make<Laser>("laser");
 	laser->setPosition(m_xGameObject->getWorldPosition() + m_xGameObject->forward() * 10.0f + m_xSpaceship->right());
 	laser->setRotation(m_xGameObject->getRotation());
-	laser->init();
+	laser->init(false);
 
 	laser = m_xGameObject->getScene()->make<Laser>("laser");
 	laser->setPosition(m_xGameObject->getWorldPosition() + m_xGameObject->forward() * 10.0f - m_xSpaceship->right());
 	laser->setRotation(m_xGameObject->getRotation());
-	laser->init();
+	laser->init(false);
 
 	AudioManager::instance()->playAudio(m_iLaserAudioID, m_xGameObject);
 }

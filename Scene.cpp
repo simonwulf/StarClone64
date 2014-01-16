@@ -32,12 +32,7 @@ Scene::Scene() {
 
 Scene::~Scene() {
 
-	for (unsigned int i = 0; i < m_xGameObjects.size(); ++i) {
-	
-		delete m_xGameObjects[i];
-	}
-
-	m_xGameObjects.clear();
+	clear();
 
 	delete m_xRoot;
 
@@ -46,6 +41,20 @@ Scene::~Scene() {
 	Input::instance()->removeEventHandler(Event::JOY_AXIS_CHANGE, this, &Scene::inputHandler);
 	Input::instance()->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &Scene::inputHandler);
 	Input::instance()->removeEventHandler(Event::JOY_BUTTON_UP, this, &Scene::inputHandler);
+}
+
+void Scene::clear() {
+
+	for (unsigned int i = 0; i < m_xGameObjects.size(); ++i) {
+	
+		delete m_xGameObjects[i];
+	}
+
+	m_xGameObjects.clear();
+
+	m_xRoot->m_xChildren.clear();
+
+	m_xCamera = nullptr;
 }
 
 /*GameObject* Scene::getRoot() {
@@ -98,7 +107,7 @@ void Scene::removeDead_r(GameObject* node) {
 	if (!node->m_bDead)
 		return;
 
-	if (node->getParent() != nullptr)
+	if (node->getParent() != nullptr && !node->getParent()->m_bDead)
 		node->getParent()->removeChild(node);
 
 	for (unsigned int i = 0; i < m_xGameObjects.size(); ++i) {

@@ -14,9 +14,10 @@ CameraController::CameraController() {
 
 CameraController::~CameraController() {
 
-	//Game::instance()->removeEventHandler(Event::GAME_UPDATE, this, &CameraController::update);
-	//Game::instance()->removeEventHandler(Event::GAME_ENTER_STATE, this, &CameraController::enterStateHandler);
-	//Game::instance()->removeEventHandler(Event::GAME_LEAVE_STATE, this, &CameraController::leaveStateHandler);
+	m_xGameObject->getScene()->removeEventHandler(Event::GAME_UPDATE, this, &CameraController::update);
+
+	if (m_xTarget != nullptr)
+		m_xTarget->removeEventHandler(Event::GAMEOBJECT_DESTROYED, this, &CameraController::targetDestroyed);
 }
 
 void CameraController::init(GameObject* target) {
@@ -24,9 +25,13 @@ void CameraController::init(GameObject* target) {
 	m_xTarget = target;
 
 	m_xGameObject->getScene()->registerEventHandler(Event::GAME_UPDATE, this, &CameraController::update);
+	m_xTarget->registerEventHandler(Event::GAMEOBJECT_DESTROYED, this, &CameraController::targetDestroyed);
 }
 
 void CameraController::update(const Event& e) {
+
+	if (m_xTarget == nullptr)
+		return;
 
 	float delta = e.game.delta;
 
@@ -53,20 +58,9 @@ void CameraController::update(const Event& e) {
 	look_target.y = ELEVATION + (look_target.y - ELEVATION) * 0.5f;
 
 	m_xGameObject->lookAt(look_target, glm::vec3(0.0f, 1.0f, 0.0f));
-
-	/*diff = look_target - go->getPosition();
-	float angle = -atan2f(diff.x, -diff.z) * (180.0f / glm::pi<float>());
-	go->setRotation(glm::angleAxis(angle, glm::vec3(0.0f, 1.0f, 0.0f)));*/
 }
 
-/*void CameraController::enterStateHandler(const Event& e) {
+void CameraController::targetDestroyed(const Event& e) {
 
-	if (e.game.state == Game::PLAY_STATE)
-		Game::instance()->registerEventHandler(Event::GAME_UPDATE, this, &CameraController::update);
+	m_xTarget = nullptr;
 }
-
-void CameraController::leaveStateHandler(const Event& e) {
-
-	if (e.game.state == Game::PLAY_STATE)
-		Game::instance()->removeEventHandler(Event::GAME_UPDATE, this, &CameraController::update);
-}*/

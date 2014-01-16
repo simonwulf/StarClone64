@@ -67,12 +67,12 @@ int Game::init() {
 
 	glfwWindowHint(GLFW_RESIZABLE, 0);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	/* *
+	/* */
 	int monitor_count;
 	GLFWmonitor** monitors = glfwGetMonitors(&monitor_count);
 	m_xWindow = glfwCreateWindow(1920, 1080, "OpenGL Window", monitor_count > 1 ? monitors[1] : monitors[0], nullptr);
 	/* */
-	m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", nullptr, nullptr);
+	//m_xWindow = glfwCreateWindow(1280, 720, "OpenGL Window", nullptr, nullptr);
 	glfwMakeContextCurrent(m_xWindow);
 
 	glfwGetWindowSize(m_xWindow, &m_vWindowSize.x, &m_vWindowSize.y);
@@ -96,7 +96,6 @@ int Game::init() {
 	
 	m_xPlayScene = new PlayScene();
 	m_xSkyScene = new SkyScene();
-	static_cast<SkyScene*>(m_xSkyScene)->init(m_xPlayScene->getCamera()->getGameObject());
 	m_xSkyScene->setVisible(true);
 	m_xHUDScene = new HUDScene();
 	m_xMenuGUIScene = new MenuGUIScene();
@@ -157,14 +156,16 @@ void Game::pause() {
 //Gameobjects are free to react to state changes any way they like.
 void Game::setState(State state) {
 
-	if ((int)m_iState != -1)
+	if ((int)m_iState != -1) {
+		
 		leaveState(m_iState);
-		//dispatchEvent(makeGameEvent(Event::GAME_LEAVE_STATE));
+		dispatchEvent(makeGameEvent(Event::GAME_LEAVE_STATE));
+	}
 
 	m_iState = state;
 
 	enterState(m_iState);
-	//dispatchEvent(makeGameEvent(Event::GAME_ENTER_STATE));
+	dispatchEvent(makeGameEvent(Event::GAME_ENTER_STATE));
 }
 
 Game::State Game::getState() const {
@@ -174,8 +175,6 @@ Game::State Game::getState() const {
 
 void Game::enterState(State state) {
 
-	std::cout << __FUNCTION__ << ": " << state << std::endl;
-
 	switch (state) {
 	
 		case MENU_STATE:
@@ -184,6 +183,8 @@ void Game::enterState(State state) {
 			break;
 
 		case PLAY_STATE:
+			static_cast<PlayScene*>(m_xPlayScene)->resetIfNeeded();
+			static_cast<SkyScene*>(m_xSkyScene)->setReference(m_xPlayScene->getCamera()->getGameObject());
 			m_xSkyScene->setActive(true);
 			m_xPlayScene->setActive(true);
 			m_xPlayScene->setVisible(true);

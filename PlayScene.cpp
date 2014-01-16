@@ -10,8 +10,9 @@
 #include "ModelRenderComponent.h"
 #include "FMODTest.h"
 #include "AudioManager.h"
-
 #include "GameObjects.h"
+#include "SmallEnemyController.h"
+#include "HUDModel.h"
 
 PlayScene::PlayScene() {
 
@@ -27,9 +28,27 @@ PlayScene::PlayScene() {
 	m_xGameObjectFactory.registerCreator<PointLight>("pointlight");
 	m_xGameObjectFactory.registerCreator<SmallEnemy>("small_enemy");
 
+	m_bReset = true;
+
+	registerEventHandler(Event::GAME_UPDATE, this, &PlayScene::update);
+}
+
+void PlayScene::resetIfNeeded() {
+
+	if (!m_bReset)
+		return;
+
+	clear();
+
+	//TODO: read serialized scene?
+
+	HUDModel::instance()->reset();
+
 	Player* player = make<Player>("player");
 	player->setPosition(glm::vec3(0.0f, 6.0f, 0.0f));
 	player->init();
+
+	player->registerEventHandler(Event::GAMEOBJECT_DESTROYED, this, &PlayScene::playerKilled);
 
 	glm::ivec2 window_size = Game::instance()->getWindowSize();
 	PlayerCamera* camera = make<PlayerCamera>("camera");
@@ -39,12 +58,12 @@ PlayScene::PlayScene() {
 
 	AudioManager::instance()->setGlobalListener(camera);
 
-	SimpleModel* teapot = make<SimpleModel>("model");
+	/*SimpleModel* teapot = make<SimpleModel>("model");
 	teapot->init("../../test/mesh_test/boss1/tris.md2");
  	teapot->setPosition(glm::vec3(0.0f));
- 	teapot->setScale(glm::vec3(0.03f, 0.03f, 0.03f));
+ 	teapot->setScale(glm::vec3(0.03f, 0.03f, 0.03f));*/
 
-	for (unsigned int i = 0; i < 100; ++i) {
+	for (unsigned int i = 0; i < 64; ++i) {
 		
 		SmallEnemy* enemy = make<SmallEnemy>("small_enemy");
 		enemy->setPosition(glm::vec3(
@@ -55,17 +74,7 @@ PlayScene::PlayScene() {
 		enemy->init();
 	}
 
-	/*GameObject* player = GOFactory::instance()->createPlayer();
-	player->setPosition(glm::vec3(0.0f, 5.0f, -5.0f));
-	add(player);*/
-
-	/*glm::ivec2 window_size = Game::instance()->getWindowSize();
-	GameObject* camera = GOFactory::instance()->createPlayerCamera(player, 60.0f, 0.1f, 1000.0f, (float)window_size.x/(float)window_size.y);
-	add(camera);
-
-	AudioManager::instance()->setGlobalListener(camera);
-
-	useCamera((CameraComponent*)camera->getComponent(Component::CAMERA));*/
+	SmallEnemyController::setPlayer(player);
 
 	SimpleModel* ground = make<SimpleModel>("model");
 	ground->init("../../test/mesh_test/terrain_test.obj");
@@ -85,7 +94,7 @@ PlayScene::PlayScene() {
 	);
 	/* */
 
-	/* *
+	/* DISCO *
 	float hue = 0.0f;
 	float r, g, b;
 	unsigned int numLights = 64;
@@ -141,4 +150,27 @@ PlayScene::PlayScene() {
 		pl->addComponent<RandomMover>();
 	}
 	/* */
+
+	m_bReset = false;
+}
+
+void PlayScene::update(const Event& e) {
+
+	if (m_fEndTime > 0.0f) {
+	
+		m_fEndTime -= e.game.delta;
+
+		if (m_fEndTime <= 0.0f) {
+			
+			m_bReset = true;
+			Game::instance()->setState(Game::MENU_STATE);
+		}
+	}
+}
+
+void PlayScene::playerKilled(const Event& e) {
+
+	SmallEnemyController::setPlayer(nullptr);
+
+	m_fEndTime = 5.0f;
 }
