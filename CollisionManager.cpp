@@ -1,7 +1,9 @@
 #include "CollisionManager.h"
-#include <iostream>
+#include "Profiler.h"
 
 void CollisionManager::checkCollisions(Scene* scene) {
+
+	PROFILE_START
 
 	//TODO: Spatial partitioning
 	Scene::ComponentList* list = scene->getComponents(Component::COLLIDER);
@@ -29,9 +31,13 @@ void CollisionManager::checkCollisions(Scene* scene) {
 			}
 		}
 	}
+
+	PROFILE_END
 }
 
 RaycastResult CollisionManager::raycast(Ray ray, Scene* scene) {
+
+	PROFILE_START
 
 	RaycastResult best = {
 		nullptr,
@@ -57,6 +63,8 @@ RaycastResult CollisionManager::raycast(Ray ray, Scene* scene) {
 		if (current.hit && (!best.hit || glm::length(current.position - ray.start) < best_length))
 			best = current;
 	}
+
+	PROFILE_END
 
 	return best;
 }

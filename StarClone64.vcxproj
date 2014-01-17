@@ -71,7 +71,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;STARCLONE_PROFILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +126,7 @@
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PlayState.cpp" />
     <ClCompile Include="PointLightComponent.cpp" />
+    <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="RandomMover.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="PlayerHit.h" />
     <ClInclude Include="PlayState.h" />
+    <ClInclude Include="Profiler.h" />
     <ClInclude Include="SmallEnemyController.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventDispatcher.h" />

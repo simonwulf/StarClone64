@@ -12,6 +12,7 @@
 #include "MenuState.h"
 #include "PlayState.h"
 
+#include "Profiler.h"
 
 Game* Game::s_xInstance = nullptr;
 
@@ -100,19 +101,6 @@ int Game::init() {
 	std::cout << "GLEW version " << glewGetString(GLEW_VERSION) << "\n";
 
 	m_xRenderer = new Renderer(m_xWindow);
-	
-	/*m_xPlayScene = new PlayScene();
-	m_xSkyScene = new SkyScene();
-	m_xSkyScene->setVisible(true);
-	m_xHUDScene = new HUDScene();
-	m_xMenuGUIScene = new MenuGUIScene();
-	//m_xMenu3DScene = new Menu3DScene();*/
-
-	/*m_xScenes.push_back(m_xSkyScene);
-	m_xScenes.push_back(m_xPlayScene);
-	m_xScenes.push_back(m_xHUDScene);
-	m_xScenes.push_back(m_xMenuGUIScene);
-	//m_xScenes.push_back(m_xMenu3DScene);*/
 
 	Input::instance()->init(m_xWindow);
 
@@ -194,18 +182,24 @@ Game::State Game::getState() const {
 
 void Game::update(float delta, float elapsedTime) {
 
+	PROFILE_START
+
 	Input::instance()->update();
 
 	m_xCurrentState->update(delta, elapsedTime);
 
-	
+	PROFILE_END
 }
 
 void Game::render() {
 
+	PROFILE_START
+
 	m_xCurrentState->render(m_xRenderer);
 
 	glfwSwapBuffers(m_xWindow);
+
+	PROFILE_END
 }
 
 Event Game::makeGameEvent(Event::Type type) {

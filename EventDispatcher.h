@@ -2,6 +2,7 @@
 #define EVENTDISPATCHER_H
 
 #include "Event.h"
+#include "Profiler.h"
 
 class EventDispatcher {
 
@@ -35,9 +36,13 @@ class EventDispatcher {
 
 	void dispatchEvent(const Event& e) {
 	
+		PROFILE_START
+
 		for (unsigned int i = 0; i < m_xHandlers[e.type].size(); ++i) {
 			m_xHandlers[e.type][i]->handle(e);
 		}
+
+		PROFILE_END
 	}
 
   private:
