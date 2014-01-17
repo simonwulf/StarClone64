@@ -11,6 +11,8 @@
 
 #include "MenuState.h"
 #include "PlayState.h"
+#include "LoadingState.h"
+#include "ShaderManager.h"
 
 
 Game* Game::s_xInstance = nullptr;
@@ -30,6 +32,13 @@ Game::Game() {
 }
 
 Game::~Game() {
+
+	if(m_tLoadingThread.joinable()) {
+
+		Log::Write("Waiting for loading thread to finish ");
+		m_tLoadingThread.join();
+		Log::Success("done");
+	}
 
 	glfwTerminate();
 
@@ -55,6 +64,9 @@ Game::~Game() {
 		
 		Log::Warn("All Components have not been deallocated");
 	}
+
+	/* m_xRC_MThread is deleted by glfwTerminate(). LThread has to be manually deleted. */
+	wglDeleteContext(m_xRC_LThread);
 }
 
 Game* Game::instance() {
@@ -65,6 +77,7 @@ Game* Game::instance() {
 int Game::init() {
 
 	glewExperimental = true;
+	m_bLoading = false;
 	
 	if (!glfwInit()) {
 	
@@ -99,29 +112,38 @@ int Game::init() {
 
 	std::cout << "GLEW version " << glewGetString(GLEW_VERSION) << "\n";
 
-	m_xRenderer = new Renderer(m_xWindow);
-	
-	/*m_xPlayScene = new PlayScene();
-	m_xSkyScene = new SkyScene();
-	m_xSkyScene->setVisible(true);
-	m_xHUDScene = new HUDScene();
-	m_xMenuGUIScene = new MenuGUIScene();
-	//m_xMenu3DScene = new Menu3DScene();*/
+	m_xDeviceContext = wglGetCurrentDC();
+	m_xRC_MThread = wglGetCurrentContext();
+	m_xRC_LThread = wglCreateContext(m_xDeviceContext);
+	wglShareLists(m_xRC_MThread, m_xRC_LThread);
 
-	/*m_xScenes.push_back(m_xSkyScene);
-	m_xScenes.push_back(m_xPlayScene);
-	m_xScenes.push_back(m_xHUDScene);
-	m_xScenes.push_back(m_xMenuGUIScene);
-	//m_xScenes.push_back(m_xMenu3DScene);*/
+// 	std::cout << "Thread test\n";
+// 	std::cout << "Waiting for thread\n";
+// 	m_tThread = std::thread(&Game::threadTest, this);
+// 	m_tThread.join();
+// 	std::cout << "Thread done\n";
+
+	m_xRenderer = new Renderer(m_xWindow);
 
 	Input::instance()->init(m_xWindow);
 
 	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
 	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
 
+	ShaderManager::instance()->compileAllSubShaders();
+
+	m_xCurrentState = nullptr;
+	m_xLoadingState = new LoadingState();
 	_setState(MENU_STATE);
 
 	return 0;
+}
+
+void Game::threadTest() {
+
+	wglMakeCurrent(m_xDeviceContext, m_xRC_LThread);
+	ShaderManager::instance()->compileAllSubShaders();
+	wglMakeCurrent(m_xDeviceContext, m_xRC_MThread);
 }
 
 void Game::loop() {
@@ -133,13 +155,36 @@ void Game::loop() {
 	dispatchEvent(Event(Event::GAME_START));
 
 	while(!glfwWindowShouldClose(m_xRenderer->getWindow())) {
-	
+
+
 		glfwPollEvents();
+
+		wglMakeCurrent(m_xDeviceContext, m_xRC_MThread);
+		if(m_bLoading) { //Assume loading thread is active and has the rendering context.
+			m_xMutex.lock();
+			/* Update and render only the loading scenes; */
+			m_xLoadingState->update(delta, m_fElapsedTime);
+			m_xLoadingState->render(m_xRenderer);
+			glfwSwapBuffers(m_xWindow);
+			m_xMutex.unlock();
+			wglMakeCurrent(m_xDeviceContext, m_xRC_LThread); //Give back the context;
+
+			clock_t now = clock();
+			delta = ((float)(now - m_iLastTime) / (float)CLOCKS_PER_SEC) * m_fTimeScale;
+			m_fElapsedTime += delta;
+			m_iLastTime = now;
+
+			continue;
+		}
+
+		if(m_xCurrentState == nullptr) {
+			continue;
+		}
 
 		update(delta, m_fElapsedTime);
 		render();
 
-		if (m_iNextState != m_iState)
+		if (!m_bLoading && m_iNextState != m_iState)
 			_setState(m_iNextState);
 
 		clock_t now = clock();
@@ -172,19 +217,54 @@ void Game::_setState(State state) {
 	m_iState = state;
 	m_iNextState = state;
 
-	if (m_xCurrentState != nullptr)
-		delete m_xCurrentState;
+	/*	Set main thread to render temporary loading state
+		Start thread
+			Delete and init the current state
+			Set main thread to stop rendering temporary loading state
+		Join thread
+		Continue as normal
+	*/
 
-	switch (state) {
-	
-		case MENU_STATE:
-			m_xCurrentState = new MenuState();
-			break;
+	m_bLoading = true;
 
-		case PLAY_STATE:
-			m_xCurrentState = new PlayState();
-			break;
+	if(m_tLoadingThread.joinable()) {
+
+		m_tLoadingThread.join(); //Wait for thread to finish
 	}
+
+	//_setState_t();
+	m_tLoadingThread = std::thread(&Game::_setState_t, this);
+	//m_tLoadingThread.join();
+}
+
+void Game::_setState_t() {
+
+	m_xMutex.lock();
+
+	wglMakeCurrent(m_xDeviceContext, m_xRC_LThread);
+
+	GameState* currentState = m_xCurrentState;
+
+	switch (m_iState) {
+
+	case MENU_STATE:
+		m_xCurrentState = new MenuState();
+		break;
+
+	case PLAY_STATE:
+		m_xCurrentState = new PlayState();
+		break;
+	}
+
+	//if (currentState != nullptr)
+	//	delete currentState;
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	m_bLoading = false;
+
+	wglMakeCurrent(m_xDeviceContext, m_xRC_MThread);
+
+	m_xMutex.unlock();
 }
 
 Game::State Game::getState() const {
@@ -221,4 +301,14 @@ Event Game::makeGameEvent(Event::Type type) {
 const glm::ivec2& Game::getWindowSize() const {
 
 	return m_vWindowSize;
+}
+
+void Game::giveRCMain() {
+
+	wglMakeCurrent(m_xDeviceContext, m_xRC_MThread);
+}
+
+void Game::giveRCLoading() {
+
+	wglMakeCurrent(m_xDeviceContext, m_xRC_LThread);
 }

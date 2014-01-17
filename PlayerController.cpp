@@ -218,6 +218,10 @@ void PlayerController::keyDownHandler(const Event& e) {
 		case GLFW_KEY_ESCAPE:
 			//Game::instance()->pause();
 			break;
+
+		case GLFW_KEY_M:
+			Game::instance()->setState(Game::MENU_STATE);
+			break;
 	}
 }
 

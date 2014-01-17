@@ -258,6 +258,12 @@
     <ClCompile Include="PlayState.cpp">
       <Filter>Source Files\GameSpecific\States</Filter>
     </ClCompile>
+    <ClCompile Include="LoadingState.cpp">
+      <Filter>Source Files\GameSpecific\States</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadingScene.cpp">
+      <Filter>Source Files\GameSpecific\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Material.h">
@@ -439,6 +445,12 @@
     </ClInclude>
     <ClInclude Include="MenuState.h">
       <Filter>Header Files\GameSpecific\States</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingState.h">
+      <Filter>Header Files\GameSpecific\States</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingScene.h">
+      <Filter>Header Files\GameSpecific\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

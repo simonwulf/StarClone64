@@ -108,6 +108,8 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="LaserController.cpp" />
     <ClCompile Include="LightComponent.cpp" />
+    <ClCompile Include="LoadingScene.cpp" />
+    <ClCompile Include="LoadingState.cpp" />
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuController.cpp" />
@@ -155,6 +157,8 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="HUDController.h" />
     <ClInclude Include="HUDModel.h" />
+    <ClInclude Include="LoadingScene.h" />
+    <ClInclude Include="LoadingState.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="PlayerHit.h" />
     <ClInclude Include="PlayState.h" />
