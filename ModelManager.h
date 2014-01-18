@@ -10,6 +10,7 @@ class ModelManager {
 
   public:
 
+	~ModelManager();
 	static ModelManager* instance();
 
 	Model* getModel(std::string filepath, unsigned int loadFlags = 0);

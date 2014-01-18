@@ -47,3 +47,8 @@ void ModelManager::clearCache() {
 	m_xModelCache.clear();
 	Log::Writeln("ModelManager cache cleared");
 }
+
+ModelManager::~ModelManager() {
+
+	clearCache();
+}

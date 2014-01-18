@@ -63,7 +63,7 @@ PlayScene::PlayScene() {
 	SmallEnemyController::setPlayer(player);
 
 	SimpleModel* ground = make<SimpleModel>("model");
-	ground->init("../../test/mesh_test/terrain_test.obj");
+	ground->init("terrain/terrain_test.obj");
 	ground->setScale(glm::vec3(1000.0f, 1000.0f, 1000.0f));
 
 	/* */

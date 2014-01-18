@@ -261,6 +261,9 @@
     <ClCompile Include="Profiler.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Compressor.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Material.h">
@@ -444,6 +447,9 @@
       <Filter>Header Files\GameSpecific\States</Filter>
     </ClInclude>
     <ClInclude Include="Profiler.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Compressor.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>

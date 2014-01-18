@@ -13,6 +13,8 @@
 #include "PlayState.h"
 
 #include "Profiler.h"
+#include "Compressor.h"
+#include "AudioManager.h"
 
 Game* Game::s_xInstance = nullptr;
 
@@ -28,6 +30,9 @@ Game::Game() {
 
 	m_iState = (State)-1;
 	m_xCurrentState = nullptr;
+
+	//Compressor::instance()->compress("data\\*", "Data.data");
+	Compressor::instance()->extract("Data.data", ".");
 }
 
 Game::~Game() {
@@ -109,6 +114,7 @@ int Game::init() {
 
 	_setState(MENU_STATE);
 
+	AudioManager::instance()->playMusic("music01.mp3");
 	return 0;
 }
 
