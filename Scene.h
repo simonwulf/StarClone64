@@ -20,6 +20,9 @@ class Scene : public EventDispatcher {
 	Scene();
 	virtual ~Scene();
 
+	void serialize(const char* filepath);
+	void accept(Visitor* visitor);
+
 	void update(float delta, float elapsedTime);
 	void lateUpdate(float delta, float elapsedTime);
 
@@ -39,6 +42,7 @@ class Scene : public EventDispatcher {
 	}
 
 	GameObject* make(const std::string& type);
+	GameObject* createEmpty();
 	void removeDead();
 
 	void registerComponent(Component* component);

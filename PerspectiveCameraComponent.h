@@ -3,11 +3,18 @@
 
 #include "CameraComponent.h"
 
+#undef near
+#undef far
+
+class Visitor;
+
 class PerspectiveCameraComponent : public CameraComponent {
 
   public:
 
 	void init(float fov, float near, float far, float ratio);
+
+	void accept(Visitor* visitor);
 
 	const glm::mat4& getProjectionMatrix() const;
 

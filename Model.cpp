@@ -6,15 +6,21 @@
 #include "ShaderManager.h"
 #include "LogManager.h"
 
-std::allocator<Mesh> Model::m_sMeshAllocator;
-std::allocator<Material> Model::m_sMaterialAllocator;
+std::allocator<Mesh> Model::s_xMeshAllocator;
+std::allocator<Material> Model::s_xMaterialAllocator;
+const char* Model::s_sBasePath = "data/models";
 
 Model::Model(std::string filepath, unsigned int loadFlags) {
 
-	Log::Write("\n--- loading model " + filepath + "\n");
+	m_sFilepath = filepath;
+
+	char model_path[MAX_PATH];
+	PathCombineA(model_path, s_sBasePath, filepath.c_str());
+
+	Log::Write("\n--- loading model " + std::string(model_path) + "\n");
 	Assimp::Importer importer;
 
-	const aiScene* scene = importer.ReadFile(filepath, loadFlags | aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+	const aiScene* scene = importer.ReadFile(model_path, loadFlags | aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
 
 	if (scene == nullptr) {
 
@@ -27,13 +33,13 @@ Model::Model(std::string filepath, unsigned int loadFlags) {
 
 		//Materials
 		m_iNumMaterials = scene->mNumMaterials;
-		m_xMaterials = m_sMaterialAllocator.allocate(m_iNumMaterials);
+		m_xMaterials = s_xMaterialAllocator.allocate(m_iNumMaterials);
 
 		//Get absolute path to the model's containing folder, for use when loading textures later
 		char cwd[MAX_PATH];
 		char model_folder[MAX_PATH];
 		GetCurrentDirectoryA(MAX_PATH, cwd);
-		PathCombineA(model_folder, cwd, filepath.c_str());
+		PathCombineA(model_folder, cwd, model_path);
 
 		//Replace all forward slashes with backslashes to satisfy PathRemoveFileSpecA
 		for (unsigned int i = 0; i < MAX_PATH && model_folder[i] != 0; ++i) {
@@ -81,7 +87,7 @@ Model::Model(std::string filepath, unsigned int loadFlags) {
 
 		//Meshes
 		m_iNumMeshes = scene->mNumMeshes;
-		m_xMeshes = m_sMeshAllocator.allocate(m_iNumMeshes);
+		m_xMeshes = s_xMeshAllocator.allocate(m_iNumMeshes);
 
 		for (unsigned int i = 0; i < m_iNumMeshes; ++i) {
 		
@@ -144,21 +150,26 @@ Model::~Model() {
 
 		for (unsigned int i = 0; i < m_iNumMeshes; ++i) {
 
-			m_sMeshAllocator.destroy(m_xMeshes + i);
+			s_xMeshAllocator.destroy(m_xMeshes + i);
 		}
 
-		m_sMeshAllocator.deallocate(m_xMeshes, m_iNumMeshes);
+		s_xMeshAllocator.deallocate(m_xMeshes, m_iNumMeshes);
 	}
 
 	if (m_xMaterials != nullptr) {
 	
 		for (unsigned int i = 0; i < m_iNumMaterials; ++i) {
 		
-			m_sMaterialAllocator.destroy(m_xMaterials + i);
+			s_xMaterialAllocator.destroy(m_xMaterials + i);
 		}
 
-		m_sMaterialAllocator.deallocate(m_xMaterials, m_iNumMaterials);
+		s_xMaterialAllocator.deallocate(m_xMaterials, m_iNumMaterials);
 	}
+}
+
+std::string Model::getPath() const {
+
+	return m_sFilepath;
 }
 
 Mesh* Model::getMeshes() {

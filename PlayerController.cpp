@@ -217,6 +217,7 @@ void PlayerController::keyDownHandler(const Event& e) {
 
 		case GLFW_KEY_ESCAPE:
 			//Game::instance()->pause();
+			m_xGameObject->destroy();
 			break;
 
 		case GLFW_KEY_P:

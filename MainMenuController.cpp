@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "Input.h"
 #include "Game.h"
+#include "Visitor.h"
 
 MainMenuController::MainMenuController() {
 
@@ -12,21 +13,23 @@ MainMenuController::MainMenuController() {
 
 MainMenuController::~MainMenuController() {
 
+	m_xGameObject->getScene()->removeEventHandler(Event::GAME_START, this, &MainMenuController::start);
 	m_xGameObject->getScene()->removeEventHandler(Event::KEY_DOWN, this, &MainMenuController::keyDownHandler);
 	m_xGameObject->getScene()->removeEventHandler(Event::JOY_AXIS_CHANGE, this, &MainMenuController::axisChangeHandler);
 	m_xGameObject->getScene()->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &MainMenuController::buttonDownHandler);
 }
 
-void MainMenuController::init( ModelRenderComponent* startItem, ModelRenderComponent* quitItem, Material* selected, Material* deselected ) {
+void MainMenuController::init() {
 
-	m_xStart = startItem;
-	m_xQuit = quitItem;
-	m_xMatSelected = selected;
-	m_xMatDeselected = deselected;
-
+	m_xGameObject->getScene()->registerEventHandler(Event::GAME_START, this, &MainMenuController::start);
 	m_xGameObject->getScene()->registerEventHandler(Event::KEY_DOWN, this, &MainMenuController::keyDownHandler);
 	m_xGameObject->getScene()->registerEventHandler(Event::JOY_AXIS_CHANGE, this, &MainMenuController::axisChangeHandler);
 	m_xGameObject->getScene()->registerEventHandler(Event::JOY_BUTTON_DOWN, this, &MainMenuController::buttonDownHandler);
+}
+
+void MainMenuController::accept(Visitor* visitor) {
+
+	visitor->visitMainMenuController(this);
 }
 
 void MainMenuController::updateMenu() {
@@ -56,6 +59,18 @@ void MainMenuController::select() {
 		case 0: Game::instance()->setState(Game::PLAY_STATE); break;
 		case 1: Game::instance()->quit(); break;
 	}
+}
+
+void MainMenuController::start(const Event& e) {
+
+	GameObject* startItem = m_xGameObject->find("item_start");
+	GameObject* quitItem = m_xGameObject->find("item_quit");
+
+	m_xStart = static_cast<ModelRenderComponent*>(startItem->getComponent(Component::RENDER));
+	m_xQuit = static_cast<ModelRenderComponent*>(quitItem->getComponent(Component::RENDER));
+
+	m_xMatSelected = m_xStart->getModel()->getMeshes()[0].getMaterial();
+	m_xMatDeselected = m_xQuit->getModel()->getMeshes()[0].getMaterial();
 }
 
 void MainMenuController::keyDownHandler( const Event& e ) {

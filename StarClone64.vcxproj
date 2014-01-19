@@ -132,6 +132,8 @@
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneLoader.cpp" />
+    <ClCompile Include="SerializationVisitor.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SkyboxCameraComponent.cpp" />
@@ -162,6 +164,8 @@
     <ClInclude Include="PlayerHit.h" />
     <ClInclude Include="PlayState.h" />
     <ClInclude Include="Profiler.h" />
+    <ClInclude Include="SceneLoader.h" />
+    <ClInclude Include="SerializationVisitor.h" />
     <ClInclude Include="SmallEnemyController.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventDispatcher.h" />
@@ -206,6 +210,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="Visitor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shaders\alpha_mask.frag" />

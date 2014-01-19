@@ -23,7 +23,6 @@ class ModelManager {
 	ModelManager(const ModelManager&);
 
 	static ModelManager m_sInstance;
-	std::string m_xModelBase;
 
 	typedef std::unordered_map<std::string, Model*> ModelMap;
 	ModelMap m_xModelCache;

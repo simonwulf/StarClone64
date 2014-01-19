@@ -13,6 +13,8 @@ class PointLightComponent : public LightComponent {
 
 	void init(float radius, glm::vec3 color, float strength);
 
+	void accept(Visitor* visitor);
+
 	void setRadius(float radius);
 	void setColor(glm::vec3 color);
 	void setStrength(float strength);

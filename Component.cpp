@@ -1,4 +1,5 @@
 #include "Component.h"
+#include "Visitor.h"
 
 unsigned int Component::s_iAllocatedMemorySize = 0;
 
@@ -37,9 +38,10 @@ unsigned int Component::getAllocatedMemorySize() {
 	return s_iAllocatedMemorySize;
 }
 
-/*void Component::update(float delta, float elapsedTime) {
+void Component::accept(Visitor* visitor) {
 
-}*/
+	visitor->visitComponent(this);
+}
 
 Component::Type Component::getType() {
 

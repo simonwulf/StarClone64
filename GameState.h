@@ -12,6 +12,7 @@ class GameState {
 	GameState();
 	virtual ~GameState();
 
+	void start();
 	void update(float delta, float elapsedTime);
 	void render(Renderer* renderer);
 

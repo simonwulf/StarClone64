@@ -129,21 +129,16 @@ void PointLight::init(glm::vec3 color, float radius, float strength) {
 
 void MainMenu::init() {
 
-	GameObject* mainMenu = getScene()->make("empty");
 	GameObject* menuItemStart = getScene()->make("empty");
 	GameObject* menuItemQuit = getScene()->make("empty");
 
-	ModelRenderComponent* mrc_start = menuItemStart->addComponent<ModelRenderComponent>();
-	mrc_start->init("text/start/start.obj");
-	Material* matSelected = mrc_start->getModel()->getMeshes()[0].getMaterial();
+	setTag("main_menu");
+	menuItemStart->setName("item_start");
+	menuItemQuit->setName("item_quit");
 
-	ModelRenderComponent* mrc_quit = menuItemQuit->addComponent<ModelRenderComponent>();
-	mrc_quit->init("text/quit/quit.obj");
-	Material* matDeselected = mrc_quit->getModel()->getMeshes()[0].getMaterial();
-
-	matSelected->setShaderProgram(ShaderManager::instance()->getProgram(SHADER_LIGHTING_DIFFUSE));
-	matDeselected->setShaderProgram(ShaderManager::instance()->getProgram(SHADER_LIGHTING_DIFFUSE));
-
+	menuItemStart->addComponent<ModelRenderComponent>()->init("text/start/start.obj");
+	menuItemQuit->addComponent<ModelRenderComponent>()->init("text/quit/quit.obj");
+	
 	menuItemStart->setPosition(glm::vec3(0.0f, 1.0f, 0.0f));
 	menuItemQuit->setPosition(glm::vec3(0.0f, -1.0f, 0.0f));
 	menuItemStart->setRotation(glm::quat(glm::vec3(0.0f, 0.4f, 0.0f)));
@@ -153,8 +148,9 @@ void MainMenu::init() {
 	light->init(glm::vec3(1.0f, 1.0f, 1.0f), 3.0f, 10.0f);
 	light->setPosition(glm::vec3(0.0f, 0.0f, 1.0f));
 
-	mainMenu->addChild(menuItemStart);
-	mainMenu->addChild(menuItemQuit);
-	mainMenu->addChild(light);
-	mainMenu->addComponent<MainMenuController>()->init(mrc_start,mrc_quit,matSelected,matDeselected);
+	addChild(menuItemStart);
+	addChild(menuItemQuit);
+	addChild(light);
+	//addComponent<MainMenuController>()->init(mrc_start,mrc_quit,matSelected,matDeselected);
+	addComponent<MainMenuController>()->init();
 }

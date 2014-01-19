@@ -1,6 +1,8 @@
 #ifndef PROFILER_H
 #define PROFILER_H
 
+#define STARCLONE_PROFILE
+
 #ifdef STARCLONE_PROFILE
 #define PROFILE_START Profiler::instance()->profileStart(__FUNCTION__);
 #define PROFILE_END Profiler::instance()->profileEnd(__FUNCTION__);

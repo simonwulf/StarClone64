@@ -5,7 +5,6 @@
 #include <ctime>
 
 #include "Game.h"
-#include "Profiler.h"
 
 int main(int argc, const char* argv[]){
 
@@ -18,8 +17,6 @@ int main(int argc, const char* argv[]){
 		return result;
 
 	game.loop();
-
-	Profiler::instance()->logData();
 
 	return 0;
 }

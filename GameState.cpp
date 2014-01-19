@@ -1,5 +1,6 @@
 #include "GameState.h"
 #include "Renderer.h"
+#include "Game.h"
 
 #include "CollisionManager.h"
 
@@ -18,6 +19,20 @@ GameState::~GameState() {
 void GameState::addScene(Scene* scene) {
 
 	m_xScenes.push_back(scene);
+}
+
+void GameState::start() {
+
+	for (unsigned int i = 0; i < m_xScenes.size(); ++i) {
+	
+		Event e(Event::GAME_START);
+
+		e.game.state = Game::instance()->getState();
+		e.game.delta = 0.0f;
+		e.game.elapsedTime = 0.0f;
+
+		m_xScenes[i]->dispatchEvent(e);
+	}
 }
 
 void GameState::update(float delta, float elapsedTime) {

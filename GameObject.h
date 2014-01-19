@@ -9,9 +9,11 @@
 
 //#include "ComponentFactory.h"
 #include "EventDispatcher.h"
+#include "Factory.h"
 
 class Scene;
 class Component;
+class Visitor;
 
 class GameObject : public EventDispatcher {
 	
@@ -24,6 +26,8 @@ class GameObject : public EventDispatcher {
 	static void* operator new(size_t size, void* p);
 	static void operator delete(void* ptr);
 	static unsigned int getAllocatedMemorySize();
+
+	void accept(Visitor* visitor);
 
 	const glm::mat4& getMatrix();
 	const glm::mat4& getInverseMatrix();
@@ -39,6 +43,7 @@ class GameObject : public EventDispatcher {
 	GameObject* childAt(unsigned int index) const;
 	void addChild(GameObject* child);
 	void removeChild(GameObject* child);
+	GameObject* find(const std::string& name);
 
 	template <class T>
 	T* addComponent() {
@@ -54,6 +59,7 @@ class GameObject : public EventDispatcher {
 
 		return component;
 	}
+	Component* addComponent(const char* type);
 	void removeComponent(Component* component);
 	unsigned int numComponents() const;
 	Component* getComponent(unsigned int type, unsigned int offset = 0);
@@ -76,7 +82,10 @@ class GameObject : public EventDispatcher {
 	glm::vec3 localToGlobal(glm::vec3 position);
 	glm::vec3 globalToLocal(glm::vec3 position);
 
-	void setTag(std::string tag);
+	void setName(const std::string& name);
+	std::string getName() const;
+
+	void setTag(const std::string& tag);
 	std::string getTag() const;
 
 	void destroy();
@@ -94,7 +103,8 @@ class GameObject : public EventDispatcher {
 	bool m_bUpdateMatrix;
 	bool m_bUpdateInverseMatrix;
 
-	std::string m_sTag;
+	std::string m_sName; //unique
+	std::string m_sTag; //can be shared with others
 	bool m_bDead;
 
 	GameObject* m_xParent;
@@ -107,6 +117,13 @@ class GameObject : public EventDispatcher {
 	void registerWithScene(Component* component);
 
 	void invalidateMatrix();
+
+	static class ComponentFactory : public Factory<Component, std::string> {
+
+	  public:
+
+		ComponentFactory();
+	} s_xComponentFactory;
 
 	friend class Scene;
 };

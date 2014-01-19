@@ -13,7 +13,10 @@ class MainMenuController : public ControllerComponent {
 		MainMenuController();
 		~MainMenuController();
 
-		void init(ModelRenderComponent* startItem, ModelRenderComponent* quitItem, Material* selected, Material* deselected);
+		//void init(ModelRenderComponent* startItem, ModelRenderComponent* quitItem, Material* selected, Material* deselected);
+		void init();
+
+		void accept(Visitor* visitor);
 
 	private:
 		ModelRenderComponent* m_xStart;
@@ -27,6 +30,8 @@ class MainMenuController : public ControllerComponent {
 		void updateMenu();
 		void step(int steps);
 		void select();
+
+		void start(const Event& e);
 
 		void keyDownHandler(const Event& e);
 		void axisChangeHandler(const Event& e);

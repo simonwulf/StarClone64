@@ -2,8 +2,10 @@
 #define MODELRENDERCOMPONENT_H
 
 #include "RenderComponent.h"
+
 #include "Model.h"
-#include "ShaderProgram.h"
+
+class ShaderProgram;
 
 class ModelRenderComponent : public RenderComponent {
 
@@ -11,6 +13,8 @@ class ModelRenderComponent : public RenderComponent {
 
 	void init(const char* filepath, ShaderProgram* defaultProgram = nullptr);
 	void init(Model* model);
+
+	void accept(Visitor* visitor);
 
 	void render();
 

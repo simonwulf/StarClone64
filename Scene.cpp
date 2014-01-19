@@ -8,6 +8,8 @@
 #include "CollisionManager.h"
 #include "Input.h"
 
+#include "SerializationVisitor.h"
+
 #define FUNC_MESSAGE(msg) std::string(__FUNCTION__) + ": " + msg
 
 Scene::Scene() {
@@ -40,6 +42,22 @@ Scene::~Scene() {
 	Input::instance()->removeEventHandler(Event::JOY_AXIS_CHANGE, this, &Scene::inputHandler);
 	Input::instance()->removeEventHandler(Event::JOY_BUTTON_DOWN, this, &Scene::inputHandler);
 	Input::instance()->removeEventHandler(Event::JOY_BUTTON_UP, this, &Scene::inputHandler);
+}
+
+void Scene::serialize(const char* filepath) {
+
+	SerializationVisitor serializer(filepath);
+
+	accept(&serializer);
+
+	serializer.close();
+}
+
+void Scene::accept(Visitor* visitor) {
+
+	visitor->visitScene(this);
+
+	m_xRoot->accept(visitor);
 }
 
 void Scene::clear() {
@@ -79,6 +97,16 @@ void Scene::lateUpdate(float delta, float elapsedTime) {
 GameObject* Scene::make(const std::string& type) {
 
 	return make<GameObject>(type);
+}
+
+GameObject* Scene::createEmpty() {
+
+	GameObject* object = new GameObject();
+
+	m_xGameObjects.push_back(object);
+	m_xRoot->addChild(object);
+
+	return object;
 }
 
 void Scene::removeDead() {

@@ -61,6 +61,8 @@ Game::~Game() {
 		
 		Log::Warn("All Components have not been deallocated");
 	}
+
+	Profiler::instance()->logData();
 }
 
 Game* Game::instance() {
@@ -108,9 +110,6 @@ int Game::init() {
 	m_xRenderer = new Renderer(m_xWindow);
 
 	Input::instance()->init(m_xWindow);
-
-	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
-	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
 
 	_setState(MENU_STATE);
 
@@ -179,6 +178,11 @@ void Game::_setState(State state) {
 			m_xCurrentState = new PlayState();
 			break;
 	}
+
+	m_xCurrentState->start();
+
+	std::cout << "Memory allocated for GameObjects: " << GameObject::getAllocatedMemorySize() << std::endl;
+	std::cout << "Memory allocated for Components: " << Component::getAllocatedMemorySize() << std::endl;
 }
 
 Game::State Game::getState() const {

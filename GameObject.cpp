@@ -2,6 +2,12 @@
 #include "ComponentFactory.h"
 #include "Component.h"
 #include "Scene.h"
+#include "Visitor.h"
+
+#include "PerspectiveCameraComponent.h"
+#include "ModelRenderComponent.h"
+#include "PointLightComponent.h"
+#include "MainMenuController.h"
 
 unsigned int GameObject::s_iAllocatedMemorySize = 0;
 
@@ -48,6 +54,17 @@ void GameObject::operator delete(void* ptr) {
 unsigned int GameObject::getAllocatedMemorySize() {
 
 	return s_iAllocatedMemorySize;
+}
+
+void GameObject::accept(Visitor* visitor) {
+
+	visitor->visitGameObject(this);
+
+	for (unsigned int i = 0; i < m_xComponents.size(); ++i)
+		m_xComponents[i]->accept(visitor);
+
+	for (unsigned int i = 0; i < m_xChildren.size(); ++i)
+		m_xChildren[i]->accept(visitor);
 }
 
 const glm::mat4& GameObject::getMatrix() {
@@ -152,6 +169,21 @@ void GameObject::removeChild(GameObject* child) {
 	}
 }
 
+GameObject* GameObject::find(const std::string& name) {
+
+	if (m_sName == name)
+		return this;
+
+	for (unsigned int i = 0; i < m_xChildren.size(); ++i) {
+	
+		GameObject* found = m_xChildren[i]->find(name);
+		if (found != nullptr)
+			return found;
+	}
+
+	return nullptr;
+}
+
 void GameObject::removeComponent(Component* component) {
 
 	if (component->m_xGameObject != this)
@@ -166,6 +198,11 @@ void GameObject::removeComponent(Component* component) {
 			break;
 		}
 	}
+}
+
+unsigned int GameObject::numComponents() const {
+
+	return m_xComponents.size();
 }
 
 Component* GameObject::getComponent(unsigned int type, unsigned int offset) {
@@ -323,7 +360,17 @@ void GameObject::invalidateMatrix() {
 	}
 }
 
-void GameObject::setTag(std::string tag) {
+void GameObject::setName(const std::string& name) {
+
+	m_sName = name;
+}
+
+std::string GameObject::getName() const {
+
+	return m_sName;
+}
+
+void GameObject::setTag(const std::string& tag) {
 
 	m_sTag = tag;
 }
@@ -347,3 +394,27 @@ void GameObject::destroy() {
 
 	dispatchEvent(e);
 }
+
+GameObject::ComponentFactory::ComponentFactory() {
+
+	registerCreator<PerspectiveCameraComponent>("perspective_camera");
+	registerCreator<ModelRenderComponent>("model_render");
+	registerCreator<PointLightComponent>("point_light");
+	registerCreator<MainMenuController>("main_menu_controller");
+}
+
+Component* GameObject::addComponent(const char* type) {
+
+	Component* component = s_xComponentFactory.create(type);
+
+	component->m_xGameObject = this;
+
+	m_xComponents.push_back(component);
+
+	if (m_xScene != nullptr)
+		registerWithScene(component);
+
+	return component;
+}
+
+GameObject::ComponentFactory GameObject::s_xComponentFactory;

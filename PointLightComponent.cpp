@@ -18,6 +18,11 @@ void PointLightComponent::init(float radius, glm::vec3 color, float strength) {
 	m_fStrength = strength;
 }
 
+void PointLightComponent::accept(Visitor* visitor) {
+
+	visitor->visitPointLightComponent(this);
+}
+
 void PointLightComponent::setRadius(float radius) {
 
 	m_fRadius = radius;

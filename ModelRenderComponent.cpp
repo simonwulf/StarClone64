@@ -2,6 +2,7 @@
 #include "ModelManager.h"
 #include "Game.h"
 #include "ShaderManager.h"
+#include "Visitor.h"
 
 void ModelRenderComponent::init(const char* filepath, ShaderProgram* defaultProgram) {
 
@@ -15,6 +16,11 @@ void ModelRenderComponent::init(const char* filepath, ShaderProgram* defaultProg
 void ModelRenderComponent::init(Model* model) {
 
 	m_xModel = model;
+}
+
+void ModelRenderComponent::accept(Visitor* visitor) {
+
+	visitor->visitModelRenderComponent(this);
 }
 
 void ModelRenderComponent::render() {

@@ -187,7 +187,8 @@ GameObject* GOFactory::createMainMenu() {
 	mainMenu->addChild(menuItemStart);
 	mainMenu->addChild(menuItemQuit);
 	mainMenu->addChild(light);
-	mainMenu->addComponent<MainMenuController>()->init(mrc_start,mrc_quit,matSelected,matDeselected);
+	//mainMenu->addComponent<MainMenuController>()->init(mrc_start,mrc_quit,matSelected,matDeselected);
+	mainMenu->addComponent<MainMenuController>()->init();
 
 	return mainMenu;
 }

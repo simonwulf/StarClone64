@@ -55,9 +55,6 @@
     <Filter Include="Header Files\Components\Camera">
       <UniqueIdentifier>{7815d172-09dc-4a8d-95d6-8dea82165f3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Components\Light">
-      <UniqueIdentifier>{6c23477b-a5fc-4a0e-b7f5-8af855a1e8d4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Components\Render">
       <UniqueIdentifier>{a913b5b3-7316-416a-a7dd-ba7fdb32786e}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,9 @@
     </Filter>
     <Filter Include="Source Files\GameSpecific\States">
       <UniqueIdentifier>{c629dc8b-03be-45ef-b5c0-5be472c54b15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components\Light">
+      <UniqueIdentifier>{6c23477b-a5fc-4a0e-b7f5-8af855a1e8d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -259,6 +259,12 @@
       <Filter>Source Files\GameSpecific\States</Filter>
     </ClCompile>
     <ClCompile Include="Profiler.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializationVisitor.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneLoader.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Compressor.cpp">
@@ -447,6 +453,15 @@
       <Filter>Header Files\GameSpecific\States</Filter>
     </ClInclude>
     <ClInclude Include="Profiler.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitor.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializationVisitor.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneLoader.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Compressor.h">

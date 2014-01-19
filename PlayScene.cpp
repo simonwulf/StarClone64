@@ -16,7 +16,7 @@
 
 PlayScene::PlayScene() {
 
-	setAmbientLight(glm::vec3(0.1f, 0.1f, 0.1f));
+	setAmbientLight(glm::vec3(0.3f, 0.3f, 0.3f));
 	setClearFlags(GL_DEPTH_BUFFER_BIT);
 	
 	m_xGameObjectFactory.registerCreator<GameObject>("empty");
